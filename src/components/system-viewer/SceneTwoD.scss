@@ -3,3 +3,9 @@
   width: 100%;
   height:100%;
 }
+
+.MainCanvass, .Grid, .Network, .Markers {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
