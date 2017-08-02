@@ -11,7 +11,7 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      cases:[fushan, qimei],
+      scenes:[fushan, qimei],
       systems: [fushanMicrogrid, qimeiMicrogrid],
       activeIdx: 0
     };
@@ -24,13 +24,13 @@ class App extends Component {
   }
 
   render() {
-    let {cases, activeIdx, system} = this.state;
+    let {scenes, activeIdx, system} = this.state;
     return (
       <div className="App">
         <SplitPane split="vertical" minSize={50} defaultSize={250}>
 
           <div className="SidePanel">
-            <ControlPanel cases={cases}
+            <ControlPanel scenes={scenes}
               setActiveIdx={this.setActiveIdx}
               activeIdx={activeIdx}/>
           </div>

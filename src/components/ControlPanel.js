@@ -2,18 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 ControlPanel.propTypes = {
-  cases: PropTypes.array.isRequired,
+  scenes: PropTypes.array.isRequired,
   activeIdx: PropTypes.number.isRequired,
   setActiveIdx: PropTypes.func.isRequired
 };
 
-function ControlPanel ({cases, setActiveIdx}) {
+function ControlPanel ({scenes, setActiveIdx}) {
   return (
     <div className='ControlPanel' >
       <div className='content'>
         <h3>Power Systems</h3>
         <div>
-          {cases.map((c, i) =>
+          {scenes.map((c, i) =>
             <div key={c.name}>
               <button className='button'
                 onClick={() => setActiveIdx(i)}>
