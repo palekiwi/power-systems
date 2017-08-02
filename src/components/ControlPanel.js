@@ -3,22 +3,26 @@ import PropTypes from 'prop-types';
 
 ControlPanel.propTypes = {
   cases: PropTypes.array.isRequired,
-  activeIdx: PropTypes.number.isRequired
+  activeIdx: PropTypes.number.isRequired,
+  setActiveIdx: PropTypes.func.isRequired
 };
 
-function ControlPanel ({cases}) {
+function ControlPanel ({cases, setActiveIdx}) {
   return (
-    <div className="ControlPanel">
-      <h3>Power Systems</h3>
-      <div>
-        {cases.map((c, i) =>
-          <div key={c.name}>
-            <button>
-              {c.name}
-            </button>
-          </div>
-        )}
-      </div>
+    <div className='ControlPanel' >
+      <div className='content'>
+        <h3>Power Systems</h3>
+        <div>
+          {cases.map((c, i) =>
+            <div key={c.name}>
+              <button className='button'
+                onClick={() => setActiveIdx(i)}>
+                {c.name}
+              </button>
+            </div>
+          )}
+        </div>
+    </div>
     </div>
   );
 }
