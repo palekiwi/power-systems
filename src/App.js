@@ -20,10 +20,16 @@ class App extends Component {
     return (
       <div className="App">
         <SplitPane split="vertical" minSize={50} defaultSize={250}>
-          <div>content</div>
-          <SplitPane split="horizontal">
-            <div>content</div>
-            <div>content</div>
+
+          <div className="SidePanel"></div>
+
+          <SplitPane split="horizontal" defaultSize={200} primary="second">
+            <div className="ContentPanel top">
+              <div className="Content"></div>
+            </div>
+            <div className="ContentPanel bottom">
+              <div className="Content"></div>
+            </div>
           </SplitPane>
         </SplitPane>
       </div>
