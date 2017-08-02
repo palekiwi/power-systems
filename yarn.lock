@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@kadira/react-split-pane@^1.4.7":
+  version "1.4.7"
+  resolved "https://registry.yarnpkg.com/@kadira/react-split-pane/-/react-split-pane-1.4.7.tgz#6d753d4a9fe62fe82056e323a6bcef7f026972b5"
+
 "@types/pixi.js@^4.4.2":
   version "4.5.2"
   resolved "https://registry.yarnpkg.com/@types/pixi.js/-/pixi.js-4.5.2.tgz#0ee8a5612ac98c190d2fc8661c9086e62a418d8a"
