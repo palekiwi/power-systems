@@ -11,7 +11,7 @@ export const fushan = case2d({
   terrainTiles: flatmapToTilesArray([
     [grass, grass, grass],
     [grass, grass, grass],
-    [water, water, water]
+    [grass, grass, grass]
   ]),
   system: fushanMicrogrid,
   structureTiles: [
@@ -22,15 +22,17 @@ export const fushan = case2d({
 
 export const qimei = case2d({
   name: 'Qimei Microgrid',
-  gridSize: [3, 3],
+  gridSize: [4, 4],
   terrainTiles: flatmapToTilesArray([
-    [grass, grass, grass],
-    [grass, grass, grass],
-    [water, water, water]
+    [grass, grass, grass, grass],
+    [grass, grass, grass, grass],
+    [grass, grass, grass, grass],
+    [water, water, water, water]
   ]),
   system: qimeiMicrogrid,
   structureTiles: [
     tile({data: {name: 'Diesel Generator'}, position: vector(0, 0), texture: factory2}),
-    tile({data: {name: 'House'}, position: vector(1, 1), texture: house})
+    tile({data: {name: 'House1'}, position: vector(1, 1), texture: house}),
+    tile({data: {name: 'House2'}, position: vector(3, 2), texture: house})
   ]
 });
