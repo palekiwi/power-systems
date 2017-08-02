@@ -16,7 +16,10 @@ function SystemViewer ({scenes, activeIdx}) {
 
   return (
     <div className="SystemViewer">
-      {content.length > 0 ? content : <div className="selection-prompt">Please Select a system.</div>}
+      {content.length > 0 ? content :
+        <div className="selection-prompt">
+          Please select a system...
+        </div>}
     </div>
   );
 }

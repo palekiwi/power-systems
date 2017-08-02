@@ -19,6 +19,9 @@ class App extends Component {
     this.setActiveIdx = this.setActiveIdx.bind(this);
   }
 
+  componentDidMount () {
+    setTimeout(() => this.setActiveIdx(0), 1000);
+  }
   setActiveIdx (i) {
     this.setState({activeIdx: i});
   }

@@ -34,12 +34,14 @@ class SceneTwoD extends React.Component {
 
     return (
       <div className="SceneTwoD" ref={c => this.scene = c}>
-        <Stage width={width} height={height} transparent={true}>
-          <TerrainTiles grid={this.state.grid} terrainTiles={this.props.terrainTiles}/>
-          <Graphics ref={c => this.graphics = c}/>
-          {this.props.structureTiles.map(tile =>
-           <StructureTile key={tile.data.name} tile={tile} grid={grid}/>)}
-        </Stage>
+        <div>
+          <Stage width={width} height={height} transparent={true}>
+            <TerrainTiles grid={this.state.grid} terrainTiles={this.props.terrainTiles}/>
+            <Graphics ref={c => this.graphics = c}/>
+              {this.props.structureTiles.map(tile =>
+            <StructureTile key={tile.data.name} tile={tile} grid={grid}/>)}
+          </Stage>
+        </div>
       </div>
     );
   }
