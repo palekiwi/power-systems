@@ -3,6 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import isometricGrid from '../../lib/isometric-grid.js';
 import MainCanvass from './MainCanvass.js';
+import Grid from './Grid.js';
+import Network from './Network.js';
+import Markers from './Markers.js';
 import './SceneTwoD.scss';
 
 class SceneTwoD extends React.Component {
@@ -29,10 +32,15 @@ class SceneTwoD extends React.Component {
           <MainCanvass {...this.state} {...this.props}/>
         </div>
         <div className="Grid">
+          <Grid {...this.state} />
         </div>
         <div className="Network">
+          <Network {...this.state} />
         </div>
         <div className="Markers">
+          <Markers grid={this.state.grid}
+            handleClick={() => null}
+            structureTiles={this.props.structureTiles}/>
         </div>
       </div>
     );

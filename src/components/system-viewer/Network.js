@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-Grid.propTypes = {
+Network.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   grid: PropTypes.object.isRequired
 };
 
-function Grid ({width, height, grid}) {
+function Network ({width, height, grid}) {
   return (
     <svg width={width} height={height}>
     </svg>
@@ -15,4 +15,4 @@ function Grid ({width, height, grid}) {
 }
 
 
-export default Grid;
+export default Network;

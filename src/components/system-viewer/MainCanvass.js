@@ -18,10 +18,13 @@ class MainCanvass extends React.Component {
 
     return (
       <Stage width={width} height={height} transparent={true}>
+
         <TerrainTiles grid={grid} terrainTiles={terrainTiles}/>
+
         <Graphics ref={c => this.graphics = c}/>
           {this.props.structureTiles.map(tile =>
             <StructureTile key={tile.data.name} tile={tile} grid={grid}/>)}
+
       </Stage>
     );
   }
