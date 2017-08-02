@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 ControlPanel.propTypes = {
   scenes: PropTypes.array.isRequired,
-  activeIdx: PropTypes.number.isRequired,
+  activeIdx: PropTypes.number,
   setActiveIdx: PropTypes.func.isRequired
 };
 

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import SplitPane from '@kadira/react-split-pane';
 import ControlPanel from './components/ControlPanel.js';
-import Graphic from './components/graphic/Graphic.js';
+import SystemViewer from './components/system-viewer/SystemViewer.js';
 import { fushanMicrogrid, qimeiMicrogrid } from './data/power-systems.js';
 import { fushan, qimei } from './data/cases-2d.js';
 import './App.scss';
@@ -13,7 +13,7 @@ class App extends Component {
     this.state = {
       scenes:[fushan, qimei],
       systems: [fushanMicrogrid, qimeiMicrogrid],
-      activeIdx: 0
+      activeIdx: null
     };
 
     this.setActiveIdx = this.setActiveIdx.bind(this);
@@ -24,10 +24,10 @@ class App extends Component {
   }
 
   render() {
-    let {scenes, activeIdx, system} = this.state;
+    let {scenes, activeIdx} = this.state;
     return (
       <div className="App">
-        <SplitPane split="vertical" minSize={50} defaultSize={250}>
+        <SplitPane split="vertical" defaultSize={200}>
 
           <div className="SidePanel">
             <ControlPanel scenes={scenes}
@@ -35,9 +35,11 @@ class App extends Component {
               activeIdx={activeIdx}/>
           </div>
 
-          <SplitPane split="horizontal" defaultSize={200} primary="second">
+          <SplitPane split="horizontal" primary="second" defaultSize={200}>
             <div className="ContentPanel top">
-              <div className="Content"></div>
+              <div className="Content">
+                <SystemViewer scenes={scenes} activeIdx={activeIdx}/>
+              </div>
             </div>
             <div className="ContentPanel bottom">
               <div className="Content"></div>

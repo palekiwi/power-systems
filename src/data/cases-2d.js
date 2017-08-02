@@ -3,7 +3,7 @@ import vector from '../lib/vector.js';
 import tile, { flatmapToTilesArray } from '../lib/tile.js';
 import { fushanMicrogrid, qimeiMicrogrid } from './power-systems.js';
 import { grass, water } from './terrain-textures.js';
-import { factory, factory2, house } from './structure-textures.js';
+import { factory2, house } from './structure-textures.js';
 
 export const fushan = case2d({
   name: 'Fushan Microgrid',
