@@ -1,0 +1,19 @@
+.Grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.Grid svg {
+  width: 100%;
+  height: 100%;
+}
+
+.GridTile {
+  fill: none;
+  stroke: #333;
+  stroke-width: 1;
+  opacity: 0.3;
+}

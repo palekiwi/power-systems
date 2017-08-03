@@ -8,7 +8,7 @@ class DomStructures extends React.Component {
   render () {
     return (
       <div className="DomStructures">
-        {this.props.terrainTiles.map((t, i)=> {
+        {this.props.structureTiles.map((t, i)=> {
           let style = domIsoTile(this.props.grid, t);
           return (
             <div className="Tile" style={style} key={i}>
@@ -24,7 +24,7 @@ class DomStructures extends React.Component {
 
 DomStructures.propTypes = {
   grid: PropTypes.object.isRequired,
-  terrainTiles: PropTypes.array.isRequired
+  structureTiles: PropTypes.array.isRequired
 };
 
 export default DomStructures;

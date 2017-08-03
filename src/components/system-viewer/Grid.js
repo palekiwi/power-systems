@@ -1,18 +1,25 @@
+/* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { gridPolygonPoints } from '../../helpers/svg-helpers.js';
+import './Grid.scss';
 
 Grid.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
   grid: PropTypes.object.isRequired
 };
 
-function Grid ({width, height, grid}) {
+function Grid ({grid}) {
   return (
-    <svg width={width} height={height}>
-    </svg>
+    <div className='Grid'>
+      <svg>
+        {gridPolygonPoints(grid).map((p,i) =>
+          <polygon className="GridTile"
+            key={i}
+            points={p}/>
+        )}
+      </svg>
+    </div>
   );
 }
-
 
 export default Grid;
