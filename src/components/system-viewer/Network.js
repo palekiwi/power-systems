@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import isometricTile from '../../lib/isometric-tile.js';
 import './Network.scss';
 
 Network.propTypes = {
@@ -17,21 +18,21 @@ function Network ({grid, structureTiles}) {
 
   if (distributor) {
     genLines = generators.map(g => {
-      let source = grid.midCoords(g.position);
-      let target = grid.midCoords(distributor.position);
+      let source = isometricTile(grid, g);
+      let target = isometricTile(grid, distributor);
       return [
-        {x: source.x, y: source.y},
-        {x: target.x, y: target.y},
+        {x: source.midX(), y: source.midY()},
+        {x: target.midX(), y: target.midY()},
         g.data
       ];
     });
 
     distLines = consumers.map(c => {
-      let source = grid.midCoords(distributor.position);
-      let target = grid.midCoords(c.position);
+      let source = isometricTile(grid, distributor);
+      let target = isometricTile(grid, c);
       return [
-        {x: source.x, y: source.y},
-        {x: target.x, y: target.y}
+        {x: source.midX(), y: source.midY()},
+        {x: target.midX(), y: target.midY()},
       ];
     });
   }
