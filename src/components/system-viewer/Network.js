@@ -2,15 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 Network.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  grid: PropTypes.object.isRequired
+  grid: PropTypes.object.isRequired,
+  structureTiles: PropTypes.array.isRequired
 };
 
-function Network ({width, height, grid}) {
+function Network ({grid, structureTiles}) {
   return (
-    <svg width={width} height={height}>
-    </svg>
+    <div className="Network">
+      <svg>
+      </svg>
+    </div>
   );
 }
 
