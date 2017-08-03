@@ -33,11 +33,9 @@ class SceneTwoD extends React.Component {
         <Grid grid={this.state.grid} />
         <DomStructures grid={this.state.grid} structureTiles={this.props.structureTiles}/>
         <Network grid={this.state.grid} structureTiles={this.props.structureTiles}/>
-        <div className="Markers">
-          <Markers grid={this.state.grid}
-            handleClick={() => null}
-            structureTiles={this.props.structureTiles}/>
-        </div>
+        <Markers grid={this.state.grid}
+          handleClick={() => null}
+          structureTiles={this.props.structureTiles}/>
       </div>
     );
   }

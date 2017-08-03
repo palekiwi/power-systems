@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { domIsoCircle } from '../../helpers/dom-helpers.js';
+import './Markers.scss';
 
 Markers.propTypes = {
   grid: PropTypes.object.isRequired,
@@ -9,7 +11,14 @@ Markers.propTypes = {
 
 function Markers ({grid, structureTiles, handleClick}) {
   return (
-    <div>
+    <div className='Markers'>
+      {structureTiles.map((t, i)=> {
+        let style = domIsoCircle(grid, t);
+        return (
+          <div key={i} className='Marker' style={style}/>
+        );
+      }
+      )}
     </div>
   );
 }
