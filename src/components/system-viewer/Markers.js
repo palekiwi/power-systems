@@ -15,7 +15,9 @@ function Markers ({grid, structureTiles, handleClick}) {
       {structureTiles.map((t, i)=> {
         let style = domIsoCircle(grid, t);
         return (
-          <div key={i} className='Marker' style={style}/>
+          <div key={i} className='Marker'
+            onClick={(e) => handleClick(e, t)}
+            style={style}/>
         );
       }
       )}

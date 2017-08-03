@@ -34,7 +34,7 @@ class SceneTwoD extends React.Component {
         <DomStructures grid={this.state.grid} structureTiles={this.props.structureTiles}/>
         <Network grid={this.state.grid} structureTiles={this.props.structureTiles}/>
         <Markers grid={this.state.grid}
-          handleClick={() => null}
+          handleClick={this.props.openSystemViewerModal}
           structureTiles={this.props.structureTiles}/>
       </div>
     );
@@ -46,6 +46,7 @@ SceneTwoD.propTypes = {
   system: PropTypes.object.isRequired,
   terrainTiles: PropTypes.array.isRequired,
   structureTiles: PropTypes.array.isRequired,
+  openSystemViewerModal: PropTypes.func.isRequired
 };
 
 export default SceneTwoD;

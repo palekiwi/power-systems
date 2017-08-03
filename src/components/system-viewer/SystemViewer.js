@@ -6,12 +6,13 @@ import './SystemViewer.scss';
 
 SystemViewer.propTypes = {
   scenes: PropTypes.array.isRequired,
-  activeIdx: PropTypes.number
+  activeIdx: PropTypes.number,
+  openSystemViewerModal: PropTypes.func.isRequired
 };
 
-function SystemViewer ({scenes, activeIdx}) {
+function SystemViewer ({scenes, activeIdx, openSystemViewerModal}) {
   let content = scenes.filter((_, i) => i == activeIdx).map(scene =>
-    <Scene key={scene.name} {...scene}/>
+    <Scene key={scene.name} {...scene} openSystemViewerModal={openSystemViewerModal}/>
   );
 
   return (
