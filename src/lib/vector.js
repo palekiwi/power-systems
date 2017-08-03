@@ -8,5 +8,5 @@ module.exports = function vector (x, y) {
     equals: v2 => (x === v2.x && y === v2.y)
   };
 
-  return Object.create(proto);
+  return proto;
 };

@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import isometricGrid from '../../lib/isometric-grid.js';
-import MainCanvass from './MainCanvass.js';
+import DomTerrain from './DomTerrain.js';
 import Grid from './Grid.js';
 import Network from './Network.js';
 import Markers from './Markers.js';
@@ -28,9 +28,7 @@ class SceneTwoD extends React.Component {
   render () {
     return (
       <div className="SceneTwoD" ref={c => this.scene = c}>
-        <div className="MainCanvass">
-          <MainCanvass {...this.state} {...this.props}/>
-        </div>
+        <DomTerrain grid={this.state.grid} terrainTiles={this.props.terrainTiles}/>
         <div className="Grid">
           <Grid {...this.state} />
         </div>
