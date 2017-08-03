@@ -7,6 +7,7 @@ import DomStructures from './DomStructures.js';
 import Grid from './Grid.js';
 import Network from './Network.js';
 import Markers from './Markers.js';
+import { TimelineMax } from 'gsap';
 import './SceneTwoD.scss';
 
 class SceneTwoD extends React.Component {
@@ -23,7 +24,17 @@ class SceneTwoD extends React.Component {
     let height = this.scene.offsetHeight;
     let grid = isometricGrid({width, height, gridSize: this.props.gridSize});
     this.setState({width, height, grid});
+    this.animateEnter();
+  }
 
+  animateEnter () {
+    new TimelineMax()
+      .from('.DomTerrain .Tile', 0.5, {opacity: 0.8, transform: 'scale(0.0)', y: '+=2', ease: 'Cubic.easeOut'}, 0.1)
+      .from('.Grid', 0.3, {opacity: 0})
+      .staggerFrom('.DomStructures .Tile', 0.5, {y: "-=10", opacity: 0, ease: 'Cubic.easeOut'}, 0.2)
+      .from(['.Marker'], 0.5, {transform: 'scale(0)', opacity: 0}, '-=0.1')
+      .from('.powerline', 0.5, {opacity: 0}, "-=0.8")
+      .from('.powerflow', 0.5, {opacity: 0}, "-=0.2");
   }
 
   render () {
