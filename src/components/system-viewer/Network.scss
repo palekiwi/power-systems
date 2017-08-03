@@ -1,0 +1,49 @@
+.Network {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.Network svg {
+  width: 100%;
+  height: 100%;
+}
+
+.powerline, .powerflow {
+  fill: none;
+  opacity: 0.6;
+  transition: .3s ease-in;
+}
+
+.powerline {
+  stroke: darkgray;
+  stroke-width: 3;
+}
+
+.active .powerline.generation {
+  stroke: rgba(204,255,153,0.5);
+}
+
+.active .powerline.distribution {
+  stroke: rgba(255,153,153,0.5);
+}
+
+.active .powerflow {
+  stroke: white;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1 10;
+  animation: powerflow 15s infinite linear forwards;
+}
+
+@keyframes powerflow {
+  0% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: -250;
+  }
+}

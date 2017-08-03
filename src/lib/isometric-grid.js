@@ -29,12 +29,20 @@ export default function isometricGrid ({width = 0, height = 0, gridSize = [0,0],
     };
   };
 
+  const midCoords = vector => {
+    return {
+      x: pointCoords(vector).x,
+      y: pointCoords(vector).y + tile.height / 2
+    };
+  };
+
   const proto =  {
     tile,
     gridSize,
     gridPoints,
     tileCoords,
-    pointCoords
+    pointCoords,
+    midCoords
   };
 
   return Object.create(proto);
