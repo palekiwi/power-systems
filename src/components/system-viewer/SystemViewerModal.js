@@ -46,7 +46,7 @@ class GraphicModal extends React.Component {
   }
 
   render () {
-    const {closeModal, showModal, data} = this.props;
+    const {closeModal, showModal, content} = this.props;
     return (
       <Transition in={showModal}
         onEnter={this.onEnter}
@@ -58,12 +58,12 @@ class GraphicModal extends React.Component {
           <div className="graphic-modal-frame">
             <div className="ripple"/>
             <div className="graphic-modal-content">
-              {data &&
+              {content &&
                 <div>
-                  <h1>{data.name}</h1>
+                  <h1>{content.name}</h1>
                   <div>
                     <button onClick={closeModal}>close</button>
-                </div>
+                  </div>
                 </div>
               }
             </div>
@@ -75,7 +75,7 @@ class GraphicModal extends React.Component {
 }
 
 GraphicModal.propTypes = {
-  data: PropTypes.object,
+  content: PropTypes.object,
   position: PropTypes.array,
   showModal: PropTypes.bool,
   closeModal: PropTypes.func.isRequired

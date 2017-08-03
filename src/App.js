@@ -36,7 +36,7 @@ class App extends Component {
     let {left, top} = e.target.getBoundingClientRect();
     this.setState({
       showSystemViewerModal: true,
-      systemViewerModalContent: tile,
+      systemViewerModalContent: this.state.systems[this.state.activeIdx].components.find(el => el.name = tile.data.name),
       systemViewerModalPosition: [left, top]
     });
   }
@@ -55,6 +55,7 @@ class App extends Component {
         <SystemViewerModal data={this.state.systemViewerModalContent}
           showModal={this.state.showSystemViewerModal}
           position={this.state.systemViewerModalPosition}
+          content={this.state.systemViewerModalContent}
           closeModal={this.closeSystemViewerModal}/>
 
         <SplitPane split="vertical" defaultSize={200}>
