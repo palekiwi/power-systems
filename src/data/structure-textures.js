@@ -2,6 +2,7 @@ import texture from '../lib/texture.js';
 
 export const factory = texture({
   filename: 'factory.png',
+  size: [1,1,1],
 });
 
 export const factory2 = texture({
@@ -22,4 +23,11 @@ export const network = texture({
 export const solar = texture({
   filename: 'solar.png',
   size: [2,2,1],
+});
+
+export const windGenerator = texture({
+  filename: 'wind-generator.png',
+  size: [1,1,1],
+  frames: 30,
+  loop: true
 });

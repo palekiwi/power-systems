@@ -2,12 +2,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { domIsoTile } from '../../helpers/dom-helpers.js';
-import './DomTerrain.scss';
+import './DomTiles.scss';
 
 class DomTerrain extends React.Component {
   render () {
     return (
-      <div className="DomTerrain">
+      <div className="DomTiles DomTerrain">
         {this.props.terrainTiles.map((t, i)=> {
           let style = domIsoTile(this.props.grid, t);
           return (
