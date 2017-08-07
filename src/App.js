@@ -23,6 +23,7 @@ class App extends Component {
     this.setActiveIdx = this.setActiveIdx.bind(this);
     this.openSystemViewerModal = this.openSystemViewerModal.bind(this);
     this.closeSystemViewerModal = this.closeSystemViewerModal.bind(this);
+    this.toggleActivateScene = this.toggleActivateScene.bind(this);
   }
 
   componentDidMount () {
@@ -30,6 +31,9 @@ class App extends Component {
   }
   setActiveIdx (i) {
     this.setState({activeIdx: i});
+  }
+
+  toggleActivateScene () {
   }
 
   openSystemViewerModal (e, tile) {
@@ -63,6 +67,7 @@ class App extends Component {
           <div className="SidePanel">
             <ControlPanel scenes={scenes}
               setActiveIdx={this.setActiveIdx}
+              toggleActivateScene={this.toggleActivateScene}
               activeIdx={activeIdx}/>
           </div>
 

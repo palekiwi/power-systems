@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 ControlPanel.propTypes = {
   scenes: PropTypes.array.isRequired,
   activeIdx: PropTypes.number,
-  setActiveIdx: PropTypes.func.isRequired
+  setActiveIdx: PropTypes.func.isRequired,
+  toggleActivateScene: PropTypes.func.isRequired
 };
 
-function ControlPanel ({scenes, setActiveIdx}) {
+function ControlPanel ({scenes, setActiveIdx, toggleActivateScene}) {
   return (
     <div className='ControlPanel' >
       <div className='content'>
@@ -22,7 +23,15 @@ function ControlPanel ({scenes, setActiveIdx}) {
             </div>
           )}
         </div>
-    </div>
+
+        <hr />
+
+        <div>
+          <button onClick={toggleActivateScene}>
+            activate system
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
