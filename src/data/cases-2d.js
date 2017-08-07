@@ -3,7 +3,7 @@ import vector from '../lib/vector.js';
 import tile, { flatmapToTilesArray } from '../lib/tile.js';
 import { fushanMicrogrid, qimeiMicrogrid } from './power-systems.js';
 import { grass, water } from './terrain-textures.js';
-import { network, windGenerator, factory2, house } from './structure-textures.js';
+import { network, windGenerator, factory, factory2, house } from './structure-textures.js';
 
 export const fushan = case2d({
   name: 'Fushan Microgrid',
@@ -15,9 +15,9 @@ export const fushan = case2d({
   ]),
   system: fushanMicrogrid,
   structureTiles: [
-    tile({data: {name: 'Diesel Generator', type: 'generator', active: true}, position: vector(0, 0), texture: factory2}),
+    tile({data: {name: 'Diesel Generator', type: 'generator', active: true}, position: vector(0, 0), texture: factory}),
     tile({data: {name: 'Wind Generator', type: 'generator', active: true}, position: vector(2, 0), texture: windGenerator}),
-    tile({data: {name: 'Power Grid', type: 'distributor'}, position: vector(0, 1), texture: network}),
+    tile({data: {name: 'Power Grid', type: 'distributor'}, position: vector(1, 1), texture: network}),
     tile({data: {name: 'House', type: 'consumer'}, position: vector(2, 2), texture: house})
   ]
 });

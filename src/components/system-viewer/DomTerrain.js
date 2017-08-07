@@ -12,7 +12,7 @@ class DomTerrain extends React.Component {
           let style = domIsoTile(this.props.grid, t);
           return (
             <div className="Tile" style={style} key={i}>
-              <img src={require('../../assets/' + t.texture.filename)}/>
+              <img className="TileImg" src={require('../../assets/' + t.texture.filename)}/>
             </div>
           );
         }

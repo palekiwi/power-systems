@@ -9,23 +9,20 @@ class DomStructureAnimated extends React.Component {
     let img = this.img;
     let steps = this.props.tile.texture.frames - 1;
     let width = this.props.grid.tile.width;
+    let active = this.props.tile.data.active;
     //this.anim = TweenMax.to(img, 2, {x: (-width * steps), repeat: -1, ease: SteppedEase.config(steps)});
-    console.log(img);
+    this.anim = TweenMax.to(img, 2, {x: (-width * steps), repeat: -1, ease: SteppedEase.config(steps)});
+    active ? this.anim.play() : this.anim.pause();
   }
 
   render () {
     let {grid, tile} = this.props;
     let style = domIsoTile(grid, tile);
-    let imgStyle= {
-      width: style.width * tile.texture.frames,
-      height: style.height
-    };
 
     return (
       <div className="Tile" style={style}>
-        <img className=''
+        <img className='AnimatedTile'
           ref={c => this.img = c}
-          style={imgStyle}
           src={require('../../assets/' + tile.texture.filename)}/>
       </div>
     );
