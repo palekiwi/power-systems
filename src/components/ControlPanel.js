@@ -6,10 +6,12 @@ ControlPanel.propTypes = {
   activeIdx: PropTypes.number,
   setActiveIdx: PropTypes.func.isRequired,
   activateScene: PropTypes.func.isRequired,
-  deactivateScene: PropTypes.func.isRequired
+  deactivateScene: PropTypes.func.isRequired,
+  handleInput: PropTypes.func.isRequired
 };
 
-function ControlPanel ({scenes, setActiveIdx, activateScene, deactivateScene}) {
+function ControlPanel ({scenes, setActiveIdx, activeIdx, activateScene, deactivateScene, handleInput}) {
+  let activeSystem = scenes[activeIdx];
   return (
     <div className='ControlPanel' >
       <div className='content'>
@@ -27,14 +29,33 @@ function ControlPanel ({scenes, setActiveIdx, activateScene, deactivateScene}) {
 
         <hr />
 
-        <div>
-          <button onClick={activateScene}>
-            Power On
-          </button>
-          <button onClick={deactivateScene}>
-            Power Off
-          </button>
-        </div>
+        {activeSystem &&
+          <div>
+            <div>
+              <button onClick={activateScene}>
+                On
+              </button>
+              <button onClick={deactivateScene}>
+                Off
+              </button>
+            </div>
+
+            <hr />
+
+            <div>
+              {activeSystem.structureTiles
+                .filter(t => t.data.type == 'generator')
+                .map((t, i) =>
+                <div key={i}>
+                  <span>{t.data.name + ' '}</span>
+                  <input type="checkbox"
+                    onChange={() => handleInput(i)}
+                    checked={t.data.active}/>
+                </div>
+              )}
+            </div>
+          </div>
+        }
       </div>
     </div>
   );

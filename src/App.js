@@ -42,6 +42,7 @@ class App extends Component {
     this.closeSystemViewerModal = this.closeSystemViewerModal.bind(this);
     this.activateScene = this.activateScene.bind(this);
     this.deactivateScene = this.deactivateScene.bind(this);
+    this.toggleTileActive = this.toggleTileActive.bind(this);
   }
 
   componentDidMount () {
@@ -58,6 +59,13 @@ class App extends Component {
 
   deactivateScene () {
     let scenes = toggleSceneActiveState(false)(this.state.activeIdx)(this.state.scenes);
+    this.setState({scenes});
+  }
+
+  toggleTileActive (i) {
+    const active = activeLens(this.state.activeIdx)(i);
+    let val = R.not(R.view(active)(this.state.scenes));
+    let scenes = R.set(active, val)(this.state.scenes);
     this.setState({scenes});
   }
 
@@ -94,6 +102,7 @@ class App extends Component {
               setActiveIdx={this.setActiveIdx}
               activateScene={this.activateScene}
               deactivateScene={this.deactivateScene}
+              handleInput={this.toggleTileActive}
               activeIdx={activeIdx}/>
           </div>
 
@@ -101,6 +110,8 @@ class App extends Component {
             <div className="ContentPanel top">
               <div className="Content">
                 <SystemViewer scenes={scenes}activeIdx={activeIdx}
+                  activateScene={this.activateScene}
+                  deactivateScene={this.deactivateScene}
                   openSystemViewerModal={this.openSystemViewerModal}/>
               </div>
             </div>

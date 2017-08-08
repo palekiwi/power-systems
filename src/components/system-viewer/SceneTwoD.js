@@ -20,11 +20,12 @@ class SceneTwoD extends React.Component {
     };
   }
   componentDidMount () {
+    this.props.deactivateScene();
     let width = this.scene.offsetWidth;
     let height = this.scene.offsetHeight;
     let grid = isometricGrid({width, height, gridSize: this.props.gridSize});
     this.setState({width, height, grid});
-    //this.animateEnter();
+    this.animateEnter();
   }
 
   animateEnter () {
@@ -57,7 +58,9 @@ SceneTwoD.propTypes = {
   system: PropTypes.object.isRequired,
   terrainTiles: PropTypes.array.isRequired,
   structureTiles: PropTypes.array.isRequired,
-  openSystemViewerModal: PropTypes.func.isRequired
+  openSystemViewerModal: PropTypes.func.isRequired,
+  activateScene: PropTypes.func.isRequired,
+  deactivateScene: PropTypes.func.isRequired
 };
 
 export default SceneTwoD;

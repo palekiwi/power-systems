@@ -10,9 +10,10 @@ class DomStructureAnimated extends React.Component {
     let activePath = R.path(['tile', 'data', 'active']);
     if (activePath(prevProps) !== activePath(this.props)) {
       let img = this.img;
-      let steps = this.props.tile.texture.frames - 1;
-      let width = this.props.grid.tile.width;
-      if (!this.anim) this.anim = TweenMax.to(img, 2, {x: (-width * steps), repeat: -1, ease: SteppedEase.config(steps)});
+      let steps = this.props.tile.texture.frames;
+      let w = this.img.offsetWidth;
+      let width = (w / steps) * (steps - 1);
+      if (!this.anim) this.anim = TweenMax.to(img, 2, {x: -width, repeat: -1, ease: SteppedEase.config(steps - 1)});
       activePath(this.props) ? this.anim.play() : this.anim.pause();
     }
   }
