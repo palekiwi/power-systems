@@ -31,6 +31,7 @@ function ControlPanel ({scenes, setActiveIdx, activeIdx, activateScene, deactiva
 
         {activeSystem &&
           <div>
+            <p>Settings: </p>
             <div>
               <button onClick={activateScene}>
                 On
@@ -43,6 +44,7 @@ function ControlPanel ({scenes, setActiveIdx, activeIdx, activateScene, deactiva
             <hr />
 
             <div>
+              <p>Generators:</p>
               {activeSystem.structureTiles
                 .filter(t => t.data.type == 'generator')
                 .map((t, i) =>

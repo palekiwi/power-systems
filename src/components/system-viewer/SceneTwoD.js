@@ -32,8 +32,9 @@ class SceneTwoD extends React.Component {
     new TimelineMax()
       .from('.DomTerrain .Tile', 0.5, {opacity: 0.8, transform: 'scale(0.0)', y: '+=2', ease: 'Cubic.easeOut'}, 0.1)
       .from('.Grid', 0.3, {opacity: 0})
-      .staggerFrom('.DomStructures .Tile', 0.5, {y: "-=10", opacity: 0, ease: 'Cubic.easeOut'}, 0.2)
-      .from(['.Marker'], 0.5, {transform: 'scale(0)', opacity: 0}, '-=0.1')
+    //.staggerFrom('.DomStructures .Tile', 0.5, {y: "-=10", opacity: 0, ease: 'Cubic.easeOut'}, 0.2)
+      .from('.DomStructures .Tile', 0.7, {y: "-=10", opacity: 0, ease: 'Cubic.easeOut'})
+      .from(['.Marker'], 0.5, {opacity: 0}, '-=0.1')
       .from('.powerline', 0.5, {opacity: 0}, "-=0.8")
       .from('.powerflow', 0.5, {opacity: 0}, "-=0.2");
   }
