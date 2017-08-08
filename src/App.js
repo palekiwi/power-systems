@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react';
+import R from 'ramda';
 import SplitPane from '@kadira/react-split-pane';
 import ControlPanel from './components/ControlPanel.js';
 import SystemViewer from './components/system-viewer/SystemViewer.js';
@@ -7,6 +8,22 @@ import SystemViewerModal from './components/system-viewer/SystemViewerModal.js';
 import { fushanMicrogrid, qimeiMicrogrid } from './data/power-systems.js';
 import { fushan, qimei } from './data/cases-2d.js';
 import './App.scss';
+
+const activeLens = activeIdx => compIdx => R.compose(
+  R.lensIndex(activeIdx),
+  R.lensPath(['structureTiles']),
+  R.lensIndex(compIdx),
+  R.lensPath(['data', 'active'])
+);
+
+const mapActive = R.compose(
+  R.map,
+  R.assocPath(['data', 'active'])
+);
+
+const toggleSceneActiveState = state => R.adjust(
+  R.over(R.lensPath(['structureTiles']), mapActive(state))
+);
 
 class App extends Component {
   constructor (props) {
@@ -34,6 +51,8 @@ class App extends Component {
   }
 
   toggleActivateScene () {
+    let scenes = toggleSceneActiveState(true)(0)(this.state.scenes);
+    this.setState({scenes});
   }
 
   openSystemViewerModal (e, tile) {
