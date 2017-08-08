@@ -5,10 +5,11 @@ ControlPanel.propTypes = {
   scenes: PropTypes.array.isRequired,
   activeIdx: PropTypes.number,
   setActiveIdx: PropTypes.func.isRequired,
-  toggleActivateScene: PropTypes.func.isRequired
+  activateScene: PropTypes.func.isRequired,
+  deactivateScene: PropTypes.func.isRequired
 };
 
-function ControlPanel ({scenes, setActiveIdx, toggleActivateScene}) {
+function ControlPanel ({scenes, setActiveIdx, activateScene, deactivateScene}) {
   return (
     <div className='ControlPanel' >
       <div className='content'>
@@ -27,8 +28,11 @@ function ControlPanel ({scenes, setActiveIdx, toggleActivateScene}) {
         <hr />
 
         <div>
-          <button onClick={toggleActivateScene}>
-            activate system
+          <button onClick={activateScene}>
+            Power On
+          </button>
+          <button onClick={deactivateScene}>
+            Power Off
           </button>
         </div>
       </div>
