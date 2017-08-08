@@ -34,7 +34,8 @@ class App extends Component {
       activeIdx: null,
       showSystemViewerModal: false,
       systemViewerModalContent: null,
-      systemViewerModalPosition:[0, 0]
+      systemViewerModalPosition:[0, 0],
+      resize: false
     };
 
     this.setActiveIdx = this.setActiveIdx.bind(this);
@@ -43,6 +44,7 @@ class App extends Component {
     this.activateScene = this.activateScene.bind(this);
     this.deactivateScene = this.deactivateScene.bind(this);
     this.toggleTileActive = this.toggleTileActive.bind(this);
+    this.resize = this.resize.bind(this);
   }
 
   componentDidMount () {
@@ -85,6 +87,10 @@ class App extends Component {
     });
   }
 
+  resize () {
+    this.setState({resize: !this.state.resize});
+  }
+
   render() {
     let {scenes, activeIdx} = this.state;
     return (
@@ -95,7 +101,7 @@ class App extends Component {
           content={this.state.systemViewerModalContent}
           closeModal={this.closeSystemViewerModal}/>
 
-        <SplitPane split="vertical" defaultSize={200}>
+        <SplitPane split="vertical" defaultSize={200} onDragFinished={this.resize}>
 
           <div className="SidePanel">
             <ControlPanel scenes={scenes}
@@ -106,12 +112,13 @@ class App extends Component {
               activeIdx={activeIdx}/>
           </div>
 
-          <SplitPane split="horizontal" primary="second" defaultSize={200}>
+          <SplitPane split="horizontal" primary="second" defaultSize={200} onDragFinished={this.resize}>
             <div className="ContentPanel top">
               <div className="Content">
                 <SystemViewer scenes={scenes}activeIdx={activeIdx}
                   activateScene={this.activateScene}
                   deactivateScene={this.deactivateScene}
+                  resize={this.state.resize}
                   openSystemViewerModal={this.openSystemViewerModal}/>
               </div>
             </div>

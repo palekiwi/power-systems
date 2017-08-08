@@ -9,12 +9,14 @@ SystemViewer.propTypes = {
   activeIdx: PropTypes.number,
   openSystemViewerModal: PropTypes.func.isRequired,
   activateScene: PropTypes.func.isRequired,
-  deactivateScene: PropTypes.func.isRequired
+  deactivateScene: PropTypes.func.isRequired,
+  resize: PropTypes.bool
 };
 
-function SystemViewer ({scenes, activeIdx, openSystemViewerModal, activateScene, deactivateScene}) {
+function SystemViewer ({scenes, activeIdx, openSystemViewerModal, activateScene, deactivateScene, resize}) {
   let content = scenes.filter((_, i) => i == activeIdx).map(scene =>
     <Scene key={scene.name} {...scene}
+      resize={resize}
       activateScene={activateScene}
       deactivateScene={deactivateScene}
       openSystemViewerModal={openSystemViewerModal}/>

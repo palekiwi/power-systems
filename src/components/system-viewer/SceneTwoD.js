@@ -23,11 +23,11 @@ class SceneTwoD extends React.Component {
   componentDidMount () {
     window.addEventListener('resize', this.resize);
     this.props.deactivateScene();
-    let width = this.scene.offsetWidth;
-    let height = this.scene.offsetHeight;
-    let grid = isometricGrid({width, height, gridSize: this.props.gridSize});
-    this.setState({width, height, grid});
+    this.resize();
     this.animateEnter();
+  }
+  componentDidUpdate (prevProps, prevState) {
+    if (prevProps.resize != this.props.resize) this.resize();
   }
 
   resize () {
@@ -70,7 +70,8 @@ SceneTwoD.propTypes = {
   structureTiles: PropTypes.array.isRequired,
   openSystemViewerModal: PropTypes.func.isRequired,
   activateScene: PropTypes.func.isRequired,
-  deactivateScene: PropTypes.func.isRequired
+  deactivateScene: PropTypes.func.isRequired,
+  resize: PropTypes.bool
 };
 
 export default SceneTwoD;
