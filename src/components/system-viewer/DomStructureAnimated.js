@@ -1,19 +1,20 @@
 /* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
+import R from 'ramda';
 import { domIsoTile } from '../../helpers/dom-helpers.js';
 import { TweenMax, SteppedEase } from 'gsap';
 
 class DomStructureAnimated extends React.Component {
-  componentWillReceiveProps (nextProps) {
-    console.log(nextProps.grid.tile.width);
-    console.log(nextProps.tile.data.active, this.props.tile.data.active);
-    let img = this.img;
-    let steps = this.props.tile.texture.frames - 1;
-    let width = this.props.grid.tile.width;
-    let active = this.props.tile.data.active;
-    this.anim = TweenMax.to(img, 2, {x: (-width * steps), repeat: -1, ease: SteppedEase.config(steps)});
-    active ? this.anim.play() : this.anim.pause();
+  componentDidUpdate (prevProps) {
+    let activePath = R.path(['tile', 'data', 'active']);
+    if (activePath(prevProps) !== activePath(this.props)) {
+      let img = this.img;
+      let steps = this.props.tile.texture.frames - 1;
+      let width = this.props.grid.tile.width;
+      if (!this.anim) this.anim = TweenMax.to(img, 2, {x: (-width * steps), repeat: -1, ease: SteppedEase.config(steps)});
+      activePath(this.props) ? this.anim.play() : this.anim.pause();
+    }
   }
 
   render () {
