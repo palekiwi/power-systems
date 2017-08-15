@@ -76,6 +76,13 @@ export const windGen = texture({
   size: [1,1,1],
 });
 
+export const windGenAnim = texture({
+  filename: 'blender/wind-gen-anim.png',
+  size: [1,1,1],
+  frames: 30,
+  loop: true
+});
+
 // flat assets
 export const factory = texture({
   filename: 'factory.png',

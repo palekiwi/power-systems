@@ -21,7 +21,7 @@ export const village = case2d({
   system: villageMicrogrid,
   structureTiles: [
     tile({data: {name: 'Diesel Generator', type: 'generator', active: false}, position: vector(0, 0), texture: ST.dieselGenerator}),
-    tile({data: {name: 'Wind Generator', type: 'generator', active: false}, position: vector(2, 0), texture: ST.windGen}),
+    tile({data: {name: 'Wind Generator', type: 'generator', active: false}, position: vector(2, 0), texture: ST.windGenAnim}),
     tile({data: {name: 'Power Grid', type: 'distributor'}, position: vector(1, 1), texture: ST.powerPole}),
     tile({data: {name: 'Farm', type: null}, position: vector(0, 2), texture: ST.farm}),
     tile({data: {name: 'House', type: 'consumer'}, position: vector(1, 2), texture: ST.houseThatched}),

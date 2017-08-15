@@ -34,6 +34,7 @@
   opacity: 0.8;
   background: white;
   cursor: pointer;
+  transition: opacity .3s ease-in;
 }
 
 .Marker:after {
