@@ -1,5 +1,6 @@
 {
   "name": "power-systems",
+  "homepage": "https://dhammafarer.github.io/power-systems",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -27,6 +28,7 @@
     "extract-text-webpack-plugin": "2.1.2",
     "file-loader": "0.11.2",
     "fs-extra": "3.0.1",
+    "gh-pages": "^1.0.0",
     "gsap": "^1.20.2",
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
@@ -55,7 +57,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "node-sass": "^4.5.3",
