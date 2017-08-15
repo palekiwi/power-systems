@@ -53,11 +53,11 @@ class SceneTwoD extends React.Component {
       <div className="SceneTwoD" ref={c => this.scene = c}>
         <DomTerrain grid={this.state.grid} terrainTiles={this.props.terrainTiles}/>
         <Grid grid={this.state.grid} />
-        <DomStructures grid={this.state.grid} structureTiles={this.props.structureTiles}/>
         <Network grid={this.state.grid} structureTiles={this.props.structureTiles}/>
         <Markers grid={this.state.grid}
           handleClick={this.props.openSystemViewerModal}
           structureTiles={this.props.structureTiles}/>
+        <DomStructures grid={this.state.grid} structureTiles={this.props.structureTiles}/>
       </div>
     );
   }

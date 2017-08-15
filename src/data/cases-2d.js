@@ -3,11 +3,11 @@ import vector from '../lib/vector.js';
 import tile, { flatmapToTilesArray } from '../lib/tile.js';
 import { fushanMicrogrid, qimeiMicrogrid } from './power-systems.js';
 import { grass, water } from './terrain-textures.js';
-import { network, windGenerator, factory, factory2, house } from './structure-textures.js';
+import * as ST from './structure-textures.js';
 
 export const fushan = case2d({
   name: 'Fushan Microgrid',
-  gridSize: [3, 3],
+  gridSize: [4, 4],
   terrainTiles: flatmapToTilesArray([
     [grass, grass, grass],
     [grass, grass, grass],
@@ -15,10 +15,12 @@ export const fushan = case2d({
   ]),
   system: fushanMicrogrid,
   structureTiles: [
-    tile({data: {name: 'Diesel Generator', type: 'generator', active: false}, position: vector(0, 0), texture: factory}),
-    tile({data: {name: 'Wind Generator', type: 'generator', active: false}, position: vector(2, 0), texture: windGenerator}),
-    tile({data: {name: 'Power Grid', type: 'distributor'}, position: vector(1, 1), texture: network}),
-    tile({data: {name: 'House', type: 'consumer'}, position: vector(2, 2), texture: house})
+    tile({data: {name: 'Diesel Generator', type: 'generator', active: false}, position: vector(0, 1), texture: ST.dieselGenerator}),
+    tile({data: {name: 'Wind Generator', type: 'generator', active: false}, position: vector(2, 0), texture: ST.windGen}),
+    tile({data: {name: 'Power Grid', type: 'distributor'}, position: vector(1, 1), texture: ST.powerPole}),
+    tile({data: {name: 'Farm', type: null}, position: vector(2, 2), texture: ST.farm}),
+    tile({data: {name: 'House', type: 'consumer'}, position: vector(1, 2), texture: ST.houseThatched})
+
   ]
 });
 
@@ -33,9 +35,9 @@ export const qimei = case2d({
   ]),
   system: qimeiMicrogrid,
   structureTiles: [
-    tile({data: {name: 'Diesel Generator', type: 'generator', active: false}, position: vector(0, 0), texture: factory2}),
-    tile({data: {name: 'Power Grid', type: 'distributor'}, position: vector(2, 1), texture: network}),
-    tile({data: {name: 'House1', type: 'consumer'}, position: vector(3, 2), texture: house}),
-    tile({data: {name: 'House2', type: 'consumer'}, position: vector(0, 2), texture: house})
+    tile({data: {name: 'Diesel Generator', type: 'generator', active: false}, position: vector(0, 0), texture: ST.factory2}),
+    tile({data: {name: 'Power Grid', type: 'distributor'}, position: vector(2, 1), texture: ST.network}),
+    tile({data: {name: 'House1', type: 'consumer'}, position: vector(3, 2), texture: ST.house}),
+    tile({data: {name: 'House2', type: 'consumer'}, position: vector(0, 2), texture: ST.house})
   ]
 });
