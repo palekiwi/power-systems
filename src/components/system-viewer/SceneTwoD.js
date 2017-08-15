@@ -43,7 +43,7 @@ class SceneTwoD extends React.Component {
       .from('.Grid', 0.3, {opacity: 0})
     //.staggerFrom('.DomStructures .Tile', 0.5, {y: "-=10", opacity: 0, ease: 'Cubic.easeOut'}, 0.2)
       .from('.DomStructures .Tile', 0.7, {y: "-=10", opacity: 0, ease: 'Cubic.easeOut'})
-      .from(['.Marker'], 0.5, {opacity: 0}, '-=0.1')
+      .from(['.Markers'], 0.5, {opacity: 0}, '-=0.1')
       .from('.powerline', 0.5, {opacity: 0}, "-=0.8")
       .from('.powerflow', 0.5, {opacity: 0}, "-=0.2");
   }
