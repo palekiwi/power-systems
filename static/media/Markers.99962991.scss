@@ -1,0 +1,47 @@
+.Markers {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.Marker, .Marker:before {
+  box-sizing: border-box;
+  border-radius: 50%;
+  transform-origin: 50% 50%;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  opacity: 0.4;
+  z-index: 2;
+}
+
+.Marker {
+  background: white;
+  transform: scale(1) translate(-50%, -50%);
+}
+
+.Marker:before {
+  content: '';
+  opacity: 0.5;
+  border: 0.1em solid white;
+  animation: pulse 3s 2s infinite;
+}
+
+.Marker:hover {
+  opacity: 1;
+  transition: .3s ease-in;
+  cursor: pointer;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(1.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
