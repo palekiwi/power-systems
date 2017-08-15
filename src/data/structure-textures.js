@@ -11,6 +11,11 @@ export const biomass = texture({
   size: [1,1,1],
 });
 
+export const boat = texture({
+  filename: 'blender/boat.png',
+  size: [1,1,1],
+});
+
 export const communityCenter = texture({
   filename: 'blender/community-center.png',
   size: [1,1,1],

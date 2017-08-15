@@ -9,3 +9,8 @@ export const water = texture({
   filename: 'water.png',
   height: 1.5
 });
+
+export const dirt = texture({
+  filename: 'dirt.png',
+  height: 1.5
+});
