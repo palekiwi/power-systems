@@ -1,10 +1,10 @@
-import case2d from '../../lib/case-2d.js';
+import scene2d from '../../lib/scene-2d.js';
 import vector from '../../lib/vector.js';
 import tile, { flatmapToTilesArray } from '../../lib/tile.js';
-import { grass, water, dirt } from '../terrain-textures.js';
+import { grass, dirt } from '../terrain-textures.js';
 import * as ST from '../structure-textures.js';
 
-export const village = case2d({
+export default scene2d({
   name: 'Village Microgrid',
   gridSize: [3, 3],
   terrainTiles: flatmapToTilesArray([

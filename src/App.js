@@ -5,8 +5,7 @@ import SplitPane from '@kadira/react-split-pane';
 import ControlPanel from './components/ControlPanel.js';
 import SystemViewer from './components/system-viewer/SystemViewer.js';
 import SystemViewerModal from './components/system-viewer/SystemViewerModal.js';
-import { villageMicrogrid, coastMicrogrid, bigIslandMicrogrid, smallIslandMicrogrid } from './data/power-systems.js';
-import { village, coast, bigIsland, smallIsland } from './data/cases-2d.js';
+import scenes from './data/scenes';
 import './App.scss';
 
 const activeLens = activeIdx => compIdx => R.compose(
@@ -29,8 +28,7 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      scenes:[village, coast, smallIsland, bigIsland],
-      systems: [smallIslandMicrogrid, bigIslandMicrogrid, villageMicrogrid, coastMicrogrid],
+      scenes: scenes,
       activeIdx: null,
       showSystemViewerModal: false,
       systemViewerModalContent: null,
