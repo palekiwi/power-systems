@@ -60,7 +60,7 @@ class GraphicModal extends React.Component {
             <div className="graphic-modal-content">
               {content &&
                 <div>
-                  <h1>{content.name}</h1>
+                  <h1>{content.data.name}</h1>
                   <div>
                     <button onClick={closeModal}>close</button>
                   </div>

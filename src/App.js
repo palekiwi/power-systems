@@ -76,7 +76,7 @@ class App extends Component {
     let {left, top} = e.target.getBoundingClientRect();
     this.setState({
       showSystemViewerModal: true,
-      systemViewerModalContent: this.state.systems[this.state.activeIdx].components.find(el => el.name = tile.data.name),
+      systemViewerModalContent: tile,
       systemViewerModalPosition: [left, top]
     });
   }
