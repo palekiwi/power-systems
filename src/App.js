@@ -8,6 +8,7 @@ import SystemViewerModal from './components/system-viewer/SystemViewerModal.js';
 import scenes from './data/scenes';
 import './App.scss';
 
+// lens that focuses on the active field of data object inside a strtucture tile
 const activeLens = activeIdx => compIdx => R.compose(
   R.lensIndex(activeIdx),
   R.lensPath(['structureTiles']),
@@ -15,11 +16,13 @@ const activeLens = activeIdx => compIdx => R.compose(
   R.lensPath(['data', 'active'])
 );
 
+// operation that sets the value of active field in the data object of an array of objects
 const mapActive = R.compose(
   R.map,
   R.assocPath(['data', 'active'])
 );
 
+// update operation of all structure tile objects of a scene
 const toggleSceneActiveState = state => R.adjust(
   R.over(R.lensPath(['structureTiles']), mapActive(state))
 );
@@ -64,8 +67,8 @@ class App extends Component {
 
   toggleTileActive (i) {
     const active = activeLens(this.state.activeIdx)(i);
-    let val = R.not(R.view(active)(this.state.scenes));
-    let scenes = R.set(active, val)(this.state.scenes);
+    const val = R.not(R.view(active)(this.state.scenes));
+    const scenes = R.set(active, val)(this.state.scenes);
     this.setState({scenes});
   }
 
