@@ -3,14 +3,13 @@ import compose from 'ramda/src/compose';
 import head from 'ramda/src/head';
 import tail from 'ramda/src/tail';
 
-// validateCase :: Object -> Array
-export default function  validateCase (options) {
+// validateScene :: Object -> Array
+export default function  validateScene (options) {
   let errors = [];
   let pipeline = [
     handleErrors,
     validateStructuresOverlap,
     validateStructuresPlacement,
-    validateSystemComponents,
     validateTerrainSize
   ].map(fn => fn.bind(null, options));
 
@@ -74,19 +73,6 @@ export function validateStructuresOverlap (options, _errors) {
       }));
     checkOverlap(array);
   }
-}
-
-// calidateSystemComponents :: (Object, Array) -> Array
-export function validateSystemComponents (options, _errors) {
-  let errors = _errors;
-  let {system, structureTiles} = options;
-  let missingTiles = system.components.filter(c => {
-    return structureTiles.map(t => t.data.name).indexOf(c.name) === -1;
-  });
-  if (missingTiles.length) {
-    missingTiles.forEach(c => errors.push(`${c.name} component does not have a tile`));
-  }
-  return errors;
 }
 
 function tileSurfacePoints (tile) {

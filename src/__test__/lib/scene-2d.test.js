@@ -1,9 +1,9 @@
 /* global beforeEach, jest, it, describe, expect */
-import case2d from '../../lib/case-2d.js';
+import scene2d from '../../lib/scene-2d.js';
 import { flatmapToTilesArray } from '../../lib/tile.js';
 import vector from '../../lib/vector.js';
 
-describe('case2d', () => {
+describe('scene2d', () => {
   let options = {};
 
   beforeEach(() => {
@@ -21,6 +21,6 @@ describe('case2d', () => {
   });
 
   it('given correct data, returns case data for rendering in 2d', () => {
-    expect(() => case2d(options)).not.toThrow();
+    expect(() => scene2d(options)).not.toThrow();
   });
 });

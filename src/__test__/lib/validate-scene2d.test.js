@@ -4,11 +4,10 @@ import { flatmapToTilesArray } from '../../lib/tile.js';
 import {
   validateStructuresOverlap,
   validateStructuresPlacement,
-  validateSystemComponents,
   validateTerrainSize
-} from '../../lib/validate-case2d.js';
+} from '../../lib/validate-scene2d.js';
 
-describe('validateCase2d', () => {
+describe('validateScene2d', () => {
   let options = {};
 
   beforeEach(() => {
@@ -74,23 +73,6 @@ describe('validateCase2d', () => {
       let res = validateStructuresOverlap(options, []);
       expect(matchedTiles(res).length).toEqual(1);
       expect(matchedTiles(res)[0]).toEqual(vector(1,0).toString());
-    });
-  });
-
-  describe('validateSystemComponents', () => {
-    beforeEach(() => {
-      options.structureTiles = [
-        {data: {name: 'factory'}, texture: {size: [1,1,1]}, position: vector(0, 0)}
-      ];
-    });
-
-    it('detects if there is no structureTile any system component', () => {
-      let res = validateSystemComponents(options, []);
-      expect(res.length).toEqual(1);
-    });
-    it('detects system components have no tile', () => {
-      let res = validateSystemComponents(options, []);
-      expect(res[0]).toMatch(/biomass/);
     });
   });
 });
