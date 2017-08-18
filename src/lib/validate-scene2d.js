@@ -43,7 +43,7 @@ export function validateStructuresPlacement (options, _errors) {
       !terrainTiles.find(tt => tt.position.equals(v))
     );
     if (missingTiles.length) {
-      errors.push(`${st.data.name} has no terrain tile at positions: ${missingTiles.join(', ')}`);
+      errors.push(`${st.name} has no terrain tile at positions: ${missingTiles.join(', ')}`);
     }
   });
   return errors;
@@ -68,7 +68,7 @@ export function validateStructuresOverlap (options, _errors) {
     tileSurfacePoints(tile)
       .forEach(p => array.forEach(t2 => {
         tileSurfacePoints(t2).forEach(p2 => {
-          if (p2.equals(p)) overlap.push([tile.data.name, t2.data.name, p]);
+          if (p2.equals(p)) overlap.push([tile.name, t2.name, p]);
         });
       }));
     checkOverlap(array);

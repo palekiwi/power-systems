@@ -6,7 +6,6 @@ import R from 'ramda';
 import './SystemViewer.scss';
 
 SystemViewer.propTypes = {
-  scenes: PropTypes.array.isRequired,
   activeScene: PropTypes.object,
   openSystemViewerModal: PropTypes.func.isRequired,
   activateScene: PropTypes.func.isRequired,
@@ -14,7 +13,7 @@ SystemViewer.propTypes = {
   resize: PropTypes.bool
 };
 
-function SystemViewer ({scenes, activeScene, openSystemViewerModal, activateScene, deactivateScene, resize}) {
+function SystemViewer ({activeScene, openSystemViewerModal, activateScene, deactivateScene, resize}) {
 
   return (
     <div className="SystemViewer">

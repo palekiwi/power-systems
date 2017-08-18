@@ -25,6 +25,18 @@ function ControlPanel ({scenes, activeScene, setActiveScene}) {
 
         <hr />
 
+        <div>
+          <h4>Generators:</h4>
+          <div>
+            {!R.isNil(activeScene) && activeScene.structureTiles
+              .filter(R.propEq('type', 'generator'))
+              .map(s => (
+                <div key={s.name}>{s.name}</div>
+              ))
+            }
+          </div>
+        </div>
+
       </div>
     </div>
   );
