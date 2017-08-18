@@ -7,26 +7,9 @@ import ControlPanel from '../components/ControlPanel.js';
 import SystemViewer from '../components/system-viewer/SystemViewer.js';
 import SystemViewerModal from '../components/system-viewer/SystemViewerModal.js';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as actions from '../actions';
 import '../App.scss';
-
-// lens that focuses on the active field of data object inside a strtucture tile
-const activeLens = activeIdx => compIdx => R.compose(
-  R.lensIndex(activeIdx),
-  R.lensPath(['structureTiles']),
-  R.lensIndex(compIdx),
-  R.lensPath(['data', 'active'])
-);
-
-// operation that sets the value of active field in the data object of an array of objects
-const mapActive = R.compose(
-  R.map,
-  R.assocPath(['data', 'active'])
-);
-
-// update operation of all structure tile objects of a scene
-const toggleSceneActiveState = state => R.adjust(
-  R.over(R.lensPath(['structureTiles']), mapActive(state))
-);
 
 class App extends Component {
   constructor (props) {
@@ -48,27 +31,20 @@ class App extends Component {
   }
 
   componentDidMount () {
-    setTimeout(() => this.setActiveIdx(0), 1000);
+    const {scenes} = this.props;
+    const scene = scenes[Object.keys(scenes)[0]];
+    setTimeout(() => this.props.setActiveScene(scene), 1000);
   }
   setActiveIdx (i) {
-    this.setState({activeIdx: i});
   }
 
   activateScene () {
-    let scenes = toggleSceneActiveState(true)(this.state.activeIdx)(this.state.scenes);
-    this.setState({scenes});
   }
 
   deactivateScene () {
-    let scenes = toggleSceneActiveState(false)(this.state.activeIdx)(this.state.scenes);
-    this.setState({scenes});
   }
 
   toggleTileActive (i) {
-    const active = activeLens(this.state.activeIdx)(i);
-    const val = R.not(R.view(active)(this.state.scenes));
-    const scenes = R.set(active, val)(this.state.scenes);
-    this.setState({scenes});
   }
 
   openSystemViewerModal (e, tile) {
@@ -135,8 +111,10 @@ class App extends Component {
 App.propTypes = {
   scenes: PropTypes.object.isRequired,
   activeScene: PropTypes.object,
+  setActiveScene: PropTypes.func.isRequired
 };
 
 const mapStateToProps = R.pick(['scenes', 'activeScene']);
+const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

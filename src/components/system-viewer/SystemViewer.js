@@ -2,32 +2,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Scene from './SceneTwoD.js';
+import R from 'ramda';
 import './SystemViewer.scss';
 
 SystemViewer.propTypes = {
-  scenes: PropTypes.array.isRequired,
-  activeIdx: PropTypes.number,
+  scenes: PropTypes.object.isRequired,
+  activeScene: PropTypes.object,
   openSystemViewerModal: PropTypes.func.isRequired,
   activateScene: PropTypes.func.isRequired,
   deactivateScene: PropTypes.func.isRequired,
   resize: PropTypes.bool
 };
 
-function SystemViewer ({scenes, activeIdx, openSystemViewerModal, activateScene, deactivateScene, resize}) {
-  let content = scenes.filter((_, i) => i == activeIdx).map(scene =>
-    <Scene key={scene.name} {...scene}
-      resize={resize}
-      activateScene={activateScene}
-      deactivateScene={deactivateScene}
-      openSystemViewerModal={openSystemViewerModal}/>
-  );
+function SystemViewer ({scenes, activeScene, openSystemViewerModal, activateScene, deactivateScene, resize}) {
 
   return (
     <div className="SystemViewer">
-      {content.length > 0 ? content :
+      {R.isNil(activeScene) ?
         <div className="selection-prompt">
           Please select a system...
-        </div>}
+        </div>
+        :
+        <Scene {...activeScene}
+          resize={resize}
+          activateScene={activateScene}
+          deactivateScene={deactivateScene}
+          openSystemViewerModal={openSystemViewerModal}
+        />
+      }
     </div>
   );
 }
