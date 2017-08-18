@@ -1,0 +1,1 @@
+export const SCENE_POWER_ON= "SCENE_POWER_ON";

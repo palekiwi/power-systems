@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import R from 'ramda';
 import SplitPane from '@kadira/react-split-pane';
 import ControlPanel from '../components/ControlPanel.js';
 import SystemViewer from '../components/system-viewer/SystemViewer.js';
 import SystemViewerModal from '../components/system-viewer/SystemViewerModal.js';
-import scenes from '../data/scenes';
+import { connect } from 'react-redux';
 import '../App.scss';
 
 // lens that focuses on the active field of data object inside a strtucture tile
@@ -31,8 +32,6 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      scenes: scenes,
-      activeIdx: null,
       showSystemViewerModal: false,
       systemViewerModalContent: null,
       systemViewerModalPosition:[0, 0],
@@ -93,7 +92,7 @@ class App extends Component {
   }
 
   render() {
-    let {scenes, activeIdx} = this.state;
+    let {scenes, activeScene} = this.props;
     return (
       <div className="App">
         <SystemViewerModal data={this.state.systemViewerModalContent}
@@ -110,13 +109,13 @@ class App extends Component {
               activateScene={this.activateScene}
               deactivateScene={this.deactivateScene}
               handleInput={this.toggleTileActive}
-              activeIdx={activeIdx}/>
+              activeScene={activeScene}/>
           </div>
 
           <SplitPane split="horizontal" primary="second" defaultSize={200} onDragFinished={this.resize}>
             <div className="ContentPanel top">
               <div className="Content">
-                <SystemViewer scenes={scenes}activeIdx={activeIdx}
+                <SystemViewer scenes={scenes} activeScene={activeScene}
                   activateScene={this.activateScene}
                   deactivateScene={this.deactivateScene}
                   resize={this.state.resize}
@@ -133,4 +132,11 @@ class App extends Component {
   }
 }
 
-export default App;
+App.propTypes = {
+  scenes: PropTypes.array.isRequired,
+  activeScene: PropTypes.object,
+};
+
+const mapStateToProps = R.pick(['scenes', 'activeScene']);
+
+export default connect(mapStateToProps)(App);
