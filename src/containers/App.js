@@ -133,7 +133,7 @@ class App extends Component {
 }
 
 App.propTypes = {
-  scenes: PropTypes.array.isRequired,
+  scenes: PropTypes.object.isRequired,
   activeScene: PropTypes.object,
 };
 

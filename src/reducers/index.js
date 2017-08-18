@@ -11,8 +11,18 @@ const scenes = (state = initialState.scenes, action) => {
   }
 };
 
+const activeScene = (state = initialState.activeScene, action) => {
+  switch (action.type) {
+  case types.SET_ACTIVE_SCENE:
+    return action.scene;
+  default:
+    return state;
+  }
+};
+
 const rootReducer = combineReducers({
-  scenes
+  scenes,
+  activeScene
 });
 
 export default rootReducer;

@@ -1,1 +1,2 @@
 export const SCENE_POWER_ON= "SCENE_POWER_ON";
+export const SET_ACTIVE_SCENE = "SET_ACTIVE_SCENE";

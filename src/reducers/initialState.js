@@ -1,4 +1,4 @@
 export default {
   scenes: {},
-  activeScene: {}
+  activeScene: null
 };

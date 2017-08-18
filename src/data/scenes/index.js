@@ -1,7 +1,6 @@
+import R from 'ramda';
 import village from './village.js';
 import coast from './coast.js';
 
-export default [
-  village,
-  coast
-];
+const ss = [village, coast];
+export default R.zipObj(R.pluck('name', ss), ss);
