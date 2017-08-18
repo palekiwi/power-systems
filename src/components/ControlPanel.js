@@ -1,17 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import R from 'ramda';
 
 ControlPanel.propTypes = {
-  scenes: PropTypes.object.isRequired,
-  activeScene: PropTypes.object
+  scenes: PropTypes.array.isRequired,
+  activeScene: PropTypes.object,
+  setActiveScene: PropTypes.func.isRequired
 };
 
-function ControlPanel ({scenes, activeScene}) {
+function ControlPanel ({scenes, activeScene, setActiveScene}) {
   return (
     <div className='ControlPanel' >
       <div className='content'>
         <h3>Power Systems</h3>
         <div>
+          {scenes.map(s => (
+            <div key={s.name}>
+              <button onClick={() => setActiveScene(s)}>
+                {s.name}
+              </button>
+            </div>)
+          )}
         </div>
 
         <hr />

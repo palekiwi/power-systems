@@ -31,9 +31,8 @@ class App extends Component {
   }
 
   componentDidMount () {
-    const {scenes} = this.props;
-    const scene = scenes[Object.keys(scenes)[0]];
-    setTimeout(() => this.props.setActiveScene(scene), 1000);
+    const {scenes, setActiveScene} = this.props;
+    setTimeout(() => setActiveScene(R.head(scenes)), 1000);
   }
   setActiveIdx (i) {
   }
@@ -68,7 +67,7 @@ class App extends Component {
   }
 
   render() {
-    let {scenes, activeScene} = this.props;
+    let {scenes, activeScene, setActiveScene} = this.props;
     return (
       <div className="App">
         <SystemViewerModal data={this.state.systemViewerModalContent}
@@ -81,7 +80,7 @@ class App extends Component {
 
           <div className="SidePanel">
             <ControlPanel scenes={scenes}
-              setActiveIdx={this.setActiveIdx}
+              setActiveScene={setActiveScene}
               activateScene={this.activateScene}
               deactivateScene={this.deactivateScene}
               handleInput={this.toggleTileActive}
@@ -109,7 +108,7 @@ class App extends Component {
 }
 
 App.propTypes = {
-  scenes: PropTypes.object.isRequired,
+  scenes: PropTypes.array.isRequired,
   activeScene: PropTypes.object,
   setActiveScene: PropTypes.func.isRequired
 };

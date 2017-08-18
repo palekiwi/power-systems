@@ -28,6 +28,10 @@ class SceneTwoD extends React.Component {
   }
   componentDidUpdate (prevProps, prevState) {
     if (prevProps.resize != this.props.resize) this.resize();
+    if (prevProps.name != this.props.name) {
+      this.resize();
+      this.animateEnter();
+    }
   }
 
   resize () {
@@ -65,8 +69,8 @@ class SceneTwoD extends React.Component {
 }
 
 SceneTwoD.propTypes = {
+  name: PropTypes.string.isRequired,
   gridSize: PropTypes.array.isRequired,
-  system: PropTypes.object.isRequired,
   terrainTiles: PropTypes.array.isRequired,
   structureTiles: PropTypes.array.isRequired,
   openSystemViewerModal: PropTypes.func.isRequired,
