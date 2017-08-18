@@ -6,3 +6,10 @@ export function setActiveScene (scene) {
     scene
   };
 }
+
+export function sceneTogglePower (bool) {
+  return {
+    type: types.SCENE_TOGGLE_POWER,
+    value: bool
+  };
+}

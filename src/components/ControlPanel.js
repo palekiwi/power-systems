@@ -31,7 +31,10 @@ function ControlPanel ({scenes, activeScene, setActiveScene}) {
             {!R.isNil(activeScene) && activeScene.structureTiles
               .filter(R.propEq('type', 'generator'))
               .map(s => (
-                <div key={s.name}>{s.name}</div>
+                <div key={s.name}>
+                  <span>{s.name}</span>
+                  <input type="checkbox"/>
+                </div>
               ))
             }
           </div>
