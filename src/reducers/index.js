@@ -10,9 +10,11 @@ const mapActive = R.compose(
 );
 
 // update operation of all structure tile objects of a scene
-const toggleSceneActiveState = bool =>
-  R.over(R.lensPath(['structureTiles']), mapActive(bool)
-);
+const toggleSceneActiveState = (bool, state) =>
+  R.over(
+    R.lensPath(['structureTiles']),
+    mapActive(bool)
+  )(state);
 
 const scenes = (state = initialState.scenes, action) => {
   switch (action.type) {
@@ -26,7 +28,7 @@ const activeScene = (state = initialState.activeScene, action) => {
   case types.SET_ACTIVE_SCENE:
     return action.scene;
   case types.SCENE_TOGGLE_POWER:
-    return toggleSceneActiveState(action.value, state);
+    return toggleSceneActiveState(action.bool, state);
   default:
     return state;
   }

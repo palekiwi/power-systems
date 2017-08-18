@@ -67,7 +67,7 @@ class App extends Component {
   }
 
   render() {
-    let {scenes, activeScene, setActiveScene} = this.props;
+    let {scenes, activeScene, setActiveScene, sceneTogglePower} = this.props;
     return (
       <div className="App">
         <SystemViewerModal data={this.state.systemViewerModalContent}
@@ -81,8 +81,7 @@ class App extends Component {
           <div className="SidePanel">
             <ControlPanel scenes={scenes}
               setActiveScene={setActiveScene}
-              activateScene={this.activateScene}
-              deactivateScene={this.deactivateScene}
+              sceneTogglePower={sceneTogglePower}
               handleInput={this.toggleTileActive}
               activeScene={activeScene}/>
           </div>
@@ -110,7 +109,8 @@ class App extends Component {
 App.propTypes = {
   scenes: PropTypes.array.isRequired,
   activeScene: PropTypes.object,
-  setActiveScene: PropTypes.func.isRequired
+  setActiveScene: PropTypes.func.isRequired,
+  sceneTogglePower: PropTypes.func.isRequired
 };
 
 const mapStateToProps = R.pick(['scenes', 'activeScene']);

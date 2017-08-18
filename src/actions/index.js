@@ -10,6 +10,6 @@ export function setActiveScene (scene) {
 export function sceneTogglePower (bool) {
   return {
     type: types.SCENE_TOGGLE_POWER,
-    value: bool
+    bool
   };
 }

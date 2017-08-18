@@ -4,8 +4,6 @@ import configureStore from '../store/configureStore.js';
 import App from './App.js';
 import scenes from '../data/scenes';
 
-/* eslint-disable no-console */
-console.log(scenes);
 const store = configureStore({
   scenes: scenes
 });

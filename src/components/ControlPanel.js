@@ -5,10 +5,11 @@ import R from 'ramda';
 ControlPanel.propTypes = {
   scenes: PropTypes.array.isRequired,
   activeScene: PropTypes.object,
-  setActiveScene: PropTypes.func.isRequired
+  setActiveScene: PropTypes.func.isRequired,
+  sceneTogglePower: PropTypes.func.isRequired
 };
 
-function ControlPanel ({scenes, activeScene, setActiveScene}) {
+function ControlPanel ({scenes, activeScene, setActiveScene, sceneTogglePower}) {
   return (
     <div className='ControlPanel' >
       <div className='content'>
@@ -25,6 +26,13 @@ function ControlPanel ({scenes, activeScene, setActiveScene}) {
 
         <hr />
 
+        <div>
+          <h4>Settings:</h4>
+          <div>
+            <button onClick={() => sceneTogglePower(true)}>ON</button>
+            <button onClick={() => sceneTogglePower(false)}>OFF</button>
+          </div>
+        </div>
         <div>
           <h4>Generators:</h4>
           <div>
