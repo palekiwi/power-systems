@@ -20,9 +20,9 @@ class SceneTwoD extends React.Component {
     };
     this.resize = this.resize.bind(this);
   }
+
   componentDidMount () {
     window.addEventListener('resize', this.resize);
-    this.props.deactivateScene();
     this.resize();
     this.animateEnter();
   }
@@ -74,8 +74,6 @@ SceneTwoD.propTypes = {
   terrainTiles: PropTypes.array.isRequired,
   structureTiles: PropTypes.array.isRequired,
   openSystemViewerModal: PropTypes.func.isRequired,
-  activateScene: PropTypes.func.isRequired,
-  deactivateScene: PropTypes.func.isRequired,
   resize: PropTypes.bool
 };
 

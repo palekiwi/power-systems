@@ -1,4 +1,9 @@
 export default {
   scenes: {},
-  activeScene: null
+  activeScene: null,
+  ui: {
+    systemViewerModal: false,
+    systemViewerPosition: [0, 0],
+    resize: new Date()
+  }
 };

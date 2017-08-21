@@ -5,7 +5,7 @@ import App from './App.js';
 import scenes from '../data/scenes';
 
 const store = configureStore({
-  scenes: scenes
+  scenes
 });
 
 export default class Root extends React.Component {
