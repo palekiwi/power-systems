@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import R from 'ramda';
 import SplitPane from '@kadira/react-split-pane';
-import ControlPanel from '../components/ControlPanel.js';
+import ControlPanel from './ControlPanel.js';
 import SystemViewer from '../components/system-viewer/SystemViewer.js';
 import SystemViewerModal from '../components/system-viewer/SystemViewerModal.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actions from '../actions';
+import * as actions from '../actions/activeSceneActions.js';
 import '../App.scss';
 
 class App extends Component {
@@ -79,11 +79,7 @@ class App extends Component {
         <SplitPane split="vertical" defaultSize={200} onDragFinished={this.resize}>
 
           <div className="SidePanel">
-            <ControlPanel scenes={scenes}
-              setActiveScene={setActiveScene}
-              sceneTogglePower={sceneTogglePower}
-              handleInput={this.toggleTileActive}
-              activeScene={activeScene}/>
+            <ControlPanel />
           </div>
 
           <SplitPane split="horizontal" primary="second" defaultSize={200} onDragFinished={this.resize}>
