@@ -3,20 +3,30 @@ import PropTypes from 'prop-types';
 import { domIsoCircle } from '../../helpers/dom-helpers.js';
 import './Markers.scss';
 
+const handleOpenSVModal = (props) => (e, tile) => {
+  /* eslint-disable no-console */
+  console.log('open¡');
+  const {left, top} = e.target.getBoundingClientRect();
+  props.setActiveStructure(tile);
+  props.openSVModal([left, top]);
+};
+
 Markers.propTypes = {
   grid: PropTypes.object.isRequired,
   structureTiles: PropTypes.array.isRequired,
-  handleClick: PropTypes.func.isRequired
+  openSVModal: PropTypes.func.isRequired,
+  closeSVModal: PropTypes.func.isRequired,
+  setActiveStructure: PropTypes.func.isRequired,
 };
 
-function Markers ({grid, structureTiles, handleClick}) {
+function Markers (props) {
   return (
     <div className='Markers'>
-      {structureTiles.map((t, i)=> {
-        let style = domIsoCircle(grid, t);
+      {props.structureTiles.map((t, i)=> {
+        let style = domIsoCircle(props.grid, t);
         return (
           <div key={i} className='Marker'
-            onClick={(e) => handleClick(e, t)}
+            onClick={e => handleOpenSVModal(props)(e, t)}
             style={style}/>
         );
       }

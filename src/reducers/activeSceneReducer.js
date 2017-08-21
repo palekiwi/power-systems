@@ -26,9 +26,9 @@ const activeLens = activeIdx => compIdx => R.compose(
 export default function activeScene (state = initialState.activeScene, action) {
   switch (action.type) {
   case types.SET_ACTIVE_SCENE:
-    return action.scene;
+    return action.payload;
   case types.SCENE_TOGGLE_POWER:
-    return toggleSceneActiveState(action.bool, state);
+    return toggleSceneActiveState(action.payload, state);
   default:
     return state;
   }

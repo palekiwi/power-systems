@@ -1,9 +1,10 @@
 export default {
   scenes: {},
   activeScene: null,
+  activeStructure: null,
   ui: {
-    systemViewerModal: false,
-    systemViewerPosition: [0, 0],
+    SVModal: false,
+    SVModalPosition: [0, 0],
     resizePane: new Date()
   }
 };

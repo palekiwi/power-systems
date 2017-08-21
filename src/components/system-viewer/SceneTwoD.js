@@ -26,7 +26,7 @@ class SceneTwoD extends React.Component {
     this.resize();
     this.animateEnter();
   }
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate (prevProps) {
     if (prevProps.resizePane != this.props.resizePane) this.resize();
     if (prevProps.name != this.props.name) {
       this.resize();
@@ -60,7 +60,9 @@ class SceneTwoD extends React.Component {
         <Grid grid={this.state.grid} />
         <Network grid={this.state.grid} structureTiles={this.props.structureTiles}/>
         <Markers grid={this.state.grid}
-          handleClick={this.props.openSystemViewerModal}
+          setActiveStructure={this.props.setActiveStructure}
+          openSVModal={this.props.openSVModal}
+          closeSVModal={this.props.closeSVModal}
           structureTiles={this.props.structureTiles}/>
         <DomStructures grid={this.state.grid} structureTiles={this.props.structureTiles}/>
       </div>
@@ -73,7 +75,9 @@ SceneTwoD.propTypes = {
   gridSize: PropTypes.array.isRequired,
   terrainTiles: PropTypes.array.isRequired,
   structureTiles: PropTypes.array.isRequired,
-  openSystemViewerModal: PropTypes.func.isRequired,
+  openSVModal: PropTypes.func.isRequired,
+  closeSVModal: PropTypes.func.isRequired,
+  setActiveStructure: PropTypes.func.isRequired,
   resizePane: PropTypes.object
 };
 

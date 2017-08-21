@@ -5,24 +5,34 @@ import Scene from '../components/system-viewer/SceneTwoD.js';
 import R from 'ramda';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actions from '../actions/uiActions.js';
+import * as uiActions from '../actions/uiActions.js';
+import * as activeStructureActions from '../actions/activeStructureActions.js';
 import './SystemViewer.scss';
+
+const actions = R.merge(uiActions, activeStructureActions);
 
 SystemViewer.propTypes = {
   activeScene: PropTypes.object,
-  ui: PropTypes.object
+  ui: PropTypes.object,
+  setActiveStructure: PropTypes.func.isRequired,
+  openSVModal: PropTypes.func.isRequired,
+  closeSVModal: PropTypes.func.isRequired
 };
 
-function SystemViewer ({activeScene, ui}) {
+function SystemViewer (props) {
 
   return (
     <div className="SystemViewer">
-      {R.isNil(activeScene) ?
+      {R.isNil(props.activeScene) ?
         <div className="selection-prompt">
           Please select a system...
         </div>
         :
-        <Scene {...activeScene} resizePane={ui.resizePane} />
+        <Scene {...props.activeScene}
+          openSVModal={props.openSVModal}
+          closeSVModal={props.closeSVModal}
+          setActiveStructure={props.setActiveStructure}
+          resizePane={props.ui.resizePane} />
       }
     </div>
   );

@@ -6,3 +6,16 @@ export function resizePane () {
     payload: new Date()
   };
 }
+
+export function openSVModal (position) {
+  return {
+    type: types.OPEN_SYSTEM_VIEWER_MODAL,
+    payload: position
+  };
+}
+
+export function closeSVModal () {
+  return {
+    type: types.CLOSE_SYSTEM_VIEWER_MODAL
+  };
+}
