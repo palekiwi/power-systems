@@ -5,7 +5,7 @@ import R from 'ramda';
 export default function ui(state = initialState.ui, action) {
   switch (action.type) {
   case types.RESIZE_PANE:
-    return R.assoc('resize', new Date(), state);
+    return R.assoc('resizePane', new Date(), state);
   default:
     return state;
   }

@@ -27,7 +27,7 @@ class SceneTwoD extends React.Component {
     this.animateEnter();
   }
   componentDidUpdate (prevProps, prevState) {
-    if (prevProps.resize != this.props.resize) this.resize();
+    if (prevProps.resizePane != this.props.resizePane) this.resize();
     if (prevProps.name != this.props.name) {
       this.resize();
       this.animateEnter();
@@ -74,7 +74,7 @@ SceneTwoD.propTypes = {
   terrainTiles: PropTypes.array.isRequired,
   structureTiles: PropTypes.array.isRequired,
   openSystemViewerModal: PropTypes.func.isRequired,
-  resize: PropTypes.bool
+  resizePane: PropTypes.object
 };
 
 export default SceneTwoD;

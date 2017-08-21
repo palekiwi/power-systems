@@ -4,6 +4,6 @@ export default {
   ui: {
     systemViewerModal: false,
     systemViewerPosition: [0, 0],
-    resize: new Date()
+    resizePane: new Date()
   }
 };

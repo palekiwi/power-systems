@@ -5,14 +5,15 @@ import Scene from '../components/system-viewer/SceneTwoD.js';
 import R from 'ramda';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actions from '../actions/activeSceneActions.js';
+import * as actions from '../actions/uiActions.js';
 import './SystemViewer.scss';
 
 SystemViewer.propTypes = {
-  activeScene: PropTypes.object
+  activeScene: PropTypes.object,
+  ui: PropTypes.object
 };
 
-function SystemViewer ({activeScene}) {
+function SystemViewer ({activeScene, ui}) {
 
   return (
     <div className="SystemViewer">
@@ -21,13 +22,13 @@ function SystemViewer ({activeScene}) {
           Please select a system...
         </div>
         :
-        <Scene {...activeScene} />
+        <Scene {...activeScene} resizePane={ui.resizePane} />
       }
     </div>
   );
 }
 
-const mapStateToProps = R.pick(['activeScene']);
+const mapStateToProps = R.pick(['activeScene', 'ui']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SystemViewer);
