@@ -7,9 +7,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as uiActions from '../actions/uiActions.js';
 import * as activeStructureActions from '../actions/activeStructureActions.js';
+import * as svModalActions from '../actions/svModalActions.js';
 import './SystemViewer.scss';
 
-const actions = R.merge(uiActions, activeStructureActions);
+const actions = R.mergeAll([uiActions, svModalActions, activeStructureActions]);
 
 SystemViewer.propTypes = {
   activeScene: PropTypes.object,

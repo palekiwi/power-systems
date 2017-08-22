@@ -5,7 +5,7 @@ import Transition from 'react-transition-group/Transition';
 import { TimelineMax } from 'gsap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as uiActions from '../actions/uiActions.js';
+import * as actions from '../actions/svModalActions.js';
 import R from 'ramda';
 import './SystemViewerModal.scss';
 
@@ -80,6 +80,6 @@ SystemViewerModal.propTypes = {
 };
 
 const mapStateToProps = R.pick(['activeStructure', 'SVModal']);
-const mapDispatchToProps = (dispatch) => bindActionCreators(uiActions, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SystemViewerModal);
