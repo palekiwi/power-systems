@@ -36,7 +36,7 @@ export default function activeScene (state = initialState.activeScene, action) {
     return toggleSceneActiveState(action.payload, state);
 
   case types.TOGGLE_STRUCTURE_ACTIVE:
-    return state;
+    return toggleStructureActive(action.payload)(state);
 
   default:
     return state;
