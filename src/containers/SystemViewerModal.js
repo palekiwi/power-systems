@@ -61,7 +61,7 @@ class SystemViewerModal extends React.Component {
                 <div>
                   <h1>{activeStructure.name}</h1>
                   <div>
-                    <button onClick={closeSVModal}>close</button>
+                    <button onClick={() => closeSVModal()}>close</button>
                   </div>
                 </div>
               }

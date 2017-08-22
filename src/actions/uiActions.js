@@ -7,15 +7,16 @@ export function resizePane () {
   };
 }
 
-export function openSVModal (position) {
+export function openSVModal (position = [0,0]) {
   return {
     type: types.OPEN_SYSTEM_VIEWER_MODAL,
     payload: position
   };
 }
 
-export function closeSVModal () {
+export function closeSVModal (position = [0,0]) {
   return {
-    type: types.CLOSE_SYSTEM_VIEWER_MODAL
+    type: types.CLOSE_SYSTEM_VIEWER_MODAL,
+    payload: position
   };
 }

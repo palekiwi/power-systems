@@ -2,7 +2,7 @@ import initialState from './initialState.js';
 import * as types from '../constants/actionTypes.js';
 import R from 'ramda';
 
-const toggleSVModal = (bool) => ({payload} = [0,0]) =>
+const toggleSVModal = (bool) => ({payload}) =>
   R.merge(R.__, {
     show: bool,
     position: payload
