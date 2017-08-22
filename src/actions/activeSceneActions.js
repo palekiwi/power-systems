@@ -20,3 +20,15 @@ export function toggleStructureActive (idx) {
     payload: idx
   };
 }
+
+export function setEmptyActiveScene () {
+  return {
+    type: types.SET_EMPTY_ACTIVE_SCENE,
+    payload: {
+      name: '',
+      terrainTiles: [],
+      structureTiles: [],
+      gridSize: []
+    }
+  };
+}

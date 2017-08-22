@@ -32,6 +32,9 @@ export default function activeScene (state = initialState.activeScene, action) {
   case types.SET_ACTIVE_SCENE:
     return action.payload;
 
+  case types.SET_EMPTY_ACTIVE_SCENE:
+    return action.payload;
+
   case types.SCENE_TOGGLE_POWER:
     return toggleSceneActiveState(action.payload, state);
 

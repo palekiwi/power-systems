@@ -4,14 +4,19 @@ import PropTypes from 'prop-types';
 import R from 'ramda';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actions from '../actions/activeSceneActions.js';
+import * as activeSceneActions from '../actions/activeSceneActions.js';
+import * as editorActions from '../actions/editorActions.js';
+
+const actions = R.mergeAll([activeSceneActions, editorActions]);
 
 ControlPanel.propTypes = {
   scenes: PropTypes.array.isRequired,
   activeScene: PropTypes.object,
   setActiveScene: PropTypes.func.isRequired,
   sceneTogglePower: PropTypes.func.isRequired,
-  toggleStructureActive: PropTypes.func.isRequired
+  setEmptyActiveScene: PropTypes.func.isRequired,
+  toggleStructureActive: PropTypes.func.isRequired,
+  editorOn: PropTypes.func.isRequired
 };
 
 function ControlPanel (props) {
@@ -27,6 +32,7 @@ function ControlPanel (props) {
               </button>
             </div>)
           )}
+          <button onClick={props.setEmptyActiveScene}>New</button>
         </div>
 
         <hr />
@@ -50,9 +56,11 @@ function ControlPanel (props) {
                 ))
               }
             </div>
+            <div>
+              <button onClick={props.editorOn}>Edit</button>
+            </div>
           </div>
         }
-
       </div>
     </div>
   );

@@ -15,6 +15,7 @@ const actions = R.mergeAll([uiActions, svModalActions, activeStructureActions]);
 SystemViewer.propTypes = {
   activeScene: PropTypes.object,
   ui: PropTypes.object,
+  editor: PropTypes.bool,
   setActiveStructure: PropTypes.func.isRequired,
   openSVModal: PropTypes.func.isRequired,
   closeSVModal: PropTypes.func.isRequired
@@ -28,18 +29,21 @@ function SystemViewer (props) {
         <div className="selection-prompt">
           Please select a system...
         </div>
+        : props.editor ?
+        <div>{props.activeScene.name}</div>
         :
         <Scene {...props.activeScene}
           openSVModal={props.openSVModal}
           closeSVModal={props.closeSVModal}
           setActiveStructure={props.setActiveStructure}
-          resizePane={props.ui.resizePane} />
-      }
+          resizePane={props.ui.resizePane}
+        />
+     }
     </div>
   );
 }
 
-const mapStateToProps = R.pick(['activeScene', 'ui']);
+const mapStateToProps = R.pick(['activeScene', 'ui', 'editor']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SystemViewer);
