@@ -7,7 +7,7 @@ import { TweenMax, SteppedEase } from 'gsap';
 
 class DomStructureAnimated extends React.Component {
   componentDidUpdate (prevProps) {
-    let activePath = R.path(['tile', 'data', 'active']);
+    let activePath = R.path(['tile', 'active']);
     if (activePath(prevProps) !== activePath(this.props)) {
       let img = this.img;
       let steps = this.props.tile.texture.frames;
