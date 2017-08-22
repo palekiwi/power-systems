@@ -1,6 +1,7 @@
 // active scene
 export const SCENE_TOGGLE_POWER = "SCENE_TOGGLE_POWER";
 export const SET_ACTIVE_SCENE = "SET_ACTIVE_SCENE";
+export const TOGGLE_STRUCTURE_ACTIVE = "TOGGLE_STRUCTURE_ACTIVE";
 
 // active structure
 export const SET_ACTIVE_STRUCTURE = "SET_ACTIVE_STRUCTURE";

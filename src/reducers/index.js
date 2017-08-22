@@ -4,13 +4,15 @@ import activeStructure from './activeStructureReducer.js';
 import scenes from './scenesReducer.js';
 import ui from './uiReducer.js';
 import SVModal from './svModalReducer.js';
+import editor from './editorReducer.js';
 
 const rootReducer = combineReducers({
   scenes,
   activeScene,
   activeStructure,
   ui,
-  SVModal
+  SVModal,
+  editor
 });
 
 export default rootReducer;

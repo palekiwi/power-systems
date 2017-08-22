@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
 import R from 'ramda';
@@ -9,18 +10,19 @@ ControlPanel.propTypes = {
   scenes: PropTypes.array.isRequired,
   activeScene: PropTypes.object,
   setActiveScene: PropTypes.func.isRequired,
-  sceneTogglePower: PropTypes.func.isRequired
+  sceneTogglePower: PropTypes.func.isRequired,
+  toggleStructureActive: PropTypes.func.isRequired
 };
 
-function ControlPanel ({scenes, activeScene, setActiveScene, sceneTogglePower}) {
+function ControlPanel (props) {
   return (
     <div className='ControlPanel' >
       <div className='content'>
         <h3>Power Systems</h3>
         <div>
-          {scenes.map(s => (
+          {props.scenes.map(s => (
             <div key={s.name}>
-              <button onClick={() => setActiveScene(s)}>
+              <button onClick={() => props.setActiveScene(s)}>
                 {s.name}
               </button>
             </div>)
@@ -28,28 +30,28 @@ function ControlPanel ({scenes, activeScene, setActiveScene, sceneTogglePower}) 
         </div>
 
         <hr />
-
-        <div>
-          <h4>Settings:</h4>
+        {!R.isNil(props.activeScene) &&
           <div>
-            <button onClick={() => sceneTogglePower(true)}>ON</button>
-            <button onClick={() => sceneTogglePower(false)}>OFF</button>
+            <h4>Generators:</h4>
+            <div>
+              <button onClick={() => props.sceneTogglePower(true)}>All ON</button>
+              <button onClick={() => props.sceneTogglePower(false)}>All OFF</button>
+            </div>
+            <div>
+              {props.activeScene.structureTiles
+                .filter(R.propEq('type', 'generator'))
+                .map((s, i) => (
+                  <div key={s.name}>
+                    <span>{s.name}</span>
+                    <input type="checkbox"
+                      onChange={() => props.toggleStructureActive(i)}
+                      checked={s.active}/>
+                  </div>
+                ))
+              }
+            </div>
           </div>
-        </div>
-        <div>
-          <h4>Generators:</h4>
-          <div>
-            {!R.isNil(activeScene) && activeScene.structureTiles
-              .filter(R.propEq('type', 'generator'))
-              .map(s => (
-                <div key={s.name}>
-                  <span>{s.name}</span>
-                  <input type="checkbox"/>
-                </div>
-              ))
-            }
-          </div>
-        </div>
+        }
 
       </div>
     </div>

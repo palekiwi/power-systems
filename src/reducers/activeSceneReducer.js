@@ -16,19 +16,28 @@ const toggleSceneActiveState = (bool, state) =>
   )(state);
 
 // lens that focuses on the active field of data object inside a strtucture tile
-const activeLens = activeIdx => compIdx => R.compose(
-  R.lensIndex(activeIdx),
-  R.lensPath(['structureTiles']),
-  R.lensIndex(compIdx),
-  R.lensPath(['data', 'active'])
-);
+const activeLens = tileIdx =>
+  R.compose(
+    R.lensPath(['structureTiles']),
+    R.lensIndex(tileIdx),
+    R.lensPath(['active'])
+  );
+
+const toggleStructureActive = idx =>
+  R.over(activeLens(idx), R.not);
 
 export default function activeScene (state = initialState.activeScene, action) {
   switch (action.type) {
+
   case types.SET_ACTIVE_SCENE:
     return action.payload;
+
   case types.SCENE_TOGGLE_POWER:
     return toggleSceneActiveState(action.payload, state);
+
+  case types.TOGGLE_STRUCTURE_ACTIVE:
+    return state;
+
   default:
     return state;
   }

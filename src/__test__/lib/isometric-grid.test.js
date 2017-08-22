@@ -12,7 +12,7 @@ describe('isometricGrid', () => {
       height: 40,
       ratio: 2,
       gridSize: [2,2],
-      padding: [20, 10],
+      minPadding: 1,
       tile: {
         width: 20,
         height: 10
