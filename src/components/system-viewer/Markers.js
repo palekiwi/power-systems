@@ -4,8 +4,6 @@ import { domIsoCircle } from '../../helpers/dom-helpers.js';
 import './Markers.scss';
 
 const handleOpenSVModal = (props) => (e, tile) => {
-  /* eslint-disable no-console */
-  console.log('open¡');
   const {left, top} = e.target.getBoundingClientRect();
   props.setActiveStructure(tile);
   props.openSVModal([left, top]);

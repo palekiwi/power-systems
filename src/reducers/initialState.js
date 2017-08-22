@@ -2,9 +2,11 @@ export default {
   scenes: {},
   activeScene: null,
   activeStructure: null,
+  SVModal: {
+    show: false,
+    position: [0,0]
+  },
   ui: {
-    SVModal: false,
-    SVModalPosition: [0, 0],
     resizePane: new Date()
   }
 };

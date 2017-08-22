@@ -5,7 +5,7 @@ import R from 'ramda';
 import SplitPane from '@kadira/react-split-pane';
 import ControlPanel from './ControlPanel.js';
 import SystemViewer from './SystemViewer.js';
-import SystemViewerModal from '../components/system-viewer/SystemViewerModal.js';
+import SystemViewerModal from './SystemViewerModal.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as uiActions from '../actions/uiActions.js';
@@ -16,22 +16,6 @@ class App extends Component {
   componentDidMount () {
     const {scenes, setActiveScene} = this.props;
     setTimeout(() => setActiveScene(R.head(scenes)), 1000);
-  }
-
-  openSystemViewerModal (e, tile) {
-    let {left, top} = e.target.getBoundingClientRect();
-    this.setState({
-      showSystemViewerModal: true,
-      systemViewerModalContent: tile,
-      systemViewerModalPosition: [left, top]
-    });
-  }
-
-  closeSystemViewerModal () {
-    this.setState({
-      showSystemViewerModal: false,
-      systemViewerModalContent: null
-    });
   }
 
   render() {

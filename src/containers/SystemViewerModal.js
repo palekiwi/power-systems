@@ -3,9 +3,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Transition from 'react-transition-group/Transition';
 import { TimelineMax } from 'gsap';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as uiActions from '../actions/uiActions.js';
+import R from 'ramda';
 import './SystemViewerModal.scss';
 
-class GraphicModal extends React.Component {
+class SystemViewerModal extends React.Component {
   constructor (props) {
     super(props);
     this.onEnter = this.onEnter.bind(this);
@@ -22,7 +26,7 @@ class GraphicModal extends React.Component {
     this.tl
       .set(node, {display: 'block'});
     let {left, top} = frame.getBoundingClientRect();
-    let [x, y] = this.props.position;
+    let [x, y] = this.props.SVModal.position;
     this.tl
       .set(ripple, {left: x - left, top: y - top})
       .to(ripple, 0.5, {transform: 'scale(50)', ease: 'Cubic.easeIn'})
@@ -40,29 +44,24 @@ class GraphicModal extends React.Component {
       .set(node, {display: 'none'});
   }
 
-  end (done) {
-    console.log(done);
-    return done();
-  }
-
   render () {
-    const {closeModal, showModal, content} = this.props;
+    const {SVModal, activeStructure, closeSVModal} = this.props;
     return (
-      <Transition in={showModal}
+      <Transition in={SVModal.show}
         onEnter={this.onEnter}
         onExit={this.onExit}
         addEndListener={(node, done) => this.tl.eventCallback('onComplete', done)}
         timeout={300}>
         <div className="graphic-modal">
-          <div className="graphic-modal-background" onClick={() => closeModal()}></div>
+          <div className="graphic-modal-background" onClick={() => closeSVModal()}></div>
           <div className="graphic-modal-frame">
             <div className="ripple"/>
             <div className="graphic-modal-content">
-              {content &&
+              {activeStructure &&
                 <div>
-                  <h1>{content.data.name}</h1>
+                  <h1>{activeStructure.name}</h1>
                   <div>
-                    <button onClick={closeModal}>close</button>
+                    <button onClick={closeSVModal}>close</button>
                   </div>
                 </div>
               }
@@ -74,11 +73,13 @@ class GraphicModal extends React.Component {
   }
 }
 
-GraphicModal.propTypes = {
-  content: PropTypes.object,
-  position: PropTypes.array,
-  showModal: PropTypes.bool,
-  closeModal: PropTypes.func.isRequired
+SystemViewerModal.propTypes = {
+  activeStructure: PropTypes.object,
+  SVModal: PropTypes.object.isRequired,
+  closeSVModal: PropTypes.func.isRequired
 };
 
-export default GraphicModal;
+const mapStateToProps = R.pick(['activeStructure', 'SVModal']);
+const mapDispatchToProps = (dispatch) => bindActionCreators(uiActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(SystemViewerModal);
