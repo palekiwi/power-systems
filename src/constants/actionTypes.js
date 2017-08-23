@@ -8,6 +8,9 @@ export const SET_GRID_SIZE = "SET_GRID_SIZE";
 // active structure
 export const SET_ACTIVE_STRUCTURE = "SET_ACTIVE_STRUCTURE";
 
+// activeTile
+export const SET_ACTIVE_TILE = "SET_ACTIVE_TILE";
+
 // ui
 export const RESIZE_PANE = "RESIZE_PANE";
 export const OPEN_SYSTEM_VIEWER_MODAL = "OPEN_SYSTEM_VIEWER_MODAL";

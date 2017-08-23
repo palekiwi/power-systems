@@ -5,6 +5,7 @@ import isometricGrid from '../../lib/isometric-grid.js';
 import DomTerrain from './DomTerrain.js';
 import DomStructures from './DomStructures.js';
 import Grid from './Grid.js';
+import GridControl from './GridControl.js';
 import Network from './Network.js';
 import Markers from './Markers.js';
 import { TimelineMax } from 'gsap';
@@ -91,6 +92,11 @@ class SceneTwoD extends React.Component {
           grid={this.state.grid}
           structureTiles={this.props.structureTiles}
         />
+        { editor &&
+          <GridControl
+            grid={this.state.grid}
+          />
+        }
       </div>
     );
   }

@@ -2,18 +2,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { zipGridPtsPolygonPts } from '../../helpers/svg-helpers.js';
-import './Grid.scss';
+import './GridControl.scss';
 
-Grid.propTypes = {
+GridControl.propTypes = {
   grid: PropTypes.object.isRequired
 };
 
-function Grid ({grid}) {
+function GridControl ({grid}) {
   return (
-    <div className='Grid'>
+    <div className='GridControl'>
       <svg>
         {zipGridPtsPolygonPts(grid).map(([gp, pp]) =>
-          <polygon className="GridTile"
+          <polygon className="GridControlTile"
             key={gp}
             points={pp}/>
         )}
@@ -22,4 +22,4 @@ function Grid ({grid}) {
   );
 }
 
-export default Grid;
+export default GridControl;

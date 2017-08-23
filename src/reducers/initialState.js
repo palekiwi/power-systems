@@ -2,6 +2,7 @@ export default {
   scenes: {},
   activeScene: null,
   activeStructure: null,
+  activeTile: null,
   SVModal: {
     show: false,
     position: [0,0]
