@@ -42,7 +42,11 @@ function SystemViewer (props) {
           Please select a system...
         </div>
         :
-        <Scene {...props.activeScene}
+        <Scene
+          name={props.activeScene.name}
+          gridSize={props.activeScene.gridSize}
+          terrainTiles={sortTiles(props.activeScene.terrainTiles)}
+          structureTiles={sortTiles(props.activeScene.structureTiles)}
           openSVModal={props.openSVModal}
           closeSVModal={props.closeSVModal}
           setActiveStructure={props.setActiveStructure}
@@ -62,3 +66,9 @@ const mapStateToProps = R.pick(['activeScene', 'ui', 'editor', 'activeTile']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SystemViewer);
+
+function sortTiles (arr) {
+  const cmpX = R.ascend(R.path(['position', 'x']));
+  const cmpY = R.ascend(R.path(['position', 'y']));
+  return R.sortWith([cmpX, cmpY], arr);
+}
