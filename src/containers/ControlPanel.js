@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as activeSceneActions from '../actions/activeSceneActions.js';
 import * as editorActions from '../actions/editorActions.js';
+import SystemSelector from '../components/control-panel/SystemSelector.js';
+import SystemControls from '../components/control-panel/SystemControls.js';
 
 const actions = R.mergeAll([activeSceneActions, editorActions]);
 
@@ -16,50 +18,28 @@ ControlPanel.propTypes = {
   sceneTogglePower: PropTypes.func.isRequired,
   createNewScene: PropTypes.func.isRequired,
   toggleStructureActive: PropTypes.func.isRequired,
-  editorOn: PropTypes.func.isRequired
+  editScene: PropTypes.func.isRequired
 };
 
 function ControlPanel (props) {
   return (
     <div className='ControlPanel' >
       <div className='content'>
-        <h3>Power Systems</h3>
-        <div>
-          {props.scenes.map(s => (
-            <div key={s.name}>
-              <button onClick={() => props.setActiveScene(s)}>
-                {s.name}
-              </button>
-            </div>)
-          )}
-          <button onClick={props.createNewScene}>New</button>
-        </div>
 
-        <hr />
+        <SystemSelector
+          createNewScene={props.createNewScene}
+          activeScene={props.activeScene}
+          setActiveScene={props.setActiveScene}
+          scenes={props.scenes}
+        />
+
         {!R.isNil(props.activeScene) &&
-          <div>
-            <h4>Generators:</h4>
-            <div>
-              <button onClick={() => props.sceneTogglePower(true)}>All ON</button>
-              <button onClick={() => props.sceneTogglePower(false)}>All OFF</button>
-            </div>
-            <div>
-              {props.activeScene.structureTiles
-                .filter(R.propEq('type', 'generator'))
-                .map((s, i) => (
-                  <div key={s.name}>
-                    <span>{s.name}</span>
-                    <input type="checkbox"
-                      onChange={() => props.toggleStructureActive(i)}
-                      checked={s.active}/>
-                  </div>
-                ))
-              }
-            </div>
-            <div>
-              <button onClick={props.editorOn}>Edit</button>
-            </div>
-          </div>
+          <SystemControls
+            activeScene={props.activeScene}
+            sceneTogglePower={props.sceneTogglePower}
+            toggleStructureActive={props.toggleStructureActive}
+            editScene={props.editScene}
+          />
         }
       </div>
     </div>

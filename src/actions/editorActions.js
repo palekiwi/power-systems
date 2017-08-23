@@ -1,4 +1,5 @@
 import * as types from '../constants/actionTypes.js';
+import { setEmptyActiveScene } from './activeSceneActions.js';
 
 export function toggleEditor () {
   return {
@@ -19,6 +20,13 @@ export function editorOff () {
 }
 
 export function createNewScene () {
+  return function (dispatch) {
+    dispatch(editorOn());
+    dispatch(setEmptyActiveScene());
+  };
+}
+
+export function editScene () {
   return function (dispatch) {
     dispatch(editorOn());
   };
