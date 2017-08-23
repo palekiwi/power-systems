@@ -2,6 +2,7 @@
 import * as types from '../../constants/actionTypes.js';
 import reducer from '../../reducers/activeSceneReducer.js';
 import village from '../../data/scenes/village.js';
+import vector from '../../lib/vector.js';
 
 describe('ActiveSceneReducer', () => {
   let scene = {};
@@ -48,5 +49,35 @@ describe('ActiveSceneReducer', () => {
     const action = {type: types.TOGGLE_STRUCTURE_ACTIVE, payload: idx};
 
     expect(reducer(scene, action)).toEqual(expected);
+  });
+
+  it('should handle SAVE_TILE', () => {
+    const scene = {
+      name: 'test scene',
+      structureTiles: [
+        {active: false, position: vector(0,0), texture: 'one'},
+        {active: false, position: vector(0,1), texture: 'two'}
+      ]
+    };
+
+    const payload = {
+      type: 'structureTiles',
+      position: vector(0,0),
+      tile: {
+        active: false, position: vector(0,0), texture: 'three'
+      }
+    };
+
+    const expected = {
+      name: 'test scene',
+      structureTiles: [
+        {active: false, position: vector(0,0), texture: 'three'},
+        {active: false, position: vector(0,1), texture: 'two'}
+      ]
+    };
+
+    const action = {type: types.SAVE_TILE, payload};
+
+    expect(reducer(scene, action).structureTiles[0].texture).toEqual(expected.structureTiles[0].texture);
   });
 });

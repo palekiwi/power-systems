@@ -8,7 +8,9 @@ import Grid from './Grid.js';
 import GridControl from './GridControl.js';
 import Network from './Network.js';
 import Markers from './Markers.js';
+import TileEditor from './TileEditor.js';
 import { TimelineMax } from 'gsap';
+import R from 'ramda';
 import './SceneTwoD.scss';
 
 class SceneTwoD extends React.Component {
@@ -95,6 +97,16 @@ class SceneTwoD extends React.Component {
         { editor &&
           <GridControl
             grid={this.state.grid}
+            setActiveTile={this.props.setActiveTile}
+          />
+        }
+        { !R.isNil(this.props.activeTile) &&
+          <TileEditor
+            saveTile={this.props.saveTile}
+            activeTile={this.props.activeTile}
+            resetActiveTile={this.props.resetActiveTile}
+            terrainTile={getTileByPosition('terrainTiles', this.props)}
+            structureTile={getTileByPosition('structureTiles', this.props)}
           />
         }
       </div>
@@ -110,8 +122,17 @@ SceneTwoD.propTypes = {
   openSVModal: PropTypes.func.isRequired,
   closeSVModal: PropTypes.func.isRequired,
   setActiveStructure: PropTypes.func.isRequired,
+  setActiveTile: PropTypes.func.isRequired,
+  resetActiveTile: PropTypes.func.isRequired,
+  saveTile: PropTypes.func.isRequired,
+  activeTile: PropTypes.object,
   resizePane: PropTypes.object,
   editor: PropTypes.bool.isRequired
 };
 
 export default SceneTwoD;
+
+function getTileByPosition (type, props) {
+  const pos = props.activeTile;
+  return R.prop(type, props).find(t => t.position.equals(pos));
+}

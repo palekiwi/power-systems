@@ -7,6 +7,10 @@ export default function activeTile (state = initialState.activeTile, action) {
   case types.SET_ACTIVE_TILE:
     return action.payload;
 
+  case types.SAVE_TILE:
+  case types.RESET_ACTIVE_TILE:
+    return null;
+
   default:
     return state;
   }

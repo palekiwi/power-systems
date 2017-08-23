@@ -5,17 +5,20 @@ import { zipGridPtsPolygonPts } from '../../helpers/svg-helpers.js';
 import './GridControl.scss';
 
 GridControl.propTypes = {
-  grid: PropTypes.object.isRequired
+  grid: PropTypes.object.isRequired,
+  setActiveTile: PropTypes.func.isRequired
 };
 
-function GridControl ({grid}) {
+function GridControl (props) {
   return (
     <div className='GridControl'>
       <svg>
-        {zipGridPtsPolygonPts(grid).map(([gp, pp]) =>
+        {zipGridPtsPolygonPts(props.grid).map(([gp, pp]) =>
           <polygon className="GridControlTile"
             key={gp}
-            points={pp}/>
+            points={pp}
+            onClick={() => props.setActiveTile(gp)}
+          />
         )}
       </svg>
     </div>

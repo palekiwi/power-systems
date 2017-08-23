@@ -41,3 +41,10 @@ export function setGridSize (array) {
     payload: array
   };
 }
+
+export function saveTile (payload) {
+  return {
+    type: types.SAVE_TILE,
+    payload
+  };
+}

@@ -26,6 +26,21 @@ const activeLens = tileIdx =>
 const toggleStructureActive = idx =>
   R.over(activeLens(idx), R.not);
 
+const saveTile = (action, state) => {
+  const {type, position, tile} = action.payload;
+  const idx = state[type].findIndex(t => t.position.equals(position));
+  if (idx < 0) {
+    return R.assoc(type, R.append(tile, state[type]))(state);
+  } else {
+    const tileLens = R.compose(
+      R.lensPath([type]),
+      R.lensIndex(idx)
+    );
+    return R.set(tileLens, tile)(state);
+  }
+};
+
+
 export default function activeScene (state = initialState.activeScene, action) {
   switch (action.type) {
 
@@ -43,6 +58,9 @@ export default function activeScene (state = initialState.activeScene, action) {
 
   case types.SET_GRID_SIZE:
     return R.assoc('gridSize', action.payload)(state);
+
+  case types.SAVE_TILE:
+    return saveTile(action, state);
 
   default:
     return state;

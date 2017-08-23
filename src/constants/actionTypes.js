@@ -4,12 +4,14 @@ export const SET_ACTIVE_SCENE = "SET_ACTIVE_SCENE";
 export const TOGGLE_STRUCTURE_ACTIVE = "TOGGLE_STRUCTURE_ACTIVE";
 export const SET_EMPTY_ACTIVE_SCENE = "SET_EMPTY_ACTIVE_SCENE";
 export const SET_GRID_SIZE = "SET_GRID_SIZE";
+export const SAVE_TILE = "SAVE_TILE";
 
 // active structure
 export const SET_ACTIVE_STRUCTURE = "SET_ACTIVE_STRUCTURE";
 
 // activeTile
 export const SET_ACTIVE_TILE = "SET_ACTIVE_TILE";
+export const RESET_ACTIVE_TILE = "RESET_ACTIVE_TILE";
 
 // ui
 export const RESIZE_PANE = "RESIZE_PANE";

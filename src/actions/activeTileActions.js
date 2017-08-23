@@ -6,3 +6,9 @@ export function setActiveTile (position) {
     payload: position
   };
 }
+
+export function resetActiveTile () {
+  return {
+    type: types.RESET_ACTIVE_TILE
+  };
+}
