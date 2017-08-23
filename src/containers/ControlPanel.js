@@ -8,6 +8,7 @@ import * as activeSceneActions from '../actions/activeSceneActions.js';
 import * as editorActions from '../actions/editorActions.js';
 import SystemSelector from '../components/control-panel/SystemSelector.js';
 import SystemControls from '../components/control-panel/SystemControls.js';
+import SystemSettings from '../components/control-panel/SystemSettings.js';
 
 const actions = R.mergeAll([activeSceneActions, editorActions]);
 
@@ -18,7 +19,9 @@ ControlPanel.propTypes = {
   sceneTogglePower: PropTypes.func.isRequired,
   createNewScene: PropTypes.func.isRequired,
   toggleStructureActive: PropTypes.func.isRequired,
-  editScene: PropTypes.func.isRequired
+  setGridSize: PropTypes.func.isRequired,
+  editScene: PropTypes.func.isRequired,
+  editor: PropTypes.bool.isRequired
 };
 
 function ControlPanel (props) {
@@ -33,7 +36,7 @@ function ControlPanel (props) {
           scenes={props.scenes}
         />
 
-        {!R.isNil(props.activeScene) &&
+        {!(R.isNil(props.activeScene) || props.editor) &&
           <SystemControls
             activeScene={props.activeScene}
             sceneTogglePower={props.sceneTogglePower}
@@ -41,12 +44,16 @@ function ControlPanel (props) {
             editScene={props.editScene}
           />
         }
+
+          <SystemSettings
+            setGridSize={props.setGridSize}
+          />
       </div>
     </div>
   );
 }
 
-const mapStateToProps = R.pick(['scenes', 'activeScene']);
+const mapStateToProps = R.pick(['scenes', 'activeScene', 'editor']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlPanel);

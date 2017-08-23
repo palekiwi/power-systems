@@ -41,6 +41,9 @@ export default function activeScene (state = initialState.activeScene, action) {
   case types.TOGGLE_STRUCTURE_ACTIVE:
     return toggleStructureActive(action.payload)(state);
 
+  case types.SET_GRID_SIZE:
+    return R.assoc('gridSize', action.payload)(state);
+
   default:
     return state;
   }

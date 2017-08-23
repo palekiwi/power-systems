@@ -56,15 +56,28 @@ class SceneTwoD extends React.Component {
   render () {
     return (
       <div className="SceneTwoD" ref={c => this.scene = c}>
-        <DomTerrain grid={this.state.grid} terrainTiles={this.props.terrainTiles}/>
-        <Grid grid={this.state.grid} />
-        <Network grid={this.state.grid} structureTiles={this.props.structureTiles}/>
-        <Markers grid={this.state.grid}
+        <DomTerrain
+          grid={this.state.grid}
+          terrainTiles={this.props.terrainTiles}
+        />
+        <Grid
+          grid={this.state.grid}
+        />
+        <Network
+          grid={this.state.grid}
+          structureTiles={this.props.structureTiles}
+        />
+        <Markers
+          grid={this.state.grid}
           setActiveStructure={this.props.setActiveStructure}
           openSVModal={this.props.openSVModal}
           closeSVModal={this.props.closeSVModal}
-          structureTiles={this.props.structureTiles}/>
-        <DomStructures grid={this.state.grid} structureTiles={this.props.structureTiles}/>
+          structureTiles={this.props.structureTiles}
+        />
+        <DomStructures
+          grid={this.state.grid}
+          structureTiles={this.props.structureTiles}
+        />
       </div>
     );
   }
@@ -78,7 +91,7 @@ SceneTwoD.propTypes = {
   openSVModal: PropTypes.func.isRequired,
   closeSVModal: PropTypes.func.isRequired,
   setActiveStructure: PropTypes.func.isRequired,
-  resizePane: PropTypes.object
+  resizePane: PropTypes.object.isRequired
 };
 
 export default SceneTwoD;

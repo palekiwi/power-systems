@@ -11,6 +11,7 @@ export default function editor(state = initialState.editor, action) {
   case types.EDITOR_ON:
     return true;
 
+  case types.SET_ACTIVE_SCENE:
   case types.EDITOR_OFF:
     return false;
 

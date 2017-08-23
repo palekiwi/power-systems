@@ -28,6 +28,7 @@ class SceneTwoD extends React.Component {
   }
   componentDidUpdate (prevProps) {
     if (prevProps.resizePane != this.props.resizePane) this.resize();
+    if (prevProps.gridSize != this.props.gridSize) this.resize();
     if (prevProps.name != this.props.name) {
       this.resize();
       this.animateEnter();
@@ -59,17 +60,37 @@ class SceneTwoD extends React.Component {
   }
 
   render () {
+    let editor = this.props.editor;
+    let viewer = !editor;
+
     return (
       <div className="SceneTwoD" ref={c => this.scene = c}>
-        <DomTerrain grid={this.state.grid} terrainTiles={this.props.terrainTiles}/>
-        <Grid grid={this.state.grid} />
-        <Network grid={this.state.grid} structureTiles={this.props.structureTiles}/>
-        <Markers grid={this.state.grid}
-          setActiveStructure={this.props.setActiveStructure}
-          openSVModal={this.props.openSVModal}
-          closeSVModal={this.props.closeSVModal}
-          structureTiles={this.props.structureTiles}/>
-        <DomStructures grid={this.state.grid} structureTiles={this.props.structureTiles}/>
+        <DomTerrain
+          grid={this.state.grid}
+          terrainTiles={this.props.terrainTiles}
+        />
+        <Grid
+          grid={this.state.grid}
+        />
+        { viewer &&
+          <Network
+            grid={this.state.grid}
+            structureTiles={this.props.structureTiles}
+          />
+        }
+        { viewer &&
+          <Markers
+            grid={this.state.grid}
+            setActiveStructure={this.props.setActiveStructure}
+            openSVModal={this.props.openSVModal}
+            closeSVModal={this.props.closeSVModal}
+            structureTiles={this.props.structureTiles}
+          />
+        }
+        <DomStructures
+          grid={this.state.grid}
+          structureTiles={this.props.structureTiles}
+        />
       </div>
     );
   }
