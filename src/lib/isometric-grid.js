@@ -6,8 +6,8 @@ export default function isometricGrid ({width = 0, height = 0, gridSize = [0,0],
 
   const gridPoints = () => {
     let pts = [];
-    for (let x=0; x<gridSize[0]; x++) {
-      for (let y=0; y<gridSize[1]; y++) {
+    for (let y=0; y<gridSize[0]; y++) {
+      for (let x=0; x<gridSize[1]; x++) {
         pts.push(vector(x,y));
       }
     }
