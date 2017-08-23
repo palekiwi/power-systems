@@ -14,7 +14,7 @@ ControlPanel.propTypes = {
   activeScene: PropTypes.object,
   setActiveScene: PropTypes.func.isRequired,
   sceneTogglePower: PropTypes.func.isRequired,
-  setEmptyActiveScene: PropTypes.func.isRequired,
+  createNewScene: PropTypes.func.isRequired,
   toggleStructureActive: PropTypes.func.isRequired,
   editorOn: PropTypes.func.isRequired
 };
@@ -32,7 +32,7 @@ function ControlPanel (props) {
               </button>
             </div>)
           )}
-          <button onClick={props.setEmptyActiveScene}>New</button>
+          <button onClick={props.createNewScene}>New</button>
         </div>
 
         <hr />

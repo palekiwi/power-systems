@@ -1,5 +1,12 @@
 import * as types from '../constants/actionTypes.js';
 
+const emptyScene = {
+  name: '',
+  terrainTiles: [],
+  structureTiles: [],
+  gridSize: [0,0]
+};
+
 export function setActiveScene (scene) {
   return {
     type: types.SET_ACTIVE_SCENE,
@@ -24,11 +31,13 @@ export function toggleStructureActive (idx) {
 export function setEmptyActiveScene () {
   return {
     type: types.SET_EMPTY_ACTIVE_SCENE,
-    payload: {
-      name: '',
-      terrainTiles: [],
-      structureTiles: [],
-      gridSize: []
-    }
+    payload: emptyScene
+  };
+}
+
+export function setGridSize (array) {
+  return {
+    type: types.SET_GRID_SIZE,
+    payload: array
   };
 }

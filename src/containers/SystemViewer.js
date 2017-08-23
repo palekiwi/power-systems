@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
-import Scene from '../components/system-viewer/SceneTwoD.js';
+import Scene from '../components/system-viewer/SceneEditor.js';
 import R from 'ramda';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -29,14 +29,13 @@ function SystemViewer (props) {
         <div className="selection-prompt">
           Please select a system...
         </div>
-        : props.editor ?
-        <div>{props.activeScene.name}</div>
         :
         <Scene {...props.activeScene}
           openSVModal={props.openSVModal}
           closeSVModal={props.closeSVModal}
           setActiveStructure={props.setActiveStructure}
           resizePane={props.ui.resizePane}
+          editor={props.editor}
         />
      }
     </div>

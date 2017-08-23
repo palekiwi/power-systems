@@ -17,3 +17,9 @@ export function editorOff () {
     type: types.EDITOR_OFF
   };
 }
+
+export function createNewScene () {
+  return function (dispatch) {
+    dispatch(editorOn());
+  };
+}
