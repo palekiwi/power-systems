@@ -51,33 +51,66 @@ describe('ActiveSceneReducer', () => {
     expect(reducer(scene, action)).toEqual(expected);
   });
 
-  it('should handle SAVE_TILE', () => {
-    const scene = {
-      name: 'test scene',
-      structureTiles: [
-        {active: false, position: vector(0,0), texture: 'one'},
-        {active: false, position: vector(0,1), texture: 'two'}
-      ]
-    };
+  describe('should handle SAVE_TILE', () => {
+    it('given a tile exists', () => {
+      const scene = {
+        name: 'test scene',
+        structureTiles: [
+          {active: false, position: vector(0,0), texture: 'one'},
+          {active: false, position: vector(0,1), texture: 'two'}
+        ]
+      };
 
-    const payload = {
-      type: 'structureTiles',
-      position: vector(0,0),
-      tile: {
-        active: false, position: vector(0,0), texture: 'three'
-      }
-    };
+      const payload = {
+        type: 'structureTiles',
+        position: vector(0,0),
+        tile: {
+          active: false, position: vector(0,0), texture: 'three'
+        }
+      };
 
-    const expected = {
-      name: 'test scene',
-      structureTiles: [
-        {active: false, position: vector(0,0), texture: 'three'},
-        {active: false, position: vector(0,1), texture: 'two'}
-      ]
-    };
+      const expected = {
+        name: 'test scene',
+        structureTiles: [
+          {active: false, position: vector(0,0), texture: 'three'},
+          {active: false, position: vector(0,1), texture: 'two'}
+        ]
+      };
 
-    const action = {type: types.SAVE_TILE, payload};
+      const action = {type: types.SAVE_TILE, payload};
 
-    expect(reducer(scene, action).structureTiles[0].texture).toEqual(expected.structureTiles[0].texture);
+      expect(reducer(scene, action).structureTiles[0].texture).toEqual(expected.structureTiles[0].texture);
+    });
+
+    it('given a a tile does not exist', () => {
+      const scene = {
+        name: 'test scene',
+        structureTiles: [
+          {active: false, position: vector(0,0), texture: 'one'},
+          {active: false, position: vector(0,2), texture: 'two'}
+        ]
+      };
+
+      const payload = {
+        type: 'structureTiles',
+        position: vector(0,1),
+        tile: {
+          active: false, position: vector(0,1), texture: 'three'
+        }
+      };
+
+      const expected = {
+        name: 'test scene',
+        structureTiles: [
+          {active: false, position: vector(0,0), texture: 'one'},
+          {active: false, position: vector(0,1), texture: 'three'},
+          {active: false, position: vector(0,2), texture: 'two'}
+        ]
+      };
+
+      const action = {type: types.SAVE_TILE, payload};
+
+      expect(reducer(scene, action).structureTiles[1].texture).toEqual(expected.structureTiles[1].texture);
+    });
   });
 });

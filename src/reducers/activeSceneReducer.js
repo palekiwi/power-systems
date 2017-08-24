@@ -1,42 +1,54 @@
 import initialState from './initialState.js';
 import * as types from '../constants/actionTypes.js';
-import R from 'ramda';
+import { sortTiles } from '../lib/tile.js';
+import over from 'ramda/src/over';
+import set from 'ramda/src/set';
+import compose from 'ramda/src/compose';
+import lensPath from 'ramda/src/lensPath';
+import lensIndex from 'ramda/src/lensIndex';
+import map from 'ramda/src/map';
+import assocPath from 'ramda/src/assocPath';
+import append from 'ramda/src/append';
+import not from 'ramda/src/not';
 
 // operation that sets the value of active field in the data object of an array of objects
-const mapActive = R.compose(
-  R.map,
-  R.assocPath(['active'])
+const mapActive = compose(
+  map,
+  assocPath(['active'])
 );
 
 // update operation of all structure tile objects of a scene
 const toggleSceneActiveState = (bool, state) =>
-  R.over(
-    R.lensPath(['structureTiles']),
+  over(
+    lensPath(['structureTiles']),
     mapActive(bool)
   )(state);
 
 // lens that focuses on the active field of data object inside a strtucture tile
 const activeLens = tileIdx =>
-  R.compose(
-    R.lensPath(['structureTiles']),
-    R.lensIndex(tileIdx),
-    R.lensPath(['active'])
+  compose(
+    lensPath(['structureTiles']),
+    lensIndex(tileIdx),
+    lensPath(['active'])
   );
 
 const toggleStructureActive = idx =>
-  R.over(activeLens(idx), R.not);
+  over(activeLens(idx), not);
 
 const saveTile = (action, state) => {
   const {type, position, tile} = action.payload;
   const idx = state[type].findIndex(t => t.position.equals(position));
   if (idx < 0) {
-    return R.assoc(type, R.append(tile, state[type]))(state);
+    return assocPath(
+      [type],
+      compose(sortTiles, append(tile))(state[type])
+    )(state);
   } else {
-    const tileLens = R.compose(
-      R.lensPath([type]),
-      R.lensIndex(idx)
+    const tileLens = compose(
+      lensPath([type]),
+      lensIndex(idx)
     );
-    return R.set(tileLens, tile)(state);
+    return set(tileLens, tile)(state);
   }
 };
 
@@ -57,7 +69,7 @@ export default function activeScene (state = initialState.activeScene, action) {
     return toggleStructureActive(action.payload)(state);
 
   case types.SET_GRID_SIZE:
-    return R.assoc('gridSize', action.payload)(state);
+    return assocPath(['gridSize'], action.payload)(state);
 
   case types.SAVE_TILE:
     return saveTile(action, state);

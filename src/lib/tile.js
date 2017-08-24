@@ -1,4 +1,7 @@
 import vector from './vector.js';
+import ascend from 'ramda/src/ascend';
+import path from 'ramda/src/path';
+import sortWith from 'ramda/src/sortWith';
 
 // tile :: (Object, Object, Object) -> Object
 const tile = ({texture, position, data = {}}) => {
@@ -17,4 +20,10 @@ export function flatmapToTilesArray (objectsMap) {
     )
     .reduce((a, b) => a.concat(b))
     .filter(el => el.texture);
+}
+
+export function sortTiles (arr) {
+  const cmpX = ascend(path(['position', 'x']));
+  const cmpY = ascend(path(['position', 'y']));
+  return sortWith([cmpX, cmpY], arr);
 }

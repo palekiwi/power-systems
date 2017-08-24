@@ -2,7 +2,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Scene from '../components/system-viewer/SceneEditor.js';
-import R from 'ramda';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as uiActions from '../actions/uiActions.js';
@@ -10,9 +9,12 @@ import * as activeStructureActions from '../actions/activeStructureActions.js';
 import * as svModalActions from '../actions/svModalActions.js';
 import * as activeTileActions from '../actions/activeTileActions.js';
 import * as activeSceneActions from '../actions/activeSceneActions.js';
+import mergeAll from 'ramda/src/mergeAll';
+import pick from 'ramda/src/pick';
+import isNil from 'ramda/src/isNil';
 import './SystemViewer.scss';
 
-const actions = R.mergeAll([
+const actions = mergeAll([
   uiActions,
   svModalActions,
   activeStructureActions,
@@ -37,16 +39,13 @@ function SystemViewer (props) {
 
   return (
     <div className="SystemViewer">
-      {R.isNil(props.activeScene) ?
+      {isNil(props.activeScene) ?
         <div className="selection-prompt">
           Please select a system...
         </div>
         :
         <Scene
-          name={props.activeScene.name}
-          gridSize={props.activeScene.gridSize}
-          terrainTiles={sortTiles(props.activeScene.terrainTiles)}
-          structureTiles={sortTiles(props.activeScene.structureTiles)}
+          {...props.activeScene}
           openSVModal={props.openSVModal}
           closeSVModal={props.closeSVModal}
           setActiveStructure={props.setActiveStructure}
@@ -62,13 +61,7 @@ function SystemViewer (props) {
   );
 }
 
-const mapStateToProps = R.pick(['activeScene', 'ui', 'editor', 'activeTile']);
+const mapStateToProps = pick(['activeScene', 'ui', 'editor', 'activeTile']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SystemViewer);
-
-function sortTiles (arr) {
-  const cmpX = R.ascend(R.path(['position', 'x']));
-  const cmpY = R.ascend(R.path(['position', 'y']));
-  return R.sortWith([cmpX, cmpY], arr);
-}
