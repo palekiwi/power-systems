@@ -4,7 +4,7 @@ const emptyScene = {
   name: '',
   terrainTiles: [],
   structureTiles: [],
-  gridSize: [0,0]
+  gridSize: [3,3]
 };
 
 export function setActiveScene (scene) {
