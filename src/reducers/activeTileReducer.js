@@ -8,6 +8,7 @@ export default function activeTile (state = initialState.activeTile, action) {
     return action.payload;
 
   case types.SAVE_TILE:
+  case types.DELETE_TILE:
   case types.RESET_ACTIVE_TILE:
     return null;
 

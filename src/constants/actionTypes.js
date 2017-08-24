@@ -5,6 +5,7 @@ export const TOGGLE_STRUCTURE_ACTIVE = "TOGGLE_STRUCTURE_ACTIVE";
 export const SET_EMPTY_ACTIVE_SCENE = "SET_EMPTY_ACTIVE_SCENE";
 export const SET_GRID_SIZE = "SET_GRID_SIZE";
 export const SAVE_TILE = "SAVE_TILE";
+export const DELETE_TILE = "DELETE_TILE";
 
 // active structure
 export const SET_ACTIVE_STRUCTURE = "SET_ACTIVE_STRUCTURE";

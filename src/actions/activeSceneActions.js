@@ -48,3 +48,10 @@ export function saveTile (payload) {
     payload
   };
 }
+
+export function deleteTile (payload) {
+  return {
+    type: types.DELETE_TILE,
+    payload
+  };
+}

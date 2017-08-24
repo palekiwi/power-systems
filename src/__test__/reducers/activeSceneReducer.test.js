@@ -3,6 +3,9 @@ import * as types from '../../constants/actionTypes.js';
 import reducer from '../../reducers/activeSceneReducer.js';
 import village from '../../data/scenes/village.js';
 import vector from '../../lib/vector.js';
+import all from 'ramda/src/all';
+import propEq from 'ramda/src/propEq';
+import pluck from 'ramda/src/pluck';
 
 describe('ActiveSceneReducer', () => {
   let scene = {};
@@ -10,8 +13,8 @@ describe('ActiveSceneReducer', () => {
     scene = {
       name: 'test scene',
       structureTiles: [
-        {active: false},
-        {active: false}
+        {active: false, position: vector(0,0), texture: 'one'},
+        {active: false, position: vector(0,2), texture: 'two'}
       ]
     };
   });
@@ -23,44 +26,22 @@ describe('ActiveSceneReducer', () => {
   });
 
   it('should handle SCENE_TOGGLE_POWER', () => {
-    const expected = {
-      name: 'test scene',
-      structureTiles: [
-        {active: true},
-        {active: true}
-      ]
-    };
-
     const action = {type: types.SCENE_TOGGLE_POWER, payload: true};
+    const res = reducer(scene, action);
 
-    expect(reducer(scene, action)).toEqual(expected);
+    expect(all(propEq('active', true), res.structureTiles)).toBe(true);
   });
 
   it('should handle TOGGLE_STRUCTURE_ACTIVE', () => {
     const idx = 0;
-    const expected = {
-      name: 'test scene',
-      structureTiles: [
-        {active: true},
-        {active: false}
-      ]
-    };
-
     const action = {type: types.TOGGLE_STRUCTURE_ACTIVE, payload: idx};
+    const res = reducer(scene, action);
 
-    expect(reducer(scene, action)).toEqual(expected);
+    expect(pluck('active', res.structureTiles)).toEqual([true, false]);
   });
 
   describe('should handle SAVE_TILE', () => {
     it('given a tile exists', () => {
-      const scene = {
-        name: 'test scene',
-        structureTiles: [
-          {active: false, position: vector(0,0), texture: 'one'},
-          {active: false, position: vector(0,1), texture: 'two'}
-        ]
-      };
-
       const payload = {
         type: 'structureTiles',
         tile: {
@@ -82,14 +63,6 @@ describe('ActiveSceneReducer', () => {
     });
 
     it('given a a tile does not exist', () => {
-      const scene = {
-        name: 'test scene',
-        structureTiles: [
-          {active: false, position: vector(0,0), texture: 'one'},
-          {active: false, position: vector(0,2), texture: 'two'}
-        ]
-      };
-
       const payload = {
         type: 'structureTiles',
         tile: {
@@ -110,5 +83,25 @@ describe('ActiveSceneReducer', () => {
 
       expect(reducer(scene, action).structureTiles[1].texture).toEqual(expected.structureTiles[1].texture);
     });
+  });
+
+  it('should handle DELETE_TILE', () => {
+    const payload = {
+      type: 'structureTiles',
+      position: vector(0,0)
+    };
+
+    const expected = {
+      name: 'test scene',
+      structureTiles: [
+        {active: false, position: vector(0,2), texture: 'two'}
+      ]
+    };
+    const action = {type: types.DELETE_TILE, payload};
+    const res = reducer(scene, action);
+
+    expect(res.structureTiles.length).toEqual(expected.structureTiles.length);
+    expect(res.structureTiles[0].texture).toEqual(expected.structureTiles[0].texture);
+    expect(res.structureTiles.findIndex(t => t.position.equals(vector(0,0)))).toEqual(-1);
   });
 });

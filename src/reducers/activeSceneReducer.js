@@ -10,6 +10,7 @@ import map from 'ramda/src/map';
 import assocPath from 'ramda/src/assocPath';
 import append from 'ramda/src/append';
 import not from 'ramda/src/not';
+import remove from 'ramda/src/remove';
 
 // operation that sets the value of active field in the data object of an array of objects
 const mapActive = compose(
@@ -51,6 +52,11 @@ const saveTile = (action, state) => {
   }
 };
 
+const deleteTile = (action, state) => {
+  const {type, position} = action.payload;
+  const idx = state[type].findIndex(t => t.position.equals(position));
+  return (idx < 0) ? state : over(lensPath([type]), remove(idx, 1))(state);
+};
 
 export default function activeScene (state = initialState.activeScene, action) {
   switch (action.type) {
@@ -72,6 +78,9 @@ export default function activeScene (state = initialState.activeScene, action) {
 
   case types.SAVE_TILE:
     return saveTile(action, state);
+
+  case types.DELETE_TILE:
+    return deleteTile(action, state);
 
   default:
     return state;

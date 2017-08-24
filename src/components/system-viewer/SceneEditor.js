@@ -105,6 +105,7 @@ class SceneTwoD extends React.Component {
             saveTile={this.props.saveTile}
             activeTile={this.props.activeTile}
             resetActiveTile={this.props.resetActiveTile}
+            deleteTile={this.props.deleteTile}
             terrainTile={getTileByPosition('terrainTiles', this.props)}
             structureTile={getTileByPosition('structureTiles', this.props)}
           />
@@ -124,6 +125,7 @@ SceneTwoD.propTypes = {
   setActiveStructure: PropTypes.func.isRequired,
   setActiveTile: PropTypes.func.isRequired,
   resetActiveTile: PropTypes.func.isRequired,
+  deleteTile: PropTypes.func.isRequired,
   saveTile: PropTypes.func.isRequired,
   activeTile: PropTypes.object,
   resizePane: PropTypes.object,

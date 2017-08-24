@@ -29,6 +29,7 @@ SystemViewer.propTypes = {
   setActiveStructure: PropTypes.func.isRequired,
   setActiveTile: PropTypes.func.isRequired,
   resetActiveTile: PropTypes.func.isRequired,
+  deleteTile: PropTypes.func.isRequired,
   activeTile: PropTypes.object,
   saveTile: PropTypes.func.isRequired,
   openSVModal: PropTypes.func.isRequired,
@@ -51,6 +52,7 @@ function SystemViewer (props) {
           setActiveStructure={props.setActiveStructure}
           setActiveTile={props.setActiveTile}
           resetActiveTile={props.resetActiveTile}
+          deleteTile={props.deleteTile}
           activeTile={props.activeTile}
           saveTile={props.saveTile}
           resizePane={props.ui.resizePane}

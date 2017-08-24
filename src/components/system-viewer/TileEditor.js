@@ -18,6 +18,7 @@ class TileEditor extends React.Component {
     this.saveStructureTile = this.saveStructureTile.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.setActiveType = this.setActiveType.bind(this);
+    this.deleteTile = this.deleteTile.bind(this);
   }
 
   saveStructureTile () {
@@ -31,14 +32,21 @@ class TileEditor extends React.Component {
 
   saveTerrainTile (texture) {
     const position = this.props.activeTile;
-    this.props.saveTile({
+    return this.props.saveTile({
       type: 'terrainTiles',
       tile: tile({texture, position})
     });
   }
 
   closeModal () {
-    this.props.resetActiveTile();
+    return this.props.resetActiveTile();
+  }
+
+  deleteTile () {
+    return this.props.deleteTile({
+      type: this.state.type,
+      position: this.props.activeTile,
+    });
   }
 
   setActiveType (type) {
@@ -80,6 +88,7 @@ class TileEditor extends React.Component {
           }
 
           <div>
+            <button onClick={this.deleteTile}>Clear</button>
             <button onClick={this.closeModal}>Cancel</button>
           </div>
 
@@ -92,6 +101,7 @@ class TileEditor extends React.Component {
 TileEditor.propTypes = {
   saveTile: PropTypes.func.isRequired,
   resetActiveTile: PropTypes.func.isRequired,
+  deleteTile: PropTypes.func.isRequired,
   terrainTile: PropTypes.object,
   structureTile: PropTypes.object,
   activeTile: PropTypes.object.isRequired
