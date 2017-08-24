@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import tile from '../../lib/tile.js';
 import * as tt from '../../data/terrain-textures.js';
+import * as st from '../../data/structure-textures.js';
 import values from 'ramda/src/values';
+import isEmpty from 'ramda/src/isEmpty';
 import './TileEditor.scss';
 
 class TileEditor extends React.Component {
@@ -16,6 +18,7 @@ class TileEditor extends React.Component {
 
     this.saveTerrainTile = this.saveTerrainTile.bind(this);
     this.saveStructureTile = this.saveStructureTile.bind(this);
+    this.setStructureTexture = this.setStructureTexture.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.setActiveType = this.setActiveType.bind(this);
     this.deleteTile = this.deleteTile.bind(this);
@@ -28,6 +31,10 @@ class TileEditor extends React.Component {
       type: 'structureTiles',
       tile: tile({texture, position, data})
     });
+  }
+
+  setStructureTexture (texture) {
+    return this.setState({texture});
   }
 
   saveTerrainTile (texture) {
@@ -84,6 +91,21 @@ class TileEditor extends React.Component {
           { this.state.type == 'structureTiles' &&
             <div>
               <h3>Structures</h3>
+              { isEmpty(this.state.texture) ?
+                <div>
+                  {values(st).map((t,i) =>
+                    <span key={i}
+                      onClick={() => this.setStructureTexture(t)}
+                    >
+                      <img src={require('../../assets/' + t.filename)}/>
+                    </span>
+                  )}
+                </div>
+                :
+                <div>
+                  settings
+                </div>
+              }
             </div>
           }
 
