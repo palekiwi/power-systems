@@ -8,16 +8,16 @@ class TileEditor extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      texture: tt.grass,
+      type: 'structureTile',
+      texture: {},
       data: {}
     };
   }
   saveTile () {
-    const {texture, data} = this.state;
+    const {type, texture, data} = this.state;
     const position = this.props.activeTile;
     this.props.saveTile({
-      type: 'terrainTiles',
-      position,
+      type,
       tile: tile({texture, position, data})
     });
   }

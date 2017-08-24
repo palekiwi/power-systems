@@ -36,19 +36,18 @@ const toggleStructureActive = idx =>
   over(activeLens(idx), not);
 
 const saveTile = (action, state) => {
-  const {type, position, tile} = action.payload;
-  const idx = state[type].findIndex(t => t.position.equals(position));
+  const {type, tile} = action.payload;
+  const idx = state[type].findIndex(t => t.position.equals(tile.position));
   if (idx < 0) {
-    return assocPath(
-      [type],
-      compose(sortTiles, append(tile))(state[type])
+    return over(
+      lensPath([type]),
+      compose(sortTiles, append(tile))
     )(state);
   } else {
-    const tileLens = compose(
-      lensPath([type]),
-      lensIndex(idx)
-    );
-    return set(tileLens, tile)(state);
+    return set(
+      compose(lensPath([type]), lensIndex(idx)),
+      tile
+    )(state);
   }
 };
 

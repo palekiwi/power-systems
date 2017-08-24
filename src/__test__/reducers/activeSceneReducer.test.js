@@ -63,7 +63,6 @@ describe('ActiveSceneReducer', () => {
 
       const payload = {
         type: 'structureTiles',
-        position: vector(0,0),
         tile: {
           active: false, position: vector(0,0), texture: 'three'
         }
@@ -93,7 +92,6 @@ describe('ActiveSceneReducer', () => {
 
       const payload = {
         type: 'structureTiles',
-        position: vector(0,1),
         tile: {
           active: false, position: vector(0,1), texture: 'three'
         }
