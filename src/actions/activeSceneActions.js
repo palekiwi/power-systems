@@ -21,10 +21,10 @@ export function sceneTogglePower (bool) {
   };
 }
 
-export function toggleStructureActive (idx) {
+export function toggleStructureActive (position) {
   return {
     type: types.TOGGLE_STRUCTURE_ACTIVE,
-    payload: idx
+    payload: position
   };
 }
 

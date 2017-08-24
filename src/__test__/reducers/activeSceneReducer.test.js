@@ -33,11 +33,11 @@ describe('ActiveSceneReducer', () => {
   });
 
   it('should handle TOGGLE_STRUCTURE_ACTIVE', () => {
-    const idx = 0;
+    const idx = 1;
     const action = {type: types.TOGGLE_STRUCTURE_ACTIVE, payload: idx};
     const res = reducer(scene, action);
 
-    expect(pluck('active', res.structureTiles)).toEqual([true, false]);
+    expect(pluck('active', res.structureTiles)).toEqual([false, true]);
   });
 
   describe('should handle SAVE_TILE', () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import R from 'ramda';
+import propEq from 'ramda/src/propEq';
 
 SystemControls.propTypes = {
   activeScene: PropTypes.object,
@@ -19,9 +19,8 @@ function SystemControls (props) {
       </div>
       <div>
         {props.activeScene.structureTiles
-          .filter(R.propEq('type', 'generator'))
           .map((s, i) => (
-            <div key={s.name}>
+            <div key={i} style={{display: propEq('type', 'generator', s) ? 'auto' : 'none'}}>
               <span>{s.name}</span>
               <input type="checkbox"
                 onChange={() => props.toggleStructureActive(i)}

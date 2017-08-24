@@ -33,6 +33,15 @@ export default scene2d({
       }
     }),
     tile({
+      position: vector(3, 0),
+      texture: ST.windGenAnim,
+      data:{
+        name: 'Wind Generator',
+        type: 'generator',
+        active: false
+      }
+    }),
+    tile({
       position: vector(1, 1),
       texture: ST.powerPole,
       data: {
