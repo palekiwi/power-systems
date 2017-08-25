@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import tile from '../../lib/tile.js';
-import * as tt from '../../data/terrain-textures.js';
+import tt from '../../data/editor/terrainTiles.js';
 import * as st from '../../data/structure-textures.js';
 import values from 'ramda/src/values';
 import isEmpty from 'ramda/src/isEmpty';
+import assoc from 'ramda/src/assoc';
 import './TileEditor.scss';
 
 class TileEditor extends React.Component {
@@ -12,36 +12,19 @@ class TileEditor extends React.Component {
     super(props);
     this.state = {
       type: 'structureTiles',
-      texture: {},
-      data: {}
     };
 
-    this.saveTerrainTile = this.saveTerrainTile.bind(this);
-    this.saveStructureTile = this.saveStructureTile.bind(this);
-    this.setStructureTexture = this.setStructureTexture.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.setActiveType = this.setActiveType.bind(this);
+    this.saveTile = this.saveTile.bind(this);
     this.deleteTile = this.deleteTile.bind(this);
   }
 
-  saveStructureTile () {
-    const {texture, data} = this.state;
+  saveTile (tile) {
     const position = this.props.activeTile;
     this.props.saveTile({
-      type: 'structureTiles',
-      tile: tile({texture, position, data})
-    });
-  }
-
-  setStructureTexture (texture) {
-    return this.setState({texture});
-  }
-
-  saveTerrainTile (texture) {
-    const position = this.props.activeTile;
-    return this.props.saveTile({
-      type: 'terrainTiles',
-      tile: tile({texture, position})
+      type: this.state.type,
+      tile: assoc('position', position, tile)
     });
   }
 
@@ -67,7 +50,7 @@ class TileEditor extends React.Component {
           onClick={this.props.resetActiveTile}
         >
         </div>
-        <div className="TileEditor__Content">
+        <div className="TileEditor__Content container">
           <div>
             <button onClick={() => this.setActiveType('terrainTiles')}>Terrain</button>
             <button onClick={() => this.setActiveType('structureTiles')}>Structures</button>
@@ -75,13 +58,13 @@ class TileEditor extends React.Component {
 
           { this.state.type == 'terrainTiles' &&
             <div>
-              <h3>Terrain</h3>
               <div>
-                {values(tt).map((t,i) =>
+                {tt.map((t,i) =>
                   <span key={i}
-                    onClick={() => this.saveTerrainTile(t)}
+                    onClick={() => this.saveTile(t)}
                   >
-                    <img src={require('../../assets/' + t.filename)}/>
+                    <span>{t.name}</span>
+                    <img src={require('../../assets/' + t.texture.filename)}/>
                   </span>
                 )}
               </div>
@@ -90,22 +73,15 @@ class TileEditor extends React.Component {
 
           { this.state.type == 'structureTiles' &&
             <div>
-              <h3>Structures</h3>
-              { isEmpty(this.state.texture) ?
-                <div>
-                  {values(st).map((t,i) =>
-                    <span key={i}
-                      onClick={() => this.setStructureTexture(t)}
-                    >
-                      <img src={require('../../assets/' + t.filename)}/>
-                    </span>
-                  )}
-                </div>
-                :
-                <div>
-                  settings
-                </div>
-              }
+              <div className="columns is-multiline TileEditor__Textures">
+                {values(st).map((t,i) =>
+                  <div className="column is-3" key={i}
+                    onClick={() => this.saveTile(t)}
+                  >
+                    <img src={require('../../assets/' + t.filename)}/>
+                  </div>
+                )}
+              </div>
             </div>
           }
 

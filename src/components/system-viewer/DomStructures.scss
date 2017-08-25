@@ -10,3 +10,8 @@
 .Tile {
   position: absolute;
 }
+
+.TileImg, .AnimatedTile {
+  min-width: none;
+  min-height: none;
+}

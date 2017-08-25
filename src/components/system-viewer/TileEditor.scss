@@ -22,4 +22,9 @@
   height: 80%;
   background: white;
   transform: translate(-50%, -50%);
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.TileEditor__Textures {
 }
