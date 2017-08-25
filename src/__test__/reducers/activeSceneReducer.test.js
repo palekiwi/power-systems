@@ -120,4 +120,24 @@ describe('ActiveSceneReducer', () => {
     expect(res.structureTiles.length).toEqual(expected.structureTiles.length);
     expect(res.structureTiles.findIndex(t => t.position.equals(vector(0,2)))).toEqual(-1);
   });
+
+  it('should handle SET_STRUCTURE_CAPACITY', () => {
+    const payload = {
+      index: 0,
+      capacity: 50
+    };
+    scene = {
+      name: 'test scene',
+      structureTiles: [
+        {capacity: 100},
+        {capacity: 100}
+      ]
+    };
+
+    const action = {type: types.SET_STRUCTURE_CAPACITY, payload};
+    const res = reducer(scene, action);
+
+    expect(res.structureTiles[0].capacity).toEqual(50);
+    expect(res.structureTiles[1].capacity).toEqual(100);
+  });
 });

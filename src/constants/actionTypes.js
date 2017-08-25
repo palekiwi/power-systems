@@ -8,6 +8,7 @@ export const ADJUST_GRID_SIZE = "ADJUST_GRID_SIZE";
 export const CROP_TO_GRID = "CROP_TO_GRID";
 export const SAVE_TILE = "SAVE_TILE";
 export const DELETE_TILE = "DELETE_TILE";
+export const SET_STRUCTURE_CAPACITY = "SET_STRUCTURE_CAPACITY";
 
 // active structure
 export const SET_ACTIVE_STRUCTURE = "SET_ACTIVE_STRUCTURE";
