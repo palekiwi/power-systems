@@ -19,6 +19,7 @@ ControlPanel.propTypes = {
   sceneTogglePower: PropTypes.func.isRequired,
   createNewScene: PropTypes.func.isRequired,
   toggleStructureActive: PropTypes.func.isRequired,
+  setSceneName: PropTypes.func.isRequired,
   setGridSize: PropTypes.func.isRequired,
   setStructureCapacity: PropTypes.func.isRequired,
   editScene: PropTypes.func.isRequired,
@@ -51,6 +52,7 @@ function ControlPanel (props) {
             activeScene={props.activeScene}
             setStructureCapacity={props.setStructureCapacity}
             setGridSize={props.setGridSize}
+            setSceneName={props.setSceneName}
           />
         }
       </div>

@@ -94,6 +94,9 @@ export default function activeScene (state = initialState.activeScene, action) {
   case types.TOGGLE_STRUCTURE_ACTIVE:
     return toggleStructureActive(action.payload)(state);
 
+  case types.SET_SCENE_NAME:
+    return assocPath(['name'], action.payload)(state);
+
   case types.ADJUST_GRID_SIZE:
     return assocPath(['gridSize'], action.payload)(state);
 

@@ -7,8 +7,9 @@ import where from 'ramda/src/where';
 import compose from 'ramda/src/compose';
 import reduce from 'ramda/src/reduce';
 import filter from 'ramda/src/filter';
-import prop from 'ramda/src/prop';
+import path from 'ramda/src/path';
 import equals from 'ramda/src/equals';
+import defaultTo from 'ramda/src/defaultTo';
 import T from 'ramda/src/T';
 import './SystemMonitor.scss';
 
@@ -16,7 +17,7 @@ const capacityBy = (active, type) => {
   return compose(
     reduce((sum, val) => sum + val.capacity, 0),
     filter(where({type, active})),
-    prop('structureTiles')
+    path(['structureTiles'])
   );
 };
 
@@ -32,7 +33,7 @@ SystemMonitor.propTypes = {
 function SystemMonitor ({activeScene}) {
   return (
     <div className="SystemMonitor has-text-centered">
-      <h3>System Monitor</h3>
+      <h3>{defaultTo('System Monitor', path(['name'], activeScene))}</h3>
       <hr />
       {
         activeScene &&

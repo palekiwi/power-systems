@@ -1,7 +1,7 @@
 import * as types from '../constants/actionTypes.js';
 
 const emptyScene = {
-  name: '',
+  name: 'New System',
   terrainTiles: [],
   structureTiles: [],
   gridSize: [3,3]
@@ -32,6 +32,13 @@ export function setEmptyActiveScene () {
   return {
     type: types.SET_EMPTY_ACTIVE_SCENE,
     payload: emptyScene
+  };
+}
+
+export function setSceneName (name) {
+  return {
+    type: types.SET_SCENE_NAME,
+    payload: name
   };
 }
 

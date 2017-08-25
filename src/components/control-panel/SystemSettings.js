@@ -3,14 +3,25 @@ import PropTypes from 'prop-types';
 
 SystemSetting.propTypes = {
   setGridSize: PropTypes.func.isRequired,
+  setSceneName: PropTypes.func.isRequired,
   setStructureCapacity: PropTypes.func.isRequired,
   activeScene: PropTypes.object.isRequired
 };
 
-function SystemSetting ({setGridSize, activeScene, setStructureCapacity}) {
+function SystemSetting ({setGridSize, setSceneName, activeScene, setStructureCapacity}) {
   return (
     <div>
       <h4>Settings</h4>
+      <div>
+        <h5>Name</h5>
+        <input className="input" type="text"
+          onChange={(e) => setSceneName(e.target.value)}
+          value={activeScene.name}
+        />
+      </div>
+
+      <hr />
+
       <div>
         <h5>Grid Size</h5>
         <button onClick={() => setGridSize([3,3])}>S</button>
