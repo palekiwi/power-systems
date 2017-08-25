@@ -52,7 +52,7 @@ function SystemSetting ({setGridSize, activeScene, setStructureCapacity}) {
                 min="0"
                 max={t.max}
                 step="5"
-                onChange={(e) => setStructureCapacity(i, e.target.value)}
+                onChange={(e) => setStructureCapacity(i,e.target.value)}
               />
               <span>{t.capacity}kW</span>
             </div>

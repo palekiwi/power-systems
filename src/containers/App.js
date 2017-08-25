@@ -6,6 +6,7 @@ import SplitPane from '@kadira/react-split-pane';
 import ControlPanel from './ControlPanel.js';
 import SystemViewer from './SystemViewer.js';
 import SystemViewerModal from './SystemViewerModal.js';
+import SystemMonitor from './SystemMonitor.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as uiActions from '../actions/uiActions.js';
@@ -37,7 +38,9 @@ class App extends Component {
              </div>
             </div>
             <div className="ContentPanel bottom">
-              <div className="Content"></div>
+              <div className="Content">
+                <SystemMonitor />
+              </div>
             </div>
           </SplitPane>
         </SplitPane>

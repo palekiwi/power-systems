@@ -75,7 +75,7 @@ const setStructureCapacity = (action, state) => {
   const {index, capacity} = action.payload;
   return set(
     compose(lensPath(['structureTiles']), lensIndex(index), lensPath(['capacity'])),
-    capacity
+    parseInt(capacity)
   )(state);
 };
 

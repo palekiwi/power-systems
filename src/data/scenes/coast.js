@@ -20,6 +20,8 @@ export default scene2d({
       data: {
         name: 'Diesel Generator',
         type: 'generator',
+        capacity: 100,
+        max: 200,
         active: false
       }
     }),
@@ -29,6 +31,8 @@ export default scene2d({
       data:{
         name: 'Wind Generator',
         type: 'generator',
+        capacity: 100,
+        max: 200,
         active: false
       }
     }),
@@ -38,6 +42,8 @@ export default scene2d({
       data:{
         name: 'Wind Generator',
         type: 'generator',
+        capacity: 100,
+        max: 200,
         active: false
       }
     }),
@@ -47,6 +53,8 @@ export default scene2d({
       data: {
         name: 'Power Grid',
         type: 'distributor',
+        capacity: 100,
+        max: 200,
         active: false
       }
     }),
@@ -56,13 +64,17 @@ export default scene2d({
       data: {
         name: 'Farm',
         type: null,
+        capacity: 100,
+        max: 200,
         active: false
       }
     }),
     tile({
       data: {
         name: 'House',
-        type: 'consumer'
+        type: 'consumer',
+        capacity: 100,
+        max: 200
       },
       position: vector(1, 2),
       texture: ST.houseThatched
