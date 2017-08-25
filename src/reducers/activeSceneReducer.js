@@ -71,6 +71,14 @@ const cropToGrid = (action, state) => {
   return evolve({terrainTiles: fn, structureTiles: fn})(state);
 };
 
+const setStructureCapacity = (action, state) => {
+  const {index, capacity} = action.payload;
+  return set(
+    compose(lensPath(['structureTiles']), lensIndex(index), lensPath(['capacity'])),
+    capacity
+  )(state);
+};
+
 export default function activeScene (state = initialState.activeScene, action) {
   switch (action.type) {
 
@@ -97,6 +105,9 @@ export default function activeScene (state = initialState.activeScene, action) {
 
   case types.DELETE_TILE:
     return deleteTile(action, state);
+
+  case types.SET_STRUCTURE_CAPACITY:
+    return setStructureCapacity(action, state);
 
   default:
     return state;
