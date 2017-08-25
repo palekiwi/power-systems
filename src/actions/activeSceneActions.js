@@ -70,9 +70,12 @@ export function deleteTile (payload) {
   };
 }
 
-export function setStructureCapacity (payload) {
+export function setStructureCapacity (index, capacity) {
   return {
     type: types.SET_STRUCTURE_CAPACITY,
-    payload
+    payload: {
+      index,
+      capacity
+    }
   };
 }

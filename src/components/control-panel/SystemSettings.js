@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 
 SystemSetting.propTypes = {
   setGridSize: PropTypes.func.isRequired,
+  setStructureCapacity: PropTypes.func.isRequired,
   activeScene: PropTypes.object.isRequired
 };
 
-function SystemSetting ({setGridSize, activeScene}) {
+function SystemSetting ({setGridSize, activeScene, setStructureCapacity}) {
   return (
     <div>
       <h4>Settings</h4>
@@ -25,7 +26,10 @@ function SystemSetting ({setGridSize, activeScene}) {
           <div key={t.name + i} style={{display: (t.type == 'generator') ? 'auto' : 'none'}}>
             <div>{t.name}</div>
             <div>
-              <input type="range" value={t.capacity}/>
+              <input type="range"
+                value={t.capacity}
+                onChange={(e) => setStructureCapacity(i, e.target.value)}
+              />
             </div>
             <div>{t.capacity}</div>
           </div>

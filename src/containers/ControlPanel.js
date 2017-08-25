@@ -20,6 +20,7 @@ ControlPanel.propTypes = {
   createNewScene: PropTypes.func.isRequired,
   toggleStructureActive: PropTypes.func.isRequired,
   setGridSize: PropTypes.func.isRequired,
+  setStructureCapacity: PropTypes.func.isRequired,
   editScene: PropTypes.func.isRequired,
   editor: PropTypes.bool.isRequired
 };
@@ -48,6 +49,7 @@ function ControlPanel (props) {
         { props.editor &&
           <SystemSettings
             activeScene={props.activeScene}
+            setStructureCapacity={props.setStructureCapacity}
             setGridSize={props.setGridSize}
           />
         }
