@@ -47,6 +47,7 @@ function ControlPanel (props) {
 
         { props.editor &&
           <SystemSettings
+            activeScene={props.activeScene}
             setGridSize={props.setGridSize}
           />
         }

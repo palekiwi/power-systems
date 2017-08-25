@@ -1,7 +1,6 @@
 /* global jest, beforeEach, describe, it, expect */
 import * as types from '../../constants/actionTypes.js';
 import reducer from '../../reducers/activeSceneReducer.js';
-import village from '../../data/scenes/village.js';
 import vector from '../../lib/vector.js';
 import all from 'ramda/src/all';
 import propEq from 'ramda/src/propEq';
