@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import tt from '../../data/editor/terrainTiles.js';
-import * as st from '../../data/structure-textures.js';
-import values from 'ramda/src/values';
-import isEmpty from 'ramda/src/isEmpty';
+import ts from '../../data/editor/terrainTiles.js';
+import ss from '../../data/editor/structureTiles.js';
 import assoc from 'ramda/src/assoc';
 import './TileEditor.scss';
 
@@ -59,7 +57,7 @@ class TileEditor extends React.Component {
           { this.state.type == 'terrainTiles' &&
             <div>
               <div>
-                {tt.map((t,i) =>
+                {ts.map((t,i) =>
                   <span key={i}
                     onClick={() => this.saveTile(t)}
                   >
@@ -74,11 +72,11 @@ class TileEditor extends React.Component {
           { this.state.type == 'structureTiles' &&
             <div>
               <div className="columns is-multiline TileEditor__Textures">
-                {values(st).map((t,i) =>
+                {ss.map((t,i) =>
                   <div className="column is-3" key={i}
                     onClick={() => this.saveTile(t)}
                   >
-                    <img src={require('../../assets/' + t.filename)}/>
+                    <img src={require('../../assets/' + t.texture.filename)}/>
                   </div>
                 )}
               </div>
