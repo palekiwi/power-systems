@@ -82,5 +82,15 @@ export default [
       capacity: 100,
       max: 200
     }
+  }),
+  tile({
+    position: vector(0,0),
+    texture: st.powerPole,
+    data: {
+      name: 'Power Network',
+      type: 'distributor',
+      capacity: 100,
+      max: 200
+    }
   })
 ];

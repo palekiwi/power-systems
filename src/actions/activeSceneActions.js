@@ -86,3 +86,10 @@ export function setStructureCapacity (index, capacity) {
     }
   };
 }
+
+export function saveScene (scene) {
+  return {
+    type: types.SAVE_SCENE,
+    payload: scene
+  };
+}

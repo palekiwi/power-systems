@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 SystemSetting.propTypes = {
   setGridSize: PropTypes.func.isRequired,
   setSceneName: PropTypes.func.isRequired,
+  saveScene: PropTypes.func.isRequired,
   setStructureCapacity: PropTypes.func.isRequired,
   activeScene: PropTypes.object.isRequired
 };
 
-function SystemSetting ({setGridSize, setSceneName, activeScene, setStructureCapacity}) {
+function SystemSetting ({setGridSize, setSceneName, activeScene, setStructureCapacity, saveScene}) {
   return (
     <div>
       <h4>Settings</h4>
@@ -69,6 +70,9 @@ function SystemSetting ({setGridSize, setSceneName, activeScene, setStructureCap
             </div>
           </div>
         )}
+      </div>
+      <div>
+        <button onClick={() => saveScene(activeScene)}>Save</button>
       </div>
     </div>
   );
