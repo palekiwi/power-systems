@@ -104,4 +104,21 @@ describe('ActiveSceneReducer', () => {
     expect(res.structureTiles[0].texture).toEqual(expected.structureTiles[0].texture);
     expect(res.structureTiles.findIndex(t => t.position.equals(vector(0,0)))).toEqual(-1);
   });
+
+  it('should handle CROP_TO_GRID', () => {
+    const payload = [2,2];
+
+    const expected = {
+      name: 'test scene',
+      structureTiles: [
+        {active: false, position: vector(0,0), texture: 'one'},
+      ]
+    };
+
+    const action = {type: types.CROP_TO_GRID, payload};
+    const res = reducer(scene, action);
+
+    expect(res.structureTiles.length).toEqual(expected.structureTiles.length);
+    expect(res.structureTiles.findIndex(t => t.position.equals(vector(0,2)))).toEqual(-1);
+  });
 });

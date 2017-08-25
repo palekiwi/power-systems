@@ -11,6 +11,12 @@ import assocPath from 'ramda/src/assocPath';
 import append from 'ramda/src/append';
 import not from 'ramda/src/not';
 import remove from 'ramda/src/remove';
+import path from 'ramda/src/path';
+import lt from 'ramda/src/lt';
+import where from 'ramda/src/where';
+import __ from 'ramda/src/__';
+import evolve from 'ramda/src/evolve';
+import filter from 'ramda/src/filter';
 
 // operation that sets the value of active field in the data object of an array of objects
 const mapActive = compose(
@@ -58,6 +64,13 @@ const deleteTile = (action, state) => {
   return (idx < 0) ? state : over(lensPath([type]), remove(idx, 1))(state);
 };
 
+const cropToGrid = (action, state) => {
+  const spec = ([r, c]) => ({x: lt(__, r), y: lt(__, c)});
+  const pred = arr => compose(where(spec(arr)), path(['position']));
+  const fn = filter(pred(action.payload));
+  return evolve({terrainTiles: fn, structureTiles: fn})(state);
+};
+
 export default function activeScene (state = initialState.activeScene, action) {
   switch (action.type) {
 
@@ -73,8 +86,11 @@ export default function activeScene (state = initialState.activeScene, action) {
   case types.TOGGLE_STRUCTURE_ACTIVE:
     return toggleStructureActive(action.payload)(state);
 
-  case types.SET_GRID_SIZE:
+  case types.ADJUST_GRID_SIZE:
     return assocPath(['gridSize'], action.payload)(state);
+
+  case types.CROP_TO_GRID:
+    return  cropToGrid(action, state);
 
   case types.SAVE_TILE:
     return saveTile(action, state);

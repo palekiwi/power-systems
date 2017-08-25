@@ -2,6 +2,8 @@ import vector from './vector.js';
 import compose from 'ramda/src/compose';
 import head from 'ramda/src/head';
 import tail from 'ramda/src/tail';
+import partial from 'ramda/src/partial';
+import flip from 'ramda/src/flip';
 
 // validateScene :: Object -> Array
 export default function  validateScene (options) {
@@ -11,7 +13,7 @@ export default function  validateScene (options) {
     validateStructuresOverlap,
     validateStructuresPlacement,
     validateTerrainSize
-  ].map(fn => fn.bind(null, options));
+  ].map(flip(partial)([options]));
 
   return compose(...pipeline)(errors);
 }

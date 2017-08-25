@@ -36,8 +36,22 @@ export function setEmptyActiveScene () {
 }
 
 export function setGridSize (array) {
+  return function (dispatch) {
+    dispatch(adjustGridSize(array));
+    dispatch(cropToGrid(array));
+  };
+}
+
+export function adjustGridSize (array) {
   return {
-    type: types.SET_GRID_SIZE,
+    type: types.ADJUST_GRID_SIZE,
+    payload: array
+  };
+}
+
+export function cropToGrid (array) {
+  return {
+    type: types.CROP_TO_GRID,
     payload: array
   };
 }
