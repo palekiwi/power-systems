@@ -9,7 +9,8 @@ export default [
     data: {
       name: 'Battery',
       type: 'storage',
-      capacity: 100
+      capacity: 100,
+      max: 200
     }
   }),
   tile({
@@ -18,7 +19,8 @@ export default [
     data: {
       name: 'Biomass Boiler',
       type: 'gasification',
-      capacity: 100
+      capacity: 100,
+      max: 200
     }
   }),
   tile({
@@ -27,7 +29,8 @@ export default [
     data: {
       name: 'Boat',
       type: 'other',
-      capacity: 100
+      capacity: 100,
+      max: 200
     }
   }),
   tile({
@@ -36,7 +39,8 @@ export default [
     data: {
       name: 'Diesel Generator',
       type: 'generator',
-      capacity: 100
+      capacity: 100,
+      max: 200
     }
   }),
   tile({
@@ -45,7 +49,8 @@ export default [
     data: {
       name: 'Community Center',
       type: 'consumer',
-      capacity: 100
+      capacity: 100,
+      max: 200
     }
   }),
   tile({
@@ -54,7 +59,8 @@ export default [
     data: {
       name: 'Farm',
       type: 'biomass',
-      capacity: 100
+      capacity: 100,
+      max: 200
     }
   }),
   tile({
@@ -63,7 +69,8 @@ export default [
     data: {
       name: 'Gas Engine',
       type: 'generator',
-      capacity: 100
+      capacity: 100,
+      max: 200
     }
   }),
   tile({
@@ -72,7 +79,8 @@ export default [
     data: {
       name: 'Hospital',
       type: 'consumer',
-      capacity: 100
+      capacity: 100,
+      max: 200
     }
   })
 ];

@@ -28,10 +28,13 @@ function SystemSetting ({setGridSize, activeScene, setStructureCapacity}) {
             <div>
               <input type="range"
                 value={t.capacity}
+                min="0"
+                max={t.max}
+                step="5"
                 onChange={(e) => setStructureCapacity(i, e.target.value)}
               />
+              <span>{t.capacity}kW</span>
             </div>
-            <div>{t.capacity}</div>
           </div>
         )}
       </div>
@@ -39,11 +42,20 @@ function SystemSetting ({setGridSize, activeScene, setStructureCapacity}) {
       <hr/>
 
       <div>
-        <h5>Consumers</h5>
+        <h5>Load</h5>
         {activeScene.structureTiles.map((t,i) =>
           <div key={t.name + i} style={{display: (t.type == 'consumer') ? 'auto' : 'none'}}>
             <div>{t.name}</div>
-            <div>{t.capacity}</div>
+            <div>
+              <input type="range"
+                value={t.capacity}
+                min="0"
+                max={t.max}
+                step="5"
+                onChange={(e) => setStructureCapacity(i, e.target.value)}
+              />
+              <span>{t.capacity}kW</span>
+            </div>
           </div>
         )}
       </div>
