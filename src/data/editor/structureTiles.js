@@ -5,55 +5,28 @@ import * as g from '../generation/index.js';
 import * as l from '../load/index.js';
 
 export default [
+  // distribution
   tile({
     position: vector(0,0),
-    texture: st.batteryContainer,
+    texture: st.powerPole,
     data: {
-      name: 'Battery',
-      class: 'storage',
-      capacity: 100,
-      max: 200
+      name: 'Power Network',
+      class: 'distributor'
     }
   }),
-  tile({
-    position: vector(0,0),
-    texture: st.biomass,
-    data: {
-      name: 'Biomass Boiler',
-      class: 'gasification',
-      capacity: 100,
-      max: 200
-    }
-  }),
+  // generation
   tile({
     position: vector(0,0),
     texture: st.gasEngine,
     data: {
       name: 'Gas Engine',
       class: 'generator',
+      type: 'non-variable',
+      priority: 1,
       capacity: 100,
       max: 200,
-      variation: null
-    }
-  }),
-  tile({
-    position: vector(0,0),
-    texture: st.boat,
-    data: {
-      name: 'Boat',
-      class: 'other',
-      capacity: 100,
-      max: 200
-    }
-  }),
-  tile({
-    position: vector(0,0),
-    texture: st.boat,
-    data: {
-      name: 'Boat',
-      class: 'other',
-      capacity: 100,
-      max: 200
+      variation: null,
+      output: null
     }
   }),
   tile({
@@ -66,7 +39,7 @@ export default [
       priority: 2,
       capacity: 100,
       max: 200,
-      variation: null,
+      variation: g.pvClear,
       output: null
     }
   }),
@@ -76,10 +49,14 @@ export default [
     data: {
       name: 'Diesel Generator',
       class: 'generator',
+      type: 'non-variable',
+      priority: 0,
       capacity: 100,
-      max: 200
+      max: 200,
+      output: null
     }
   }),
+  // consumption
   tile({
     position: vector(0,0),
     texture: st.communityCenter,
@@ -87,27 +64,9 @@ export default [
       name: 'Community Center',
       class: 'consumer',
       capacity: 100,
-      max: 200
-    }
-  }),
-  tile({
-    position: vector(0,0),
-    texture: st.farm,
-    data: {
-      name: 'Farm',
-      class: 'biomass',
-      capacity: 100,
-      max: 200
-    }
-  }),
-  tile({
-    position: vector(0,0),
-    texture: st.gasEngine,
-    data: {
-      name: 'Gas Engine',
-      class: 'generator',
-      capacity: 100,
-      max: 200
+      max: 200,
+      variation: l.communityCenter,
+      consumption: null
     }
   }),
   tile({
@@ -116,18 +75,11 @@ export default [
     data: {
       name: 'Hospital',
       class: 'consumer',
+      type: 'variable',
       capacity: 100,
-      max: 200
+      max: 200,
+      variation: l.hospital,
+      consumption: null
     }
   }),
-  tile({
-    position: vector(0,0),
-    texture: st.powerPole,
-    data: {
-      name: 'Power Network',
-      class: 'distributor',
-      capacity: 100,
-      max: 200
-    }
-  })
 ];
