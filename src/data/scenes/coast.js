@@ -19,7 +19,7 @@ export default scene2d({
       texture: ST.dieselGenerator,
       data: {
         name: 'Diesel Generator',
-        type: 'generator',
+        class: 'generator',
         capacity: 100,
         max: 200,
         active: false
@@ -30,7 +30,7 @@ export default scene2d({
       texture: ST.windGenAnim,
       data:{
         name: 'Wind Generator',
-        type: 'generator',
+        class: 'generator',
         capacity: 100,
         max: 200,
         active: false
@@ -41,7 +41,7 @@ export default scene2d({
       texture: ST.windGenAnim,
       data:{
         name: 'Wind Generator',
-        type: 'generator',
+        class: 'generator',
         capacity: 100,
         max: 200,
         active: false
@@ -52,7 +52,7 @@ export default scene2d({
       texture: ST.powerPole,
       data: {
         name: 'Power Grid',
-        type: 'distributor',
+        class: 'distributor',
         capacity: 100,
         max: 200,
         active: false
@@ -63,7 +63,7 @@ export default scene2d({
       texture: ST.farm,
       data: {
         name: 'Farm',
-        type: null,
+        class: null,
         capacity: 100,
         max: 200,
         active: false
@@ -72,7 +72,7 @@ export default scene2d({
     tile({
       data: {
         name: 'House',
-        type: 'consumer',
+        class: 'consumer',
         capacity: 100,
         max: 200
       },

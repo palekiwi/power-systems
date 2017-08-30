@@ -20,7 +20,7 @@ function SystemControls (props) {
       <div>
         {props.activeScene.structureTiles
           .map((s, i) => (
-            <div key={i} style={{display: propEq('type', 'generator', s) ? 'auto' : 'none'}}>
+            <div key={i} style={{display: propEq('class', 'generator', s) ? 'auto' : 'none'}}>
               <span>{s.name}</span>
               <input type="checkbox"
                 onChange={() => props.toggleStructureActive(i)}

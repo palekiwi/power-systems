@@ -35,7 +35,7 @@ function SystemSetting ({setGridSize, setSceneName, activeScene, setStructureCap
       <div>
         <h5>Generators</h5>
         {activeScene.structureTiles.map((t,i) =>
-          <div key={t.name + i} style={{display: (t.type == 'generator') ? 'auto' : 'none'}}>
+          <div key={t.name + i} style={{display: (t.class == 'generator') ? 'auto' : 'none'}}>
             <div>{t.name}</div>
             <div>
               <input type="range"
@@ -56,7 +56,7 @@ function SystemSetting ({setGridSize, setSceneName, activeScene, setStructureCap
       <div>
         <h5>Load</h5>
         {activeScene.structureTiles.map((t,i) =>
-          <div key={t.name + i} style={{display: (t.type == 'consumer') ? 'auto' : 'none'}}>
+          <div key={t.name + i} style={{display: (t.class == 'consumer') ? 'auto' : 'none'}}>
             <div>{t.name}</div>
             <div>
               <input type="range"

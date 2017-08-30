@@ -12,9 +12,9 @@ function Network ({grid, structureTiles}) {
   let distLines = [];
   let genLines = [];
 
-  let distributor = structureTiles.find(el => el.type == 'distributor');
-  let generators = structureTiles.filter(el => el.type == 'generator');
-  let consumers = structureTiles.filter(el => el.type == 'consumer');
+  let distributor = structureTiles.find(el => el.class == 'distributor');
+  let generators = structureTiles.filter(el => el.class == 'generator');
+  let consumers = structureTiles.filter(el => el.class == 'consumer');
 
   if (distributor) {
     genLines = generators.map(g => {
