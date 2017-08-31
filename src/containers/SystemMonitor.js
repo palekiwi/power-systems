@@ -13,10 +13,10 @@ import defaultTo from 'ramda/src/defaultTo';
 import T from 'ramda/src/T';
 import './SystemMonitor.scss';
 
-const capacityBy = (active, type) => {
+const capacityBy = (active, field) => {
   return compose(
     reduce((sum, val) => sum + val.capacity, 0),
-    filter(where({type, active})),
+    filter(where({class: field, active})),
     path(['structureTiles'])
   );
 };
