@@ -14,11 +14,11 @@ describe('computeSystemOutput', () => {
       ];
 
       const expected = [
-        zipToDates([40, 40, 90, 30]),
-        zipToDates([30, 50, 70, 40]),
-        zipToDates([0,  10, 50,  0]),
-        zipToDates([70, 80, 90, 70]),
-        zipToDates([0,   0, 20,  0])
+        zipToDates([40, 40,  90, 30]),
+        zipToDates([30, 50,  70, 40]),
+        zipToDates([0,  10,  50,  0]),
+        zipToDates([70, 80, 100, 70]),
+        zipToDates([0,   0,  10,  0])
       ];
 
       const res = computeSystemOutput(tiles);

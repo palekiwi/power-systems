@@ -3,8 +3,10 @@ import R from 'ramda';
 
 // StructureTile -> (a -> b)
 const computeVariablePower = x => R.map(R.evolve({value: R.multiply(R.prop('capacity', x))}), R.prop('variation', x));
-const setPower = fn => x => R.set(R.lensProp('power'), fn(x), x);
-const setPowerVar = setPower(computeVariablePower);
+const setVariablePower = x => R.set(R.lensProp('power'), computeVariablePower(x), x);
+
+const computeNonVarPower = load => cap => R.map(r => (r.value <= cap) ? r : R.assoc('value', cap, r), load);
+const setNonVarPower = load => x => R.set(R.lensProp('power'), computeNonVarPower(load)(R.prop('capacity', x)), x);
 
 const power = R.pluck('power');
 const zipValuesWith = fn => R.zipWith(R.mergeWithKey((k,l,r) => k == 'value' ? fn(l, Math.abs(r)) : r));
@@ -18,19 +20,25 @@ const subValues = zipRec(zipDiff);
 export function computeSystemOutput (sts) {
   const consumers = sts
     .filter(R.propEq('class', 'consumer'))
-    .map(setPowerVar);
+    .map(setVariablePower);
 
   const primary = sts
     .filter(R.propEq('priority', 2))
-    .map(setPowerVar);
+    .map(setVariablePower);
 
   const load = addValues(power(consumers));
   const primaryPower = addValues(power(primary));
+  const lp = subValues([load, primaryPower]);
 
-  const secondary = sts.filter(R.propEq('priority', 1));
-  const backup = sts.filter(R.propEq('priority', 0));
+  const secondary = sts.filter(R.propEq('priority', 1))
+    .map(setNonVarPower(lp));
+  const secondaryPower = addValues(power(secondary));
+  const ls = subValues([lp, secondaryPower]);
 
-  console.log(subValues([load, primaryPower]));
+  const backup = sts.filter(R.propEq('priority', 0))
+    .map(setNonVarPower(ls));
+
+  console.log(power(backup));
 
   return R.reduce(R.concat, [], [consumers, primary, secondary, backup]);
 }
