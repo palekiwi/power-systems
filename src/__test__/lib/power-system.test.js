@@ -90,9 +90,9 @@ describe('computeSystemOutput', () => {
   describe('given array of structureTiles without load', () => {
     it('secondary power and backup output no power', () => {
       const tiles = [
-        {name: 'solar', class: 'generator', type: 'variable', capacity: 100, priority: 2, variation: zipToDates([0, 0.1, 0.5, 0]), power: null},
-        {name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: null},
-        {name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: null}
+        {name: 'solar', class: 'generator', type: 'variable', capacity: 100, priority: 2, variation: zipToDates([0, 0.1, 0.5, 0]), power: []},
+        {name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: []},
+        {name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: []}
       ];
 
       const res = computeSystemOutput(tiles);

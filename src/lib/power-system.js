@@ -29,7 +29,7 @@ const addValues = zipRec(zipSum);
 const subValues = zipRec(zipDiff);
 
 export function computeSystemOutput (sts) {
-  if (sts.filter(R.propEq('class', 'consumer')).length == 0) return sts;
+  if (sts.filter(R.propEq('class', 'consumer')).length == 0) return sts.map(R.assoc('power', null));
 
   const consumers = sts
     .filter(R.propEq('class', 'consumer'))
