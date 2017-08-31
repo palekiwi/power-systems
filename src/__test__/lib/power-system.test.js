@@ -6,11 +6,11 @@ describe('computeSystemOutput', () => {
   describe('given array of structureTiles', () => {
     it('computes consumption and output of each component', () => {
       const tiles = [
-        {name: 'hospital', class: 'consumer', type: 'variable', capacity: 100, variation: [0.4, 0.4, 0.9, 0.3], consumption: null},
-        {name: 'communityCenter', class: 'consumer', type: 'variable', capacity: 100, variation: [0.3, 0.5, 0.7, 0.4], consumption: null},
-        {name: 'solar', class: 'generator', type: 'variable', capacity: 100, priority: 2, variation: [0, 0.1, 0.5, 0], output: null},
-        {name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, output: null},
-        {name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, output: null}
+        {name: 'hospital', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.4, 0.4, 0.9, 0.3]), power: null},
+        {name: 'communityCenter', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.3, 0.5, 0.7, 0.4]), power: null},
+        {name: 'solar', class: 'generator', type: 'variable', capacity: 100, priority: 2, variation: zipToDates([0, 0.1, 0.5, 0]), power: null},
+        {name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: null},
+        {name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: null}
       ];
 
       const expected = [
@@ -23,11 +23,12 @@ describe('computeSystemOutput', () => {
 
       const res = computeSystemOutput(tiles);
 
-      expect(res[0].consumption).toEqual(expected[0]);
-      expect(res[1].consumption).toEqual(expected[1]);
-      expect(res[2].output).toEqual(expected[2]);
-      expect(res[3].output).toEqual(expected[3]);
-      expect(res[4].output).toEqual(expected[4]);
+      expect(res.length).toEqual(expected.length);
+      expect(res[0].power).toEqual(expected[0]);
+      expect(res[1].power).toEqual(expected[1]);
+      expect(res[2].power).toEqual(expected[2]);
+      expect(res[3].power).toEqual(expected[3]);
+      expect(res[4].power).toEqual(expected[4]);
     });
   });
 });

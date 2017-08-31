@@ -26,7 +26,7 @@ export default [
       capacity: 100,
       max: 200,
       variation: null,
-      output: null
+      power: null
     }
   }),
   tile({
@@ -40,7 +40,7 @@ export default [
       capacity: 100,
       max: 200,
       variation: g.pvClear,
-      output: null
+      power: null
     }
   }),
   tile({
@@ -53,7 +53,7 @@ export default [
       priority: 0,
       capacity: 100,
       max: 200,
-      output: null
+      power: null
     }
   }),
   // consumption
@@ -66,7 +66,7 @@ export default [
       capacity: 100,
       max: 200,
       variation: l.communityCenter,
-      consumption: null
+      power: null
     }
   }),
   tile({
@@ -79,7 +79,7 @@ export default [
       capacity: 100,
       max: 200,
       variation: l.hospital,
-      consumption: null
+      power: null
     }
   }),
 ];
