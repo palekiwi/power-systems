@@ -31,7 +31,7 @@ class App extends Component {
             <ControlPanel />
           </div>
 
-          <SplitPane split="horizontal" defaultSize={150} onDragFinished={resizePane}>
+          <SplitPane split="horizontal" defaultSize={200} onDragFinished={resizePane}>
             <div className="ContentPanel top">
               <div className="Content">
                 <SystemMonitor />

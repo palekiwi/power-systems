@@ -10,5 +10,6 @@ export default {
   editor: false,
   ui: {
     resizePane: new Date()
-  }
+  },
+  time: 12
 };

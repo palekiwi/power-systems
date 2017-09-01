@@ -33,3 +33,7 @@ export const TOGGLE_EDITOR = "TOGGLE_EDITOR";
 export const EDITOR_ON = "EDITOR_ON";
 export const EDITOR_OFF = "EDITOR_OFF";
 export const CLOSE_EDITOR = "CLOSE_EDITOR";
+
+// time
+export const SET_TIME = "SET_TIME";
+export const INC_TIME = "INC_TIME";
