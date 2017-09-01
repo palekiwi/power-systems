@@ -33,7 +33,8 @@ SystemViewer.propTypes = {
   activeTile: PropTypes.object,
   saveTile: PropTypes.func.isRequired,
   openSVModal: PropTypes.func.isRequired,
-  closeSVModal: PropTypes.func.isRequired
+  closeSVModal: PropTypes.func.isRequired,
+  time: PropTypes.number.isRequired
 };
 
 function SystemViewer (props) {
@@ -57,13 +58,14 @@ function SystemViewer (props) {
           saveTile={props.saveTile}
           resizePane={props.ui.resizePane}
           editor={props.editor}
+          time={props.time}
         />
      }
     </div>
   );
 }
 
-const mapStateToProps = pick(['activeScene', 'ui', 'editor', 'activeTile']);
+const mapStateToProps = pick(['activeScene', 'ui', 'editor', 'activeTile', 'time']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SystemViewer);

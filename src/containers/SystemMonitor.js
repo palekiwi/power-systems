@@ -28,7 +28,6 @@ const capacityBy = (active, category) => {
 };
 
 const curCap = (time, category, active, x) => {
-  console.log(time, category, x);
   return compose(
     reduce((sum, arr) => sum + arr[time].value, 0),
     tap(console.log),

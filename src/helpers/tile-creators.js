@@ -76,7 +76,6 @@ export const houseThatched = ({position, data}) => {
   const d = merge({
     name: 'Thatched House',
     type: 'variable',
-    priority: 1,
     variation: l.houseThatched,
     capacity: 0,
     max: 200
@@ -89,7 +88,6 @@ export const communityCenter = ({position, data}) => {
   const d = merge({
     name: 'Community Center',
     type: 'variable',
-    priority: 1,
     variation: l.communityCenter,
     capacity: 0,
     max: 200
@@ -102,7 +100,6 @@ export const hospital = ({position, data}) => {
   const d = merge({
     name: 'Hospital',
     type: 'variable',
-    priority: 1,
     variation: l.hospital,
     capacity: 0,
     max: 200

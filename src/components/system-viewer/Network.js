@@ -5,10 +5,11 @@ import './Network.scss';
 
 Network.propTypes = {
   grid: PropTypes.object.isRequired,
-  structureTiles: PropTypes.array.isRequired
+  structureTiles: PropTypes.array.isRequired,
+  time: PropTypes.number.isRequired
 };
 
-function Network ({grid, structureTiles}) {
+function Network ({grid, structureTiles, time}) {
   let distLines = [];
   let genLines = [];
 
@@ -43,7 +44,7 @@ function Network ({grid, structureTiles}) {
     <div className="Network">
       <svg>
         {genLines.map((line, i) =>
-          <g key={i} className={line[2].active ? 'active' : ''}>
+          <g key={i} className={(line[2].active && line[2].power[time].value > 0) ? 'active' : ''}>
             <path d={link(line)} className="powerline generation"/>
             <path d={link(line)} className="powerflow"/>
           </g>
