@@ -10,7 +10,8 @@ describe('computeSystemOutput', () => {
         {name: 'communityCenter', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.3, 0.5, 0.7, 0.4]), power: null},
         {name: 'solar', class: 'generator', type: 'variable', capacity: 100, priority: 2, variation: zipToDates([0, 0.1, 0.5, 0]), power: null},
         {name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: null},
-        {name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: null}
+        {name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: null},
+        {name: '', class: ''}
       ];
 
       const expected = [
@@ -23,7 +24,7 @@ describe('computeSystemOutput', () => {
 
       const res = computeSystemOutput(tiles);
 
-      expect(res.length).toEqual(expected.length);
+      expect(res.length).toEqual(tiles.length);
       expect(res.find(el => el.name == 'hospital').power).toEqual(expected[0]);
       expect(res.find(el => el.name == 'communityCenter').power).toEqual(expected[1]);
       expect(res.find(el => el.name == 'solar').power).toEqual(expected[2]);

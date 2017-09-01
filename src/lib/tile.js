@@ -1,11 +1,16 @@
 import vector from './vector.js';
+import randomId from './random-id.js';
 import ascend from 'ramda/src/ascend';
 import path from 'ramda/src/path';
 import sortWith from 'ramda/src/sortWith';
 
 // tile :: (Object, Object, Object) -> Object
 const tile = ({texture, position, data = {}}) => {
-  return Object.assign({}, {texture, position}, data);
+  return Object.assign(
+    {id: randomId()},
+    {texture, position},
+    data
+  );
 };
 
 export default tile;
