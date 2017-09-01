@@ -6,6 +6,7 @@ SystemSetting.propTypes = {
   setGridSize: PropTypes.func.isRequired,
   setSceneName: PropTypes.func.isRequired,
   saveNewScene: PropTypes.func.isRequired,
+  updateScene: PropTypes.func.isRequired,
   closeEditor: PropTypes.func.isRequired,
   setStructureCapacity: PropTypes.func.isRequired,
   activeScene: PropTypes.object.isRequired
@@ -75,7 +76,7 @@ function SystemSetting (props) {
       </div>
       <div>
         { props.activeScene.id  ?
-          <button onClick={() => props.saveNewScene(scene2d(props.activeScene))}>Update</button>
+          <button onClick={() => props.updateScene(props.activeScene)}>Update</button>
           :
           <button onClick={() => props.saveNewScene(scene2d(props.activeScene))}>Save</button>
         }

@@ -93,3 +93,10 @@ export function saveNewScene (scene) {
     payload: scene
   };
 }
+
+export function updateScene (scene) {
+  return {
+    type: types.UPDATE_SCENE,
+    payload: scene
+  };
+}
