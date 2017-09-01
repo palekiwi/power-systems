@@ -1,4 +1,5 @@
 export const hospital = [
+  {date: "00:00", value: 0.3},
   {date: "01:00", value: 0.3},
   {date: "02:00", value: 0.3},
   {date: "03:00", value: 0.3},
@@ -26,6 +27,7 @@ export const hospital = [
 ];
 
 export const communityCenter = [
+  {date: "00:00", value: 0.3},
   {date: "01:00", value: 0.3},
   {date: "02:00", value: 0.3},
   {date: "03:00", value: 0.3},
@@ -53,6 +55,7 @@ export const communityCenter = [
 ];
 
 export const houseElevated = [
+  {date: "00:00", value: 0.3},
   {date: "01:00", value: 0.3},
   {date: "02:00", value: 0.3},
   {date: "03:00", value: 0.3},
