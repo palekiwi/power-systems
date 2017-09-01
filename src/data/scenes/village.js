@@ -1,8 +1,8 @@
 import scene2d from '../../lib/scene-2d.js';
 import vector from '../../lib/vector.js';
-import tile, { flatmapToTilesArray } from '../../lib/tile.js';
+import { flatmapToTilesArray } from '../../lib/tile.js';
+import { diesel, wind, powerPole, houseThatched, farm } from '../../helpers/tile-creators.js';
 import { grass, dirt } from '../terrain-textures.js';
-import * as ST from '../structure-textures.js';
 
 export default scene2d({
   name: 'Village Microgrid',
@@ -13,54 +13,29 @@ export default scene2d({
     [grass, dirt, grass]
   ]),
   structureTiles: [
-    tile({
+    diesel({
       position: vector(0, 0),
-      texture: ST.dieselGenerator,
       data: {
-        name: 'Diesel Generator',
-        class: 'generator',
         capacity: 100,
-        active: false
       }
     }),
-    tile({
+    wind({
       position: vector(2, 0),
-      texture: ST.windGenAnim,
       data:{
-        name: 'Wind Generator',
-        class: 'generator',
         capacity: 100,
-        active: false
       }
     }),
-    tile({
+    powerPole({
       position: vector(1, 1),
-      texture: ST.powerPole,
-      data: {
-        name: 'Power Grid',
-        class: 'distributor',
-        capacity: 100,
-        active: false
-      }
     }),
-    tile({
+    farm({
       position: vector(0, 2),
-      texture: ST.farm,
-      data: {
-        name: 'Farm',
-        class: null,
-        capacity: 100,
-        active: false
-      }
     }),
-    tile({
-      data: {
-        name: 'House',
-        class: 'consumer',
-        capacity: 100
-      },
+    houseThatched({
       position: vector(1, 2),
-      texture: ST.houseThatched
+      data: {
+        capacity: 100
+      }
     })
   ]
 });

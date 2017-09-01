@@ -40,7 +40,7 @@ function SystemSetting (props) {
       <div>
         <h5>Generators</h5>
         {props.activeScene.structureTiles.map((t,i) =>
-          <div key={t.name + i} style={{display: (t.class == 'generator') ? 'auto' : 'none'}}>
+          <div key={t.name + i} style={{display: (t.category == 'generator') ? 'auto' : 'none'}}>
             <div>{t.name}</div>
             <div>
               <input type="range"
@@ -61,7 +61,7 @@ function SystemSetting (props) {
       <div>
         <h5>Load</h5>
         {props.activeScene.structureTiles.map((t,i) =>
-          <div key={t.name + i} style={{display: (t.class == 'consumer') ? 'auto' : 'none'}}>
+          <div key={t.name + i} style={{display: (t.category == 'consumer') ? 'auto' : 'none'}}>
             <div>{t.name}</div>
             <div>
               <input type="range"
