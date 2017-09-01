@@ -11,17 +11,31 @@ import compose from 'ramda/src/compose';
 import reduce from 'ramda/src/reduce';
 import filter from 'ramda/src/filter';
 import path from 'ramda/src/path';
+import pluck from 'ramda/src/pluck';
+import tap from 'ramda/src/tap';
 import equals from 'ramda/src/equals';
+import propEq from 'ramda/src/propEq';
 import defaultTo from 'ramda/src/defaultTo';
 import T from 'ramda/src/T';
 import './SystemMonitor.scss';
 
 const capacityBy = (active, category) => {
   return compose(
-    reduce((sum, val) => sum + val.capacity, 0),
+    reduce((sum, arr) => sum + arr.capacity, 0),
     filter(where({category, active})),
     path(['structureTiles'])
   );
+};
+
+const curCap = (time, category, active, x) => {
+  console.log(time, category, x);
+  return compose(
+    reduce((sum, arr) => sum + arr[time].value, 0),
+    tap(console.log),
+    pluck('power'),
+    filter(where({category, active})),
+    path(['structureTiles'])
+  )(x);
 };
 
 const totalGenCap = capacityBy(T, equals('generator'));
@@ -59,18 +73,19 @@ function SystemMonitor ({activeScene, time, setTime}) {
             <div className="column is-2 has-text-centered">
               <span>Max Load:</span>
               <div>
-                {maxLoad(activeScene)}</div>
+                {maxLoad(activeScene)}
               </div>
+            </div>
             <div className="column is-2 has-text-centered">
               <span>Current Generation:</span>
               <div>
-                {currentGen(activeScene)}
+                {curCap(time, equals('generator'), equals(true), activeScene)}
               </div>
             </div>
             <div className="column is-2 has-text-centered">
               <span>Current Load:</span>
               <div>
-                {currentLoad(activeScene)}
+                {curCap(time, equals('consumer'), equals(true), activeScene)}
               </div>
             </div>
           </div>

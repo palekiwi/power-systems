@@ -78,7 +78,7 @@ function SystemSetting (props) {
       </div>
       <div>
         { props.activeScene.id  ?
-          <button onClick={() => props.updateScene(props.activeScene)}>Update</button>
+          <button onClick={() => props.updateScene(evolve({'structureTiles': computeSystemOutput}, props.activeScene))}>Update</button>
           :
           <button onClick={() => props.saveNewScene(evolve({'structureTiles': computeSystemOutput}, scene2d(props.activeScene)))}>Save</button>
         }

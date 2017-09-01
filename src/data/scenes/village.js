@@ -1,10 +1,12 @@
 import scene2d from '../../lib/scene-2d.js';
 import vector from '../../lib/vector.js';
+import {computeSystemOutput} from '../../lib/power-system.js';
 import { flatmapToTilesArray } from '../../lib/tile.js';
 import { diesel, wind, powerPole, houseThatched, farm } from '../../helpers/tile-creators.js';
 import { grass, dirt } from '../terrain-textures.js';
+import evolve from 'ramda/src/evolve';
 
-export default scene2d({
+const village = scene2d({
   name: 'Village Microgrid',
   gridSize: [3, 3],
   terrainTiles: flatmapToTilesArray([
@@ -39,3 +41,5 @@ export default scene2d({
     })
   ]
 });
+
+export default evolve({structureTiles: computeSystemOutput}, village);

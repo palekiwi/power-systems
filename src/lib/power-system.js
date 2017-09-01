@@ -29,7 +29,7 @@ const subValues = zipRec(zipDiff);
 
 export function computeSystemOutput (sts) {
   const consumers = sts
-    .filter(R.propEq('class', 'consumer'))
+    .filter(R.propEq('category', 'consumer'))
     .map(setVariablePower);
 
   if (consumers.length == 0) return sts.map(R.assoc('power', null));
