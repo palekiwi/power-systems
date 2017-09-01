@@ -6,12 +6,12 @@ describe('computeSystemOutput', () => {
   describe('given array of structureTiles', () => {
     it('computes consumption and output of each component', () => {
       const tiles = [
-        {name: 'hospital', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.4, 0.4, 0.9, 0.3]), power: null},
-        {name: 'communityCenter', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.3, 0.5, 0.7, 0.4]), power: null},
-        {name: 'solar', class: 'generator', type: 'variable', capacity: 100, priority: 2, variation: zipToDates([0, 0.1, 0.5, 0]), power: null},
-        {name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: null},
-        {name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: null},
-        {name: '', class: ''}
+        {id: 1, name: 'hospital', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.4, 0.4, 0.9, 0.3]), power: null},
+        {id: 2, name: 'communityCenter', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.3, 0.5, 0.7, 0.4]), power: null},
+        {id: 3, name: 'solar', class: 'generator', type: 'variable', capacity: 100, priority: 2, variation: zipToDates([0, 0.1, 0.5, 0]), power: null},
+        {id: 4, name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: null},
+        {id: 5, name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: null},
+        {id: 6, name: '', class: ''}
       ];
 
       const expected = [
@@ -36,11 +36,11 @@ describe('computeSystemOutput', () => {
   describe('given primary power supplies enough power', () => {
     it('secondary and backup should output nothing', () => {
       const tiles = [
-        {name: 'hospital', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.1, 0.1, 0.1, 0.1]), power: null},
-        {name: 'communityCenter', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.1, 0.1, 0.1, 0.1]), power: null},
-        {name: 'solar', class: 'generator', type: 'variable', capacity: 100, priority: 2, variation: zipToDates([0, 0.3, 0.5, 0]), power: null},
-        {name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: null},
-        {name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: null}
+        {id: 1, name: 'hospital', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.1, 0.1, 0.1, 0.1]), power: null},
+        {id: 2, name: 'communityCenter', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.1, 0.1, 0.1, 0.1]), power: null},
+        {id: 3, name: 'solar', class: 'generator', type: 'variable', capacity: 100, priority: 2, variation: zipToDates([0, 0.3, 0.5, 0]), power: null},
+        {id: 4, name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: null},
+        {id: 5, name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: null}
       ];
 
       const expected = [
@@ -65,10 +65,10 @@ describe('computeSystemOutput', () => {
   describe('given structureTiles without primary power', () => {
     it('computes consumption and output of each component', () => {
       const tiles = [
-        {name: 'hospital', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.4, 0.4, 0.9, 0.3]), power: null},
-        {name: 'communityCenter', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.3, 0.5, 0.7, 0.4]), power: null},
-        {name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: null},
-        {name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: null}
+        {id: 1, name: 'hospital', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.4, 0.4, 0.9, 0.3]), power: null},
+        {id: 2, name: 'communityCenter', class: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.3, 0.5, 0.7, 0.4]), power: null},
+        {id: 3, name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: null},
+        {id: 4, name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: null}
       ];
 
       const expected = [
@@ -91,9 +91,9 @@ describe('computeSystemOutput', () => {
   describe('given array of structureTiles without load', () => {
     it('secondary power and backup output no power', () => {
       const tiles = [
-        {name: 'solar', class: 'generator', type: 'variable', capacity: 100, priority: 2, variation: zipToDates([0, 0.1, 0.5, 0]), power: []},
-        {name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: []},
-        {name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: []}
+        {id: 1, name: 'solar', class: 'generator', type: 'variable', capacity: 100, priority: 2, variation: zipToDates([0, 0.1, 0.5, 0]), power: []},
+        {id: 2, name: 'gas', class: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: []},
+        {id: 3, name: 'diesel', class: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: []}
       ];
 
       const res = computeSystemOutput(tiles);

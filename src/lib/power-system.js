@@ -28,27 +28,30 @@ const addValues = zipRec(zipSum);
 const subValues = zipRec(zipDiff);
 
 export function computeSystemOutput (sts) {
-  if (sts.filter(R.propEq('class', 'consumer')).length == 0) return sts.map(R.assoc('power', null));
-
   const consumers = sts
     .filter(R.propEq('class', 'consumer'))
     .map(setVariablePower);
 
-  const primary = sts
-    .filter(R.propEq('priority', 2))
+  if (consumers.length == 0) return sts.map(R.assoc('power', null));
+
+  const primary = sts.filter(R.propEq('priority', 2))
     .map(setVariablePower);
 
-  const load = addValues(power(consumers));
+  const load0 = addValues(power(consumers));
   const primaryPower = addValues(power(primary));
-  const lp = subValues([load, primaryPower]);
+  const load1 = subValues([load0, primaryPower]);
 
   const secondary = sts.filter(R.propEq('priority', 1))
-    .map(setNonVarPower(lp));
+    .map(setNonVarPower(load1));
+
   const secondaryPower = addValues(power(secondary));
-  const ls = subValues([lp, secondaryPower]);
+  const load2 = subValues([load1, secondaryPower]);
 
   const backup = sts.filter(R.propEq('priority', 0))
-    .map(setNonVarPower(ls));
+    .map(setNonVarPower(load2));
 
-  return [...consumers, ...primary, ...secondary, ...backup];
+  return R.unionWith(
+    R.eqBy(R.prop('id')),
+    R.unnest([consumers, primary, secondary, backup]),
+    sts);
 }
