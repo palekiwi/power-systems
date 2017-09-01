@@ -1,5 +1,5 @@
 export default {
-  scenes: {},
+  scenes: [],
   activeScene: null,
   activeStructure: null,
   activeTile: null,

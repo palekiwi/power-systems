@@ -83,6 +83,7 @@ export default function activeScene (state = initialState.activeScene, action) {
   switch (action.type) {
 
   case types.SET_ACTIVE_SCENE:
+  case types.SAVE_NEW_SCENE:
     return action.payload;
 
   case types.SET_EMPTY_ACTIVE_SCENE:

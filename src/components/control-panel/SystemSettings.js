@@ -1,23 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import scene2d from '../../lib/scene-2d.js';
 
 SystemSetting.propTypes = {
   setGridSize: PropTypes.func.isRequired,
   setSceneName: PropTypes.func.isRequired,
-  saveScene: PropTypes.func.isRequired,
+  saveNewScene: PropTypes.func.isRequired,
+  closeEditor: PropTypes.func.isRequired,
   setStructureCapacity: PropTypes.func.isRequired,
   activeScene: PropTypes.object.isRequired
 };
 
-function SystemSetting ({setGridSize, setSceneName, activeScene, setStructureCapacity, saveScene}) {
+function SystemSetting (props) {
   return (
     <div>
       <h4>Settings</h4>
       <div>
         <h5>Name</h5>
         <input className="input" type="text"
-          onChange={(e) => setSceneName(e.target.value)}
-          value={activeScene.name}
+          onChange={(e) => props.setSceneName(e.target.value)}
+          value={props.activeScene.name}
         />
       </div>
 
@@ -25,16 +27,16 @@ function SystemSetting ({setGridSize, setSceneName, activeScene, setStructureCap
 
       <div>
         <h5>Grid Size</h5>
-        <button onClick={() => setGridSize([3,3])}>S</button>
-        <button onClick={() => setGridSize([4,4])}>M</button>
-        <button onClick={() => setGridSize([5,5])}>L</button>
+        <button onClick={() => props.setGridSize([3,3])}>S</button>
+        <button onClick={() => props.setGridSize([4,4])}>M</button>
+        <button onClick={() => props.setGridSize([5,5])}>L</button>
       </div>
 
       <hr />
 
       <div>
         <h5>Generators</h5>
-        {activeScene.structureTiles.map((t,i) =>
+        {props.activeScene.structureTiles.map((t,i) =>
           <div key={t.name + i} style={{display: (t.class == 'generator') ? 'auto' : 'none'}}>
             <div>{t.name}</div>
             <div>
@@ -43,7 +45,7 @@ function SystemSetting ({setGridSize, setSceneName, activeScene, setStructureCap
                 min="0"
                 max={t.max}
                 step="5"
-                onChange={(e) => setStructureCapacity(i, e.target.value)}
+                onChange={(e) => props.setStructureCapacity(i, e.target.value)}
               />
               <span>{t.capacity}kW</span>
             </div>
@@ -55,7 +57,7 @@ function SystemSetting ({setGridSize, setSceneName, activeScene, setStructureCap
 
       <div>
         <h5>Load</h5>
-        {activeScene.structureTiles.map((t,i) =>
+        {props.activeScene.structureTiles.map((t,i) =>
           <div key={t.name + i} style={{display: (t.class == 'consumer') ? 'auto' : 'none'}}>
             <div>{t.name}</div>
             <div>
@@ -64,7 +66,7 @@ function SystemSetting ({setGridSize, setSceneName, activeScene, setStructureCap
                 min="0"
                 max={t.max}
                 step="5"
-                onChange={(e) => setStructureCapacity(i,e.target.value)}
+                onChange={(e) => props.setStructureCapacity(i,e.target.value)}
               />
               <span>{t.capacity}kW</span>
             </div>
@@ -72,11 +74,15 @@ function SystemSetting ({setGridSize, setSceneName, activeScene, setStructureCap
         )}
       </div>
       <div>
-        <button onClick={() => saveScene(activeScene)}>Save</button>
+        { props.activeScene.id  ?
+          <button onClick={() => props.saveNewScene(scene2d(props.activeScene))}>Update</button>
+          :
+          <button onClick={() => props.saveNewScene(scene2d(props.activeScene))}>Save</button>
+        }
+        <button onClick={() => props.closeEditor()}>Cancel</button>
       </div>
     </div>
   );
 }
-
 
 export default SystemSetting;

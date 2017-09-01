@@ -19,6 +19,12 @@ export function editorOff () {
   };
 }
 
+export function closeEditor () {
+  return {
+    type: types.CLOSE_EDITOR
+  };
+}
+
 export function createNewScene () {
   return function (dispatch) {
     dispatch(editorOn());

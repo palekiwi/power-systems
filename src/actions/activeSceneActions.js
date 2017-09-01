@@ -87,9 +87,9 @@ export function setStructureCapacity (index, capacity) {
   };
 }
 
-export function saveScene (scene) {
+export function saveNewScene (scene) {
   return {
-    type: types.SAVE_SCENE,
+    type: types.SAVE_NEW_SCENE,
     payload: scene
   };
 }
