@@ -2,7 +2,7 @@ import scene2d from '../../lib/scene-2d.js';
 import vector from '../../lib/vector.js';
 import {computeSystemOutput} from '../../lib/power-system.js';
 import { flatmapToTilesArray } from '../../lib/tile.js';
-import { diesel, wind, powerPole, houseThatched, farm } from '../../helpers/tile-creators.js';
+import { diesel, solar, powerPole, houseThatched, farm } from '../../helpers/tile-creators.js';
 import { grass, dirt } from '../terrain-textures.js';
 import evolve from 'ramda/src/evolve';
 
@@ -21,7 +21,7 @@ const village = scene2d({
         capacity: 100,
       }
     }),
-    wind({
+    solar({
       position: vector(2, 0),
       data:{
         capacity: 100,

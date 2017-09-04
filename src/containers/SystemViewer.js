@@ -40,38 +40,63 @@ SystemViewer.propTypes = {
 };
 
 function SystemViewer (props) {
+  let content = (props => {
+    let scene = <Scene
+      {...props.activeScene}
+      openSVModal={props.openSVModal}
+      closeSVModal={props.closeSVModal}
+      setActiveStructure={props.setActiveStructure}
+      setActiveTile={props.setActiveTile}
+      resetActiveTile={props.resetActiveTile}
+      deleteTile={props.deleteTile}
+      activeTile={props.activeTile}
+      saveTile={props.saveTile}
+      resizePane={props.ui.resizePane}
+      editor={props.editor}
+      time={props.time}
+    />;
+
+    let chart = <SystemChart
+      structureTiles={props.activeScene.structureTiles}
+      time={props.time}
+    />;
+
+    switch (props.ui.viewerMode) {
+
+    case 'graphic':
+      return scene;
+
+    case 'chart':
+      return chart;
+
+    case 'split':
+      return (
+        <div className="columns">
+          <div className="column is-half">
+            {scene}
+          </div>
+          <div className="column is-half">
+            {chart}
+          </div>
+        </div>
+      );
+
+    }
+  });
 
   return (
     <div className="SystemViewer">
       <div>
         <button onClick={() => props.setViewerMode('graphic')}>Graphic</button>
         <button onClick={() => props.setViewerMode('chart')}>Chart</button>
+        <button onClick={() => props.setViewerMode('split')}>Split</button>
       </div>
 
       {isNil(props.activeScene) ?
         <div className="selection-prompt">
           Please select a system...
         </div>
-      : props.ui.viewerMode == 'graphic' ?
-        <Scene
-          {...props.activeScene}
-          openSVModal={props.openSVModal}
-          closeSVModal={props.closeSVModal}
-          setActiveStructure={props.setActiveStructure}
-          setActiveTile={props.setActiveTile}
-          resetActiveTile={props.resetActiveTile}
-          deleteTile={props.deleteTile}
-          activeTile={props.activeTile}
-          saveTile={props.saveTile}
-          resizePane={props.ui.resizePane}
-          editor={props.editor}
-          time={props.time}
-        />
-      :
-        <SystemChart
-          structureTiles={props.activeScene.structureTiles}
-          time={props.time}
-        />
+      : content(props)
       }
     </div>
   );
