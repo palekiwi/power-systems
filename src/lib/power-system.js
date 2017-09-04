@@ -1,56 +1,55 @@
-import R from 'ramda';
+import assoc from 'ramda/src/assoc';
+import evolve from 'ramda/src/evolve';
+import multiply from 'ramda/src/multiply';
+import lensProp from 'ramda/src/lensProp';
+import map from 'ramda/src/map';
+import set from 'ramda/src/set';
+import pluck from 'ramda/src/pluck';
+import unnest from 'ramda/src/unnest';
+import propEq from 'ramda/src/propEq';
+import unionWith from 'ramda/src/unionWith';
+import eqBy from 'ramda/src/eqBy';
+import prop from 'ramda/src/prop';
+
+import { addValues, subValues } from './helpers/power-helpers.js';
 
 // StructureTile -> (a -> b)
-const computeVariablePower = x => R.map(R.evolve({value: R.multiply(R.prop('capacity', x))}), R.prop('variation', x));
-const setVariablePower = x => R.set(R.lensProp('power'), computeVariablePower(x), x);
+const computeVariablePower = x => map(evolve({value: multiply(prop('capacity', x))}), prop('variation', x));
+const setVariablePower = x => set(lensProp('power'), computeVariablePower(x), x);
 
-const computeNonVarPower = load => cap => R.map(r => {
-  if (r.value <= 0) return R.assoc('value', 0, r);
-  return (r.value <= cap) ? r : R.assoc('value', cap, r);
+const computeNonVarPower = load => cap => map(r => {
+  if (r.value <= 0) return assoc('value', 0, r);
+  return (r.value <= cap) ? r : assoc('value', cap, r);
 }, load);
 
-const setNonVarPower = load => x => R.set(R.lensProp('power'), computeNonVarPower(load)(R.prop('capacity', x)), x);
-
-const power = R.pluck('power');
-const zipValuesWith = fn => (a,b) => {
-  if (R.isEmpty(a) && R.isEmpty(b)) return [];
-  if (R.isEmpty(a)) return b;
-  if (R.isEmpty(b)) return a;
-  return R.zipWith(R.mergeWithKey((k,l,r) => k == 'value' ? fn(l, Math.abs(r)) : r), a, b);
-};
-
-const zipSum = (acc, arr) => (arr.length == 0) ? acc : zipSum(zipValuesWith(R.add)(acc, R.head(arr)), R.tail(arr));
-const zipDiff = (acc, arr) => (arr.length == 0) ? acc : zipDiff(zipValuesWith(R.subtract)(acc, R.head(arr)), R.tail(arr));
-
-const zipRec = fn => arr => (arr.length == 0) ? [] : fn(R.head(arr), R.tail(arr));
-const addValues = zipRec(zipSum);
-const subValues = zipRec(zipDiff);
+const setNonVarPower = load => x => set(lensProp('power'), computeNonVarPower(load)(prop('capacity', x)), x);
+const power = pluck('power');
 
 export function computeSystemOutput (sts) {
   const consumers = sts
-    .filter(R.propEq('category', 'consumer'))
+    .filter(propEq('category', 'consumer'))
     .map(setVariablePower);
 
-  if (consumers.length == 0) return sts.map(R.assoc('power', []));
+  if (consumers.length == 0) return sts.map(assoc('power', []));
 
-  const primary = sts.filter(R.propEq('priority', 2))
+  const primary = sts.filter(propEq('priority', 2))
     .map(setVariablePower);
 
   const load0 = addValues(power(consumers));
   const primaryPower = addValues(power(primary));
   const load1 = subValues([load0, primaryPower]);
 
-  const secondary = sts.filter(R.propEq('priority', 1))
+  const secondary = sts.filter(propEq('priority', 1))
     .map(setNonVarPower(load1));
 
   const secondaryPower = addValues(power(secondary));
   const load2 = subValues([load1, secondaryPower]);
 
-  const backup = sts.filter(R.propEq('priority', 0))
+  const backup = sts.filter(propEq('priority', 0))
     .map(setNonVarPower(load2));
 
-  return R.unionWith(
-    R.eqBy(R.prop('id')),
-    R.unnest([consumers, primary, secondary, backup]),
+  return unionWith(
+    eqBy(prop('id')),
+    unnest([consumers, primary, secondary, backup]),
     sts);
 }

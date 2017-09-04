@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ts from '../../data/editor/terrainTiles.js';
 import ss from '../../data/editor/structureTiles.js';
-import assoc from 'ramda/src/assoc';
+import merge from 'ramda/src/merge';
+import randomId from '../../lib/random-id.js';
 import './TileEditor.scss';
 
 class TileEditor extends React.Component {
@@ -22,7 +23,7 @@ class TileEditor extends React.Component {
     const position = this.props.activeTile;
     this.props.saveTile({
       type: this.state.type,
-      tile: assoc('position', position, tile)
+      tile: merge(tile, {id: randomId(), 'position': position})
     });
   }
 

@@ -1,3 +1,4 @@
+import {parseDate} from '../../helpers/format.js';
 export const hospital = [
   {date: "00:00", value: 0.3},
   {date: "01:00", value: 0.3},
@@ -24,7 +25,7 @@ export const hospital = [
   {date: "22:00", value: 0.4},
   {date: "23:00", value: 0.3},
   {date: "24:00", value: 0.3}
-];
+].map(parseDate);
 
 export const communityCenter = [
   {date: "00:00", value: 0.3},
@@ -51,8 +52,7 @@ export const communityCenter = [
   {date: "21:00", value: 0.5},
   {date: "22:00", value: 0.4},
   {date: "23:00", value: 0.3},
-  {date: "24:00", value: 0.3}
-];
+].map(parseDate);
 
 export const houseElevated = [
   {date: "00:00", value: 0.3},
@@ -80,7 +80,7 @@ export const houseElevated = [
   {date: "22:00", value: 0.4},
   {date: "23:00", value: 0.3},
   {date: "24:00", value: 0.3}
-];
+].map(parseDate);
 
 export const houseThatched = [
   {date: "00:00", value: 0.3},
@@ -108,4 +108,4 @@ export const houseThatched = [
   {date: "22:00", value: 0.4},
   {date: "23:00", value: 0.3},
   {date: "24:00", value: 0.3}
-];
+].map(parseDate);

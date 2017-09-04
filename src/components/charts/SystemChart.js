@@ -6,8 +6,17 @@ import LineChart from './LineChart.js';
 import XYaxis from './XYaxis.js';
 import propEq from 'ramda/src/propEq';
 import evolve from 'ramda/src/evolve';
+import prop from 'ramda/src/prop';
+import add from 'ramda/src/add';
 import range from 'ramda/src/range';
+import max from 'ramda/src/max';
+import map from 'ramda/src/map';
+import compose from 'ramda/src/compose';
+import filter from 'ramda/src/filter';
+import reduce from 'ramda/src/reduce';
+import pluck from 'ramda/src/pluck';
 import { parseHM, timeFromInt } from '../../helpers/format.js';
+import { addValues } from '../../lib/helpers/power-helpers.js';
 
 class SystemChart extends React.Component {
   constructor (props) {
@@ -29,12 +38,42 @@ class SystemChart extends React.Component {
   render () {
     const {structureTiles} = this.props;
     const state = this.state;
-    const data = structureTiles
-      .find(x => x.category == 'generator')
-      .power
-      .map(evolve({date: parseHM}));
 
-    const scales = {x: x(state.width, data), y: y(state.height, data)};
+    const instantGen = compose(
+      reduce(max, 0),
+      pluck('value'),
+      addValues,
+      map(prop('power')),
+      filter(propEq('category', 'generator'))
+    )(structureTiles);
+
+    const totalLoad = compose(
+      addValues,
+      map(prop('power')),
+      filter(propEq('category', 'consumer'))
+    )(structureTiles);
+
+    console.log(totalLoad);
+
+    const totalGen = compose(
+      addValues,
+      map(prop('power')),
+      filter(propEq('category', 'consumer'))
+    )(structureTiles);
+
+    const instantLoad = compose(
+      reduce(max, 0),
+      pluck('value'),
+      addValues,
+      map(prop('power')),
+      filter(propEq('category', 'consumer'))
+    )(structureTiles);
+
+    const data = max(instantGen, instantLoad);
+
+    const scales = {
+      x: x(state.width, range(0,25).map(timeFromInt).map(parseHM)),
+      y: y(state.height, data)};
 
     const pos = scales.x(d3.timeParse('%H:%M')(timeFromInt(this.props.time)));
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(range(0,10));
@@ -43,13 +82,14 @@ class SystemChart extends React.Component {
       <div ref={(chart) => this.chart = chart}>
         <svg {...svgSize(state)}>
           <g transform={transform(state)}>
+            <LineChart stroke={'red'} data={totalLoad} {...scales}/>
             {structureTiles
-              .filter(x => ['generator', 'consumer'].includes(x.category))
+              .filter(propEq('category', 'generator'))
               .map((el, i) =>
                 <LineChart
                   key={el.id}
                   stroke={colorScale(i)}
-                  data={el.power.map(evolve({date: parseHM}))} {...scales}/>
+                  data={el.power} {...scales}/>
               )
             }
             <g>
@@ -86,12 +126,12 @@ function transform(state) {
 
 function x(width, data) {
   return d3.scaleTime()
-    .domain(d3.extent(data, d => d.date))
+    .domain(d3.extent(data))
     .range([0, width]);
 }
 
 function y(height, data) {
   return d3.scaleLinear()
-    .domain([0, d3.max(data, d => d.value) + 20])
+    .domain([0, data])
     .range([height, 0]);
 }

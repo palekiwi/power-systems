@@ -15,11 +15,12 @@
   fill: none;
   opacity: 0.6;
   transition: opacity .3s ease-in;
+  stroke-linecap: round;
 }
 
 .powerline {
   stroke: darkgray;
-  stroke-width: 3;
+  stroke-width: 1.5%;
 }
 
 .active .powerline.generation {
@@ -32,8 +33,7 @@
 
 .active .powerflow {
   stroke: white;
-  stroke-width: 2;
-  stroke-linecap: round;
+  stroke-width: 0.3%;
   stroke-dasharray: 1 10;
   animation: powerflow 15s infinite linear forwards;
 }

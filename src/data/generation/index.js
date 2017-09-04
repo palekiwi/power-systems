@@ -1,3 +1,4 @@
+import {parseDate} from '../../helpers/format.js';
 export const pvClear = [
   {date: "00:00", value: 0.0},
   {date: "01:00", value: 0.0},
@@ -24,4 +25,4 @@ export const pvClear = [
   {date: "22:00", value: 0.0},
   {date: "23:00", value: 0.0},
   {date: "24:00", value: 0.0}
-];
+].map(parseDate);
