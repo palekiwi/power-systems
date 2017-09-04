@@ -6,6 +6,7 @@ import LineChart from './LineChart.js';
 import XYaxis from './XYaxis.js';
 import propEq from 'ramda/src/propEq';
 import evolve from 'ramda/src/evolve';
+import range from 'ramda/src/range';
 import { parseHM, timeFromInt } from '../../helpers/format.js';
 
 class SystemChart extends React.Component {
@@ -32,30 +33,22 @@ class SystemChart extends React.Component {
       .find(x => x.category == 'generator')
       .power
       .map(evolve({date: parseHM}));
-    console.log(data);
+
     const scales = {x: x(state.width, data), y: y(state.height, data)};
 
     const pos = scales.x(d3.timeParse('%H:%M')(timeFromInt(this.props.time)));
+    const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(range(0,10));
 
     return (
       <div ref={(chart) => this.chart = chart}>
         <svg {...svgSize(state)}>
           <g transform={transform(state)}>
             {structureTiles
-              .filter(propEq('category', 'generator'))
-              .map(el =>
+              .filter(x => ['generator', 'consumer'].includes(x.category))
+              .map((el, i) =>
                 <LineChart
                   key={el.id}
-                  stroke={'rgba(100,240,200,0.5)'}
-                  data={el.power.map(evolve({date: parseHM}))} {...scales}/>
-              )
-            }
-            {structureTiles
-              .filter(propEq('category', 'consumer'))
-              .map(el =>
-                <LineChart
-                  key={el.id}
-                  stroke={'rgba(200,200,200,0.5)'}
+                  stroke={colorScale(i)}
                   data={el.power.map(evolve({date: parseHM}))} {...scales}/>
               )
             }

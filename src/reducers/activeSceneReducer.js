@@ -88,7 +88,7 @@ export default function activeScene (state = initialState.activeScene, action) {
     return action.payload;
 
   case types.CLOSE_EDITOR:
-    return null;
+    return state.id ? state : null;
 
   case types.SET_EMPTY_ACTIVE_SCENE:
     return action.payload;

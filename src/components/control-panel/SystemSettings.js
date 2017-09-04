@@ -19,6 +19,19 @@ function SystemSetting (props) {
     <div>
       <h4>Settings</h4>
       <div>
+        { props.activeScene.id  ?
+          <div>
+            <button onClick={() => props.updateScene(evolve({'structureTiles': computeSystemOutput}, props.activeScene))}>Update</button>
+            <button onClick={() => props.closeEditor()}>Cancel</button>
+          </div>
+          :
+          <div>
+            <button onClick={() => props.saveNewScene(evolve({'structureTiles': computeSystemOutput}, scene2d(props.activeScene)))}>Save</button>
+            <button onClick={() => props.closeEditor()}>Cancel</button>
+          </div>
+        }
+      </div>
+      <div>
         <h5>Name</h5>
         <input className="input" type="text"
           onChange={(e) => props.setSceneName(e.target.value)}
@@ -75,14 +88,6 @@ function SystemSetting (props) {
             </div>
           </div>
         )}
-      </div>
-      <div>
-        { props.activeScene.id  ?
-          <button onClick={() => props.updateScene(evolve({'structureTiles': computeSystemOutput}, props.activeScene))}>Update</button>
-          :
-          <button onClick={() => props.saveNewScene(evolve({'structureTiles': computeSystemOutput}, scene2d(props.activeScene)))}>Save</button>
-        }
-        <button onClick={() => props.closeEditor()}>Cancel</button>
       </div>
     </div>
   );

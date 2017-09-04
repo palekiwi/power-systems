@@ -11,6 +11,9 @@ export default function ui(state = initialState.ui, action) {
   case types.SET_VIEWER_MODE:
     return assoc('viewerMode', action.payload, state);
 
+  case types.EDITOR_ON:
+    return assoc('viewerMode', 'graphic', state);
+
   default:
     return state;
   }
