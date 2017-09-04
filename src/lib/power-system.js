@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import R from 'ramda';
 
 // StructureTile -> (a -> b)
@@ -47,7 +46,6 @@ export function computeSystemOutput (sts) {
   const secondaryPower = addValues(power(secondary));
   const load2 = subValues([load1, secondaryPower]);
 
-  console.log(secondary, secondaryPower);
   const backup = sts.filter(R.propEq('priority', 0))
     .map(setNonVarPower(load2));
 

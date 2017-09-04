@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -6,41 +5,37 @@ import { bindActionCreators } from 'redux';
 import * as timeActions from '../actions/timeActions.js';
 import { timeFromInt } from '../helpers/format.js';
 import pick from 'ramda/src/pick';
-import where from 'ramda/src/where';
 import compose from 'ramda/src/compose';
 import reduce from 'ramda/src/reduce';
 import filter from 'ramda/src/filter';
 import path from 'ramda/src/path';
 import pluck from 'ramda/src/pluck';
-import tap from 'ramda/src/tap';
-import equals from 'ramda/src/equals';
 import propEq from 'ramda/src/propEq';
 import defaultTo from 'ramda/src/defaultTo';
 import T from 'ramda/src/T';
 import './SystemMonitor.scss';
 
-const capacityBy = (active, category) => {
+const capacityBy = (category) => {
   return compose(
     reduce((sum, arr) => sum + arr.capacity, 0),
-    filter(where({category, active})),
+    filter(propEq('category', category)),
     path(['structureTiles'])
   );
 };
 
-const curCap = (time, category, active, x) => {
+const currentAt = category => (time, x) => {
   return compose(
     reduce((sum, arr) => sum + arr[time].value, 0),
-    tap(console.log),
     pluck('power'),
-    filter(where({category, active})),
+    filter(propEq('category', category)),
     path(['structureTiles'])
   )(x);
 };
 
-const totalGenCap = capacityBy(T, equals('generator'));
-const maxLoad = capacityBy(T, equals('consumer'));
-const currentGen = capacityBy(equals(true), equals('generator'));
-const currentLoad = capacityBy(equals(true), equals('consumer'));
+const totalGenCap = capacityBy('generator');
+const maxLoad = capacityBy('consumer');
+const currentGen = currentAt('generator');
+const currentLoad = currentAt('consumer');
 
 SystemMonitor.propTypes = {
   activeScene: PropTypes.object,
@@ -78,13 +73,13 @@ function SystemMonitor ({activeScene, time, setTime}) {
             <div className="column is-2 has-text-centered">
               <span>Current Generation:</span>
               <div>
-                {curCap(time, equals('generator'), equals(true), activeScene)}
+                {currentGen(time, activeScene)}
               </div>
             </div>
             <div className="column is-2 has-text-centered">
               <span>Current Load:</span>
               <div>
-                {curCap(time, equals('consumer'), equals(true), activeScene)}
+                {currentLoad(time, activeScene)}
               </div>
             </div>
           </div>
