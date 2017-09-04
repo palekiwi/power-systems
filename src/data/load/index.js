@@ -52,6 +52,7 @@ export const communityCenter = [
   {date: "21:00", value: 0.5},
   {date: "22:00", value: 0.4},
   {date: "23:00", value: 0.3},
+  {date: "24:00", value: 0.3}
 ].map(parseDate);
 
 export const houseElevated = [

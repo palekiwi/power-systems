@@ -58,7 +58,7 @@ class SystemChart extends React.Component {
     const totalGen = compose(
       addValues,
       map(prop('power')),
-      filter(propEq('category', 'consumer'))
+      filter(propEq('category', 'generator'))
     )(structureTiles);
 
     const instantLoad = compose(
@@ -82,6 +82,7 @@ class SystemChart extends React.Component {
       <div ref={(chart) => this.chart = chart}>
         <svg {...svgSize(state)}>
           <g transform={transform(state)}>
+            <LineChart stroke={'black'} data={totalGen} {...scales}/>
             <LineChart stroke={'red'} data={totalLoad} {...scales}/>
             {structureTiles
               .filter(propEq('category', 'generator'))
