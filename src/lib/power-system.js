@@ -31,7 +31,7 @@ export function computeSystemOutput (sts) {
     .filter(R.propEq('category', 'consumer'))
     .map(setVariablePower);
 
-  if (consumers.length == 0) return sts.map(R.assoc('power', null));
+  if (consumers.length == 0) return sts.map(R.assoc('power', []));
 
   const primary = sts.filter(R.propEq('priority', 2))
     .map(setVariablePower);

@@ -14,7 +14,7 @@ function XYAxis (props) {
     axis: 'axisBottom',
     transform: `translate(0, ${props.height})`,
     scale: props.x,
-    ticks: 3,
+    ticks: 6,
     values: range([0, 24]),
     format: d => timeFormat('%H:%M')(d)
   };
@@ -34,6 +34,5 @@ function XYAxis (props) {
     </g>
   );
 }
-
 
 export default XYAxis;

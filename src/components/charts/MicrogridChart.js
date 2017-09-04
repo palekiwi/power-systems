@@ -23,7 +23,7 @@ class MicrogridChart extends React.Component {
   }
 
   render () {
-    const {data, timeline} = this.props;
+    const {data} = this.props;
     const state = this.state;
     const scales = {x: x(state.width, data), y: y(state.height, data)};
 
@@ -32,10 +32,8 @@ class MicrogridChart extends React.Component {
         <svg {...svgSize(state)}>
           <g transform={transform(state)}>
             <LineChart
-              timeline={timeline}
               data={data} {...scales}/>
             <ChartAnimationOverlay
-              timeline={timeline}
               height={state.height}
               width={state.width}/>
             <XYaxis
@@ -50,8 +48,7 @@ class MicrogridChart extends React.Component {
 }
 
 MicrogridChart.propTypes = {
-  data: PropTypes.array.isRequired,
-  timeline: PropTypes.object.isRequired
+  data: PropTypes.array.isRequired
 };
 
 export default MicrogridChart;

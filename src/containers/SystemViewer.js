@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Scene from '../components/system-viewer/SceneEditor.js';
+import SystemChart from '../components/charts/SystemChart.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as uiActions from '../actions/uiActions.js';
@@ -25,6 +26,7 @@ const actions = mergeAll([
 SystemViewer.propTypes = {
   activeScene: PropTypes.object,
   ui: PropTypes.object,
+  setViewerMode: PropTypes.func.isRequired,
   editor: PropTypes.bool,
   setActiveStructure: PropTypes.func.isRequired,
   setActiveTile: PropTypes.func.isRequired,
@@ -41,11 +43,16 @@ function SystemViewer (props) {
 
   return (
     <div className="SystemViewer">
+      <div>
+        <button onClick={() => props.setViewerMode('graphic')}>Graphic</button>
+        <button onClick={() => props.setViewerMode('chart')}>Chart</button>
+      </div>
+
       {isNil(props.activeScene) ?
         <div className="selection-prompt">
           Please select a system...
         </div>
-        :
+      : props.ui.viewerMode == 'graphic' ?
         <Scene
           {...props.activeScene}
           openSVModal={props.openSVModal}
@@ -60,7 +67,12 @@ function SystemViewer (props) {
           editor={props.editor}
           time={props.time}
         />
-     }
+      :
+        <SystemChart
+          structureTiles={props.activeScene.structureTiles}
+          time={props.time}
+        />
+      }
     </div>
   );
 }

@@ -9,7 +9,8 @@ export default {
   },
   editor: false,
   ui: {
-    resizePane: new Date()
+    resizePane: new Date(),
+    viewerMode: 'chart'
   },
   time: 12
 };

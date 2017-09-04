@@ -12,7 +12,7 @@ import path from 'ramda/src/path';
 import pluck from 'ramda/src/pluck';
 import propEq from 'ramda/src/propEq';
 import defaultTo from 'ramda/src/defaultTo';
-import T from 'ramda/src/T';
+import reject from 'ramda/src/reject';
 import './SystemMonitor.scss';
 
 const capacityBy = (category) => {
@@ -27,6 +27,7 @@ const currentAt = category => (time, x) => {
   return compose(
     reduce((sum, arr) => sum + arr[time].value, 0),
     pluck('power'),
+    reject(propEq('active', false)),
     filter(propEq('category', category)),
     path(['structureTiles'])
   )(x);

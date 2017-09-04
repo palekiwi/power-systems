@@ -8,7 +8,7 @@ import * as l from '../data/load/index.js';
 export const generator = ({texture, position, data}) => {
   const d = merge({
     category: 'generator',
-    power: null,
+    power: [],
   }, data);
   return tile({texture, position, data: d});
 };
@@ -66,7 +66,8 @@ export const wind = ({position, data}) => {
 // consumers
 export const consumer = ({texture, position, data}) => {
   const d = merge({
-    category: 'consumer'
+    category: 'consumer',
+    power: []
   }, data);
   return tile({texture, position, data: d});
 };

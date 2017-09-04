@@ -6,3 +6,10 @@ export function resizePane () {
     payload: new Date()
   };
 }
+
+export function setViewerMode (payload) {
+  return {
+    type: types.SET_VIEWER_MODE,
+    payload: payload
+  };
+}

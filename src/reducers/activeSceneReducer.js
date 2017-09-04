@@ -96,6 +96,9 @@ export default function activeScene (state = initialState.activeScene, action) {
   case types.SCENE_TOGGLE_POWER:
     return toggleSceneActiveState(action.payload, state);
 
+  case types.EDITOR_ON:
+    return toggleSceneActiveState(false, state);
+
   case types.TOGGLE_STRUCTURE_ACTIVE:
     return toggleStructureActive(action.payload)(state);
 
