@@ -10,6 +10,10 @@ export function parseHM (s) {
   return timeParse('%H:%M')(s);
 }
 
+export function parseHMS (s) {
+  return timeParse('%H:%M:%S')(s);
+}
+
 export function parseDate (x) {
   return evolve({date: parseHM}, x);
 }
