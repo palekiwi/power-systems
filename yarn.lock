@@ -1852,6 +1852,14 @@ d3-dsv@1, d3-dsv@1.0.5:
     iconv-lite "0.4"
     rw "1"
 
+d3-dsv@^1.0.0:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/d3-dsv/-/d3-dsv-1.0.7.tgz#137076663f398428fc3d031ae65370522492b78f"
+  dependencies:
+    commander "2"
+    iconv-lite "0.4"
+    rw "1"
+
 d3-ease@1, d3-ease@1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/d3-ease/-/d3-ease-1.0.3.tgz#68bfbc349338a380c44d8acc4fbc3304aa2d8c0e"
@@ -2252,6 +2260,13 @@ dot-prop@^3.0.0:
 dotenv@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
+
+dsv-loader@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/dsv-loader/-/dsv-loader-2.0.0.tgz#a60e1c8bf88109ed6445f59428d985704e0bcc86"
+  dependencies:
+    d3-dsv "^1.0.0"
+    loader-utils "^0.2.15"
 
 duplexer2@^0.1.2, duplexer2@^0.1.4:
   version "0.1.4"
@@ -4279,7 +4294,7 @@ loader-runner@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-2.3.0.tgz#f482aea82d543e07921700d5a46ef26fdac6b8a2"
 
-loader-utils@^0.2.16:
+loader-utils@^0.2.15, loader-utils@^0.2.16:
   version "0.2.17"
   resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-0.2.17.tgz#f86e6374d43205a6e6c60e9196f17c0299bfb348"
   dependencies:
