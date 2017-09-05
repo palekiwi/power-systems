@@ -1,8 +1,6 @@
 import tile from '../lib/tile.js';
 import merge from 'ramda/src/merge';
 import * as st from '../data/structure-textures.js';
-import * as g from '../data/generation/index.js';
-import * as l from '../data/load/index.js';
 
 // generators
 export const generator = ({texture, position, data}) => {
@@ -43,7 +41,7 @@ export const solar = ({position, data}) => {
     name: 'PV Solar',
     type: 'variable',
     priority: 2,
-    variation: g.pvClear,
+    variation: 'solar',
     capacity: 0,
     max: 200
   }, data);
@@ -56,7 +54,7 @@ export const wind = ({position, data}) => {
     name: 'Wind Generator',
     type: 'variable',
     priority: 2,
-    variation: g.pvClear,
+    variation: 'solar',
     capacity: 0,
     max: 200
   }, data);
@@ -77,7 +75,7 @@ export const houseThatched = ({position, data}) => {
   const d = merge({
     name: 'Thatched House',
     type: 'variable',
-    variation: l.houseThatched,
+    variation: 'default',
     capacity: 0,
     max: 200
   }, data);
@@ -89,7 +87,7 @@ export const communityCenter = ({position, data}) => {
   const d = merge({
     name: 'Community Center',
     type: 'variable',
-    variation: l.communityCenter,
+    variation: 'default',
     capacity: 0,
     max: 200
   }, data);
@@ -101,7 +99,7 @@ export const hospital = ({position, data}) => {
   const d = merge({
     name: 'Hospital',
     type: 'variable',
-    variation: l.hospital,
+    variation: 'default',
     capacity: 0,
     max: 200
   }, data);

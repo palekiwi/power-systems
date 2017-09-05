@@ -25,7 +25,7 @@ const computeNonVarPower = load => cap => map(r => {
 const setNonVarPower = load => x => set(lensProp('power'), computeNonVarPower(load)(prop('capacity', x)), x);
 const power = pluck('power');
 
-export function computeSystemOutput (sts) {
+export function computeSystemOutput (data, sts) {
   const consumers = sts
     .filter(propEq('category', 'consumer'))
     .map(setVariablePower);

@@ -1,4 +1,7 @@
-import {parseDate} from '../../helpers/format.js';
+import {parseCSV, parseDate} from '../../helpers/format.js';
+
+export const solar = require('./solar.csv').map(parseCSV);
+
 export const pvClear = [
   {date: "00:00", value: 0.0},
   {date: "01:00", value: 0.0},

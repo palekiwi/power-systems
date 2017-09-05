@@ -17,3 +17,7 @@ export function parseHMS (s) {
 export function parseDate (x) {
   return evolve({date: parseHM}, x);
 }
+
+export function parseCSV (x) {
+  return evolve({date: parseHMS, value: parseFloat}, x);
+}
