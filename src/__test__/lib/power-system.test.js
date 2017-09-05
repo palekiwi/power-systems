@@ -15,7 +15,7 @@ describe('computeSystemOutput', () => {
       {date: "00:00:00", value: 0.4},
       {date: "00:05:00", value: 0.4},
       {date: "00:10:00", value: 0.9},
-      {date: "00:15:00", value: 0.3},
+      {date: "00:15:00", value: 0.4},
     ],
     solar: [
       {date: "00:00:00", value: 0.0},
@@ -25,8 +25,8 @@ describe('computeSystemOutput', () => {
     ]
   };
 
-  describe('given array of structureTiles', () => {
-    it.only('computes consumption and output of each relevant component', () => {
+  describe('given array of structureTiles without a battery', () => {
+    it('computes consumption and output of each relevant component', () => {
       const tiles = [
         {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
         {id: 2, name: 'communityCenter', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
@@ -37,10 +37,10 @@ describe('computeSystemOutput', () => {
       ];
 
       const expected = {
-        hospital:        [40, 40,  90, 30],
-        communityCenter: [40, 40,  90, 30],
+        hospital:        [40, 40,  90, 40],
+        communityCenter: [40, 40,  90, 40],
         solar:           [ 0, 10,  50,  0],
-        gas:             [80, 70, 100, 60],
+        gas:             [80, 70, 100, 80],
         diesel:          [ 0,  0,  30,  0]
       };
 
@@ -54,6 +54,35 @@ describe('computeSystemOutput', () => {
       expect(power('gas')).toEqual(expected.gas);
       expect(power('diesel')).toEqual(expected.diesel);
       expect(res.find(propEq('name', 'other')).power).toEqual(undefined);
+    });
+  });
+
+  describe('given array of structureTiles with a battery', () => {
+    it.only('computes consumption and output of each relevant component', () => {
+      const tiles = [
+        {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
+        {id: 3, name: 'solar', category: 'generator', type: 'variable', ramp: 0.1, capacity: 200, priority: 2, variation: 'solar', power: []},
+        {id: 4, name: 'gas', category: 'generator', type: 'non-variable', ramp: 0.1, capacity: 100, priority: 1, power: []},
+        {id: 5, name: 'diesel', category: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: []},
+        {id: 6, name: 'battery', category: 'battery', power: []}
+      ];
+
+      const expected = {
+        hospital:        [40, 40,  90,  40],
+        solar:           [ 0, 20, 100,   0],
+        gas:             [40, 30,  20,  30],
+        diesel:          [ 0,  0,   0,   0],
+        battery:         [ 0, 10,  30, -10]
+      };
+
+      const res = computeSystemOutput(data, tiles);
+      const power = pluckPower(res);
+
+      expect(res.length).toEqual(tiles.length);
+      expect(power('hospital')).toEqual(expected.hospital);
+      expect(power('solar')).toEqual(expected.solar);
+      expect(power('gas')).toEqual(expected.gas);
+      expect(power('diesel')).toEqual(expected.diesel);
     });
   });
 
