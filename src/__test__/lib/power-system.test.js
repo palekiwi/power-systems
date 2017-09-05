@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* global jest, it, describe, expect */
 import {computeSystemOutput} from '../../lib/power-system.js';
 import zipWith from 'ramda/src/zipWith';
@@ -6,44 +7,41 @@ import compose from 'ramda/src/compose';
 import propEq from 'ramda/src/propEq';
 import prop from 'ramda/src/prop';
 import find from 'ramda/src/find';
+import tap from 'ramda/src/tap';
 
 describe('computeSystemOutput', () => {
   const data = {
-    load: {
-      default: [
-        {date: "00:00:00", value: 0.4},
-        {date: "00:05:00", value: 0.4},
-        {date: "00:10:00", value: 0.9},
-        {date: "00:15:00", value: 0.3},
-      ]
-    },
-    generation: {
-      solar: [
-        {date: "00:00:00", value: 0.0},
-        {date: "00:05:00", value: 0.1},
-        {date: "00:10:00", value: 0.5},
-        {date: "00:15:00", value: 0.0},
-      ]
-    }
+    defaultLoad: [
+      {date: "00:00:00", value: 0.4},
+      {date: "00:05:00", value: 0.4},
+      {date: "00:10:00", value: 0.9},
+      {date: "00:15:00", value: 0.3},
+    ],
+    solar: [
+      {date: "00:00:00", value: 0.0},
+      {date: "00:05:00", value: 0.1},
+      {date: "00:10:00", value: 0.5},
+      {date: "00:15:00", value: 0.0},
+    ]
   };
 
   describe('given array of structureTiles', () => {
     it.only('computes consumption and output of each relevant component', () => {
       const tiles = [
-        {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: 'default', power: []},
-        {id: 2, name: 'communityCenter', category: 'consumer', type: 'variable', capacity: 100, variation: 'default', power: []},
+        {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
+        {id: 2, name: 'communityCenter', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
         {id: 3, name: 'solar', category: 'generator', type: 'variable', capacity: 100, priority: 2, variation: 'solar', power: []},
         {id: 4, name: 'gas', category: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: []},
         {id: 5, name: 'diesel', category: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: []},
-        {id: 6, name: '', category: ''}
+        {id: 6, name: 'other', category: 'other'}
       ];
 
       const expected = {
-        hospital: [40, 40,  90, 30],
+        hospital:        [40, 40,  90, 30],
         communityCenter: [40, 40,  90, 30],
-        solar: [ 0, 10,  50,  0],
-        gas: [80, 70, 100, 60],
-        diesel: [ 0,  0,  30,  0]
+        solar:           [ 0, 10,  50,  0],
+        gas:             [80, 70, 100, 60],
+        diesel:          [ 0,  0,  30,  0]
       };
 
       const res = computeSystemOutput(data, tiles);
@@ -55,6 +53,7 @@ describe('computeSystemOutput', () => {
       expect(power('solar')).toEqual(expected.solar);
       expect(power('gas')).toEqual(expected.gas);
       expect(power('diesel')).toEqual(expected.diesel);
+      expect(res.find(propEq('name', 'other')).power).toEqual(undefined);
     });
   });
 
@@ -168,7 +167,7 @@ const zipToDates = zipDateValue(dates);
 
 const pluckPower = xs => s =>
   compose(
-    pluck('values'),
+    pluck('value'),
     prop('power'),
     find(propEq('name', s))
   )(xs);

@@ -1,6 +1,8 @@
 import {parseCSV, parseDate} from '../../helpers/format.js';
 
-export const defaultLoad = require('./defaultLoad.csv').map(parseCSV);
+export default {
+  default: require('./defaultLoad.csv').map(parseCSV)
+};
 
 export const hospital = [
   {date: "00:00", value: 0.3},
