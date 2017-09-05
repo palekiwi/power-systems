@@ -6,6 +6,10 @@ export default [
   tc.powerPole({
     position: vector(0,0),
   }),
+  // battery
+  tc.battery({
+    position: vector(0,0),
+  }),
   // generation
   tc.gas({
     position: vector(0,0),

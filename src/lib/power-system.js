@@ -5,7 +5,6 @@ import multiply from 'ramda/src/multiply';
 import lensProp from 'ramda/src/lensProp';
 import map from 'ramda/src/map';
 import set from 'ramda/src/set';
-import over from 'ramda/src/over';
 import pluck from 'ramda/src/pluck';
 import unnest from 'ramda/src/unnest';
 import propEq from 'ramda/src/propEq';
@@ -14,9 +13,10 @@ import eqBy from 'ramda/src/eqBy';
 import prop from 'ramda/src/prop';
 import compose from 'ramda/src/compose';
 import filter from 'ramda/src/filter';
-import tap from 'ramda/src/tap';
+import isEmpty from 'ramda/src/isEmpty';
 
 import { addValues, subValues } from './helpers/power-helpers.js';
+import {setControl} from './helpers/ramp-control.js';
 
 // StructureTile -> (a -> b)
 const computeVariablePower = x => map(evolve({value: multiply(prop('capacity', x))}), prop('variation', x));
@@ -27,35 +27,62 @@ const setVariablePowerBy = (fn, data) => compose(
   filter(fn)
 );
 
-const computeNonVarPower = load => cap => map(r => {
-  if (r.value <= 0) return assoc('value', 0, r);
-  return (r.value <= cap) ? r : assoc('value', cap, r);
-}, load);
+const computeNonVarPower = load => cap =>
+  map(r => {
+    if (r.value <= 0) return assoc('value', 0, r);
+    return (r.value <= cap) ? r : assoc('value', cap, r);
+  })(load);
 
 const setNonVarPower = load => x => set(lensProp('power'), computeNonVarPower(load)(prop('capacity', x)), x);
 const power = pluck('power');
+const control = pluck('control');
 
 export function computeSystemOutput (data, xs) {
   const consumers = setVariablePowerBy(propEq('category', 'consumer'), data)(xs);
-  const primary = setVariablePowerBy(propEq('priority', 2), data)(xs);
+  const battery = filter(propEq('name', 'battery'), xs);
 
-  if (consumers.length == 0) return map(assoc('power', []), xs);
+  if (isEmpty(consumers)) return map(assoc('power', []), xs);
 
   const load0 = addValues(power(consumers));
-  const primaryPower = addValues(power(primary));
-  const load1 = subValues([load0, primaryPower]);
 
-  const secondary = xs.filter(propEq('priority', 1))
-    .map(setNonVarPower(load1));
+  if (isEmpty(battery)) {
+    const primary = setVariablePowerBy(propEq('priority', 2), data)(xs);
+    const primaryPower = addValues(power(primary));
+    const load1 = subValues([load0, primaryPower]);
 
-  const secondaryPower = addValues(power(secondary));
-  const load2 = subValues([load1, secondaryPower]);
+    const secondary = xs.filter(propEq('priority', 1))
+      .map(setNonVarPower(load1));
 
-  const backup = xs.filter(propEq('priority', 0))
-    .map(setNonVarPower(load2));
+    const secondaryPower = addValues(power(secondary));
+    const load2 = subValues([load1, secondaryPower]);
 
-  return unionWith(
-    eqBy(prop('id')),
-    unnest([consumers, primary, secondary, backup]),
-    xs);
+    const backup = xs.filter(propEq('priority', 0))
+      .map(setNonVarPower(load2));
+
+    return unionWith(
+      eqBy(prop('id')),
+      unnest([consumers, primary, secondary, backup]),
+      xs);
+  } else {
+    const primary = compose(map(setControl), setVariablePowerBy(propEq('priority', 2), data))(xs);
+    const primaryPower = addValues(power(primary));
+    const primaryControl = addValues(control(primary));
+    const load1 = subValues([load0, primaryControl]);
+
+    const secondary = xs.filter(propEq('priority', 1))
+      .map(setNonVarPower(load1));
+
+    const secondaryPower = addValues(power(secondary));
+    const load2 = subValues([load1, secondaryPower]);
+
+    const backup = xs.filter(propEq('priority', 0))
+      .map(setNonVarPower(load2));
+
+    const bat = assoc('power', subValues([primaryPower, primaryControl]), battery[0]);
+
+    return unionWith(
+      eqBy(prop('id')),
+      unnest([consumers, primary, secondary, backup, bat]),
+      xs);
+  }
 }

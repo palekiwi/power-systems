@@ -42,8 +42,10 @@ export const solar = ({position, data}) => {
     type: 'variable',
     priority: 2,
     variation: 'solar',
+    ramp: 0.1,
     capacity: 0,
-    max: 200
+    max: 200,
+    control: []
   }, data);
   return generator({texture, position, data: d});
 };
@@ -59,6 +61,16 @@ export const wind = ({position, data}) => {
     max: 200
   }, data);
   return generator({texture, position, data: d});
+};
+
+// battery
+export const battery = ({position, data}) => {
+  const texture = st.batteryContainer;
+  const d = merge({
+    category: 'battery',
+    power: []
+  }, data);
+  return tile({texture, position, data: d});
 };
 
 // consumers
