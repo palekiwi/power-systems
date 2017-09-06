@@ -5,14 +5,16 @@ import {range, timeFormat} from 'd3';
 
 XYAxis.propTypes = {
   height: PropTypes.number.isRequired,
+  offset: PropTypes.number.isRequired,
   x: PropTypes.func.isRequired,
   y: PropTypes.func.isRequired
 };
 
 function XYAxis (props) {
+  const offset = props.offset < 0 ? props.y(Math.abs(props.offset)) : 0;
   const xSettings = {
     axis: 'axisBottom',
-    transform: `translate(0, ${props.height})`,
+    transform: `translate(0, ${props.height - offset})`,
     scale: props.x,
     ticks: 6,
     values: range([0, 24]),

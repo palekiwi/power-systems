@@ -78,11 +78,12 @@ class SystemChart extends React.Component {
       filter(propEq('category', 'consumer'))
     )(structureTiles);
 
-    const data = max(instantGen, instantLoad);
+    const high = max(instantGen, instantLoad);
+    const low = 0;
 
     const scales = {
       x: x(state.width, range(0,25).map(timeFromInt).map(parseHM)),
-      y: y(state.height, data)};
+      y: y(state.height, low, high)};
 
     const pos = scales.x(d3.timeParse('%H:%M')(timeFromInt(this.props.time)));
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(range(0,10));
@@ -114,6 +115,7 @@ class SystemChart extends React.Component {
             <XYaxis
               width={state.width}
               height={state.height}
+              offset={low}
               {...scales}/>
           </g>
         </svg>
@@ -147,8 +149,8 @@ function x(width, data) {
     .range([0, width]);
 }
 
-function y(height, data) {
+function y(height, low, high) {
   return d3.scaleLinear()
-    .domain([-50, data])
+    .domain([low, high])
     .range([height, 0]);
 }
