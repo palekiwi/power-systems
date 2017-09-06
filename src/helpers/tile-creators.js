@@ -77,6 +77,7 @@ export const battery = ({position, data}) => {
 export const consumer = ({texture, position, data}) => {
   const d = merge({
     category: 'consumer',
+    variation: 'defaultLoad',
     power: []
   }, data);
   return tile({texture, position, data: d});
@@ -87,7 +88,6 @@ export const houseThatched = ({position, data}) => {
   const d = merge({
     name: 'Thatched House',
     type: 'variable',
-    variation: 'default',
     capacity: 0,
     max: 200
   }, data);
@@ -99,7 +99,6 @@ export const communityCenter = ({position, data}) => {
   const d = merge({
     name: 'Community Center',
     type: 'variable',
-    variation: 'default',
     capacity: 0,
     max: 200
   }, data);
@@ -111,7 +110,6 @@ export const hospital = ({position, data}) => {
   const d = merge({
     name: 'Hospital',
     type: 'variable',
-    variation: 'default',
     capacity: 0,
     max: 200
   }, data);

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import scene2d from '../../lib/scene-2d.js';
 import {computeSystemOutput} from '../../lib/power-system.js';
 import evolve from 'ramda/src/evolve';
+import powerData from '../../data/power/index.js';
 
 SystemSetting.propTypes = {
   setGridSize: PropTypes.func.isRequired,
@@ -21,12 +22,12 @@ function SystemSetting (props) {
       <div>
         { props.activeScene.id  ?
           <div>
-            <button onClick={() => props.updateScene(evolve({'structureTiles': computeSystemOutput}, props.activeScene))}>Update</button>
+            <button onClick={() => props.updateScene(evolve({'structureTiles': computeSystemOutput(powerData)}, props.activeScene))}>Update</button>
             <button onClick={() => props.closeEditor()}>Cancel</button>
           </div>
           :
           <div>
-            <button onClick={() => props.saveNewScene(evolve({'structureTiles': computeSystemOutput}, scene2d(props.activeScene)))}>Save</button>
+            <button onClick={() => props.saveNewScene(evolve({'structureTiles': computeSystemOutput(powerData)}, scene2d(props.activeScene)))}>Save</button>
             <button onClick={() => props.closeEditor()}>Cancel</button>
           </div>
         }

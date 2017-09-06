@@ -44,7 +44,7 @@ describe('computeSystemOutput', () => {
         diesel:          [ 0,  0,  30,  0]
       };
 
-      const res = computeSystemOutput(data, tiles);
+      const res = computeSystemOutput(data)(tiles);
       const power = pluckField('power')(res);
 
       expect(res.length).toEqual(tiles.length);
@@ -75,7 +75,7 @@ describe('computeSystemOutput', () => {
         battery:         [ 0,  0,  60, -20]
       };
 
-      const res = computeSystemOutput(data, tiles);
+      const res = computeSystemOutput(data)(tiles);
       const power = pluckField('power')(res);
       const control = pluckField('control')(res);
 

@@ -37,15 +37,16 @@ const setNonVarPower = load => x => set(lensProp('power'), computeNonVarPower(lo
 const power = pluck('power');
 const control = pluck('control');
 
-export function computeSystemOutput (data, xs) {
+export const computeSystemOutput = data => xs => {
   const consumers = setVariablePowerBy(propEq('category', 'consumer'), data)(xs);
-  const battery = filter(propEq('name', 'battery'), xs);
+  const battery = filter(propEq('category', 'battery'), xs);
 
   if (isEmpty(consumers)) return map(assoc('power', []), xs);
 
   const load0 = addValues(power(consumers));
 
   if (isEmpty(battery)) {
+    console.log('no battery');
     const primary = setVariablePowerBy(propEq('priority', 2), data)(xs);
     const primaryPower = addValues(power(primary));
     const load1 = subValues([load0, primaryPower]);
@@ -64,6 +65,7 @@ export function computeSystemOutput (data, xs) {
       unnest([consumers, primary, secondary, backup]),
       xs);
   } else {
+    console.log('battery');
     const primary = compose(map(setControl), setVariablePowerBy(propEq('priority', 2), data))(xs);
     const primaryPower = addValues(power(primary));
     const primaryControl = addValues(control(primary));
@@ -85,4 +87,4 @@ export function computeSystemOutput (data, xs) {
       unnest([consumers, primary, secondary, backup, bat]),
       xs);
   }
-}
+};

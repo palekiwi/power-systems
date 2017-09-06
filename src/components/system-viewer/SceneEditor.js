@@ -39,10 +39,12 @@ class SceneTwoD extends React.Component {
   }
 
   resize () {
-    let width = this.scene.offsetWidth;
-    let height = this.scene.offsetHeight;
-    let grid = isometricGrid({width, height, gridSize: this.props.gridSize});
-    this.setState({width, height, grid});
+    if (this.scene) {
+      let width = this.scene.offsetWidth;
+      let height = this.scene.offsetHeight;
+      let grid = isometricGrid({width, height, gridSize: this.props.gridSize});
+      this.setState({width, height, grid});
+    }
   }
 
   animateEnter () {

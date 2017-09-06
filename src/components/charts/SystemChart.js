@@ -83,12 +83,18 @@ class SystemChart extends React.Component {
             <LineChart stroke={'black'} data={totalGen} {...scales}/>
             <LineChart stroke={'red'} data={totalLoad} {...scales}/>
             {structureTiles
-              .filter(propEq('category', 'generator'))
+              .filter(x => x.category == 'generator' || x.category == 'battery')
               .map((el, i) =>
-                <LineChart
-                  key={el.id}
-                  stroke={colorScale(i)}
-                  data={el.power} {...scales}/>
+                <g key={el.id}>
+                  <LineChart
+                    stroke={colorScale(i)}
+                    data={el.power} {...scales}/>
+                  {el.control &&
+                    <LineChart
+                      stroke={'green'}
+                      data={el.control} {...scales}/>
+                  }
+                </g>
               )
             }
             <g>
@@ -131,6 +137,6 @@ function x(width, data) {
 
 function y(height, data) {
   return d3.scaleLinear()
-    .domain([0, data])
+    .domain([-50, data])
     .range([height, 0]);
 }
