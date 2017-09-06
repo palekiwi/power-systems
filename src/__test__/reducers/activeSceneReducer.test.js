@@ -124,7 +124,7 @@ describe('ActiveSceneReducer', () => {
   it('should handle SET_STRUCTURE_CAPACITY', () => {
     const payload = {
       index: 0,
-      capacity: 50
+      field: 50
     };
     scene = {
       name: 'test scene',

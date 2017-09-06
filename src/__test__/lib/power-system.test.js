@@ -30,9 +30,9 @@ describe('computeSystemOutput', () => {
       const tiles = [
         {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
         {id: 2, name: 'communityCenter', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
-        {id: 3, name: 'solar', category: 'generator', type: 'variable', capacity: 100, priority: 2, variation: 'solar', power: []},
-        {id: 4, name: 'gas', category: 'generator', type: 'non-variable', capacity: 100, base: 0, priority: 1, power: []},
-        {id: 5, name: 'diesel', category: 'generator', type: 'non-variable', capacity: 100, base: 0, priority: 0, power: []},
+        {id: 3, name: 'solar', category: 'generator', type: 'variable', capacity: 100, ramp: 1, priority: 2, variation: 'solar', power: []},
+        {id: 4, name: 'gas', category: 'generator', type: 'non-variable', capacity: 100, ramp: 1, base: 0, priority: 1, power: []},
+        {id: 5, name: 'diesel', category: 'generator', type: 'non-variable', capacity: 100, ramp: 1, base: 0, priority: 0, power: []},
         {id: 6, name: 'other', category: 'other'}
       ];
 
@@ -62,8 +62,8 @@ describe('computeSystemOutput', () => {
       const tiles = [
         {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
         {id: 3, name: 'solar', category: 'generator', type: 'variable', ramp: 0.1, capacity: 200, priority: 2, variation: 'solar', power: []},
-        {id: 4, name: 'gas', category: 'generator', type: 'non-variable', capacity: 100, base: 0, priority: 1, power: []},
-        {id: 5, name: 'diesel', category: 'generator', type: 'non-variable', capacity: 100, base: 0, priority: 0, power: []},
+        {id: 4, name: 'gas', category: 'generator', type: 'non-variable', ramp: 1, capacity: 100, base: 0, priority: 1, power: []},
+        {id: 5, name: 'diesel', category: 'generator', type: 'non-variable', ramp: 1, capacity: 100, base: 0, priority: 0, power: []},
         {id: 6, name: 'battery', category: 'battery', power: []}
       ];
 
