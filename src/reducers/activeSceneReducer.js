@@ -79,6 +79,14 @@ const setStructureCapacity = (action, state) => {
   )(state);
 };
 
+const setStructureRamp = (action, state) => {
+  const {index, ramp} = action.payload;
+  return set(
+    compose(lensPath(['structureTiles']), lensIndex(index), lensPath(['ramp'])),
+    parseFloat(ramp)
+  )(state);
+};
+
 export default function activeScene (state = initialState.activeScene, action) {
   switch (action.type) {
 
@@ -119,6 +127,9 @@ export default function activeScene (state = initialState.activeScene, action) {
 
   case types.SET_STRUCTURE_CAPACITY:
     return setStructureCapacity(action, state);
+
+  case types.SET_STRUCTURE_RAMP:
+    return setStructureRamp(action, state);
 
   default:
     return state;

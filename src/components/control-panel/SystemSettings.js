@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import scene2d from '../../lib/scene-2d.js';
 import {computeSystemOutput} from '../../lib/power-system.js';
 import evolve from 'ramda/src/evolve';
+import propEq from 'ramda/src/propEq';
+import isNil from 'ramda/src/isNil';
 import powerData from '../../data/power/index.js';
 
 SystemSetting.propTypes = {
@@ -12,10 +14,12 @@ SystemSetting.propTypes = {
   updateScene: PropTypes.func.isRequired,
   closeEditor: PropTypes.func.isRequired,
   setStructureCapacity: PropTypes.func.isRequired,
+  setStructureRamp: PropTypes.func.isRequired,
   activeScene: PropTypes.object.isRequired
 };
 
 function SystemSetting (props) {
+  const battery = props.activeScene.structureTiles.find(propEq('category', 'battery'));
   return (
     <div>
       <h4>Settings</h4>
@@ -66,6 +70,23 @@ function SystemSetting (props) {
               />
               <span>{t.capacity}kW</span>
             </div>
+            {
+              battery && t.ramp &&
+              <div>
+                <div>
+                  <span>Ramp: </span>
+                  <input type="number"
+                    style={{width: '30%'}}
+                    min="0"
+                    max="100"
+                    step="1"
+                    value={Math.floor(t.ramp * 100)}
+                    onChange={(e) => props.setStructureRamp(i, e.target.value / 100)}
+                  />
+                  <span>%/5min</span>
+                </div>
+              </div>
+            }
           </div>
         )}
       </div>

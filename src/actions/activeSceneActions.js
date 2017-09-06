@@ -87,6 +87,16 @@ export function setStructureCapacity (index, capacity) {
   };
 }
 
+export function setStructureRamp (index, ramp) {
+  return {
+    type: types.SET_STRUCTURE_RAMP,
+    payload: {
+      index,
+      ramp
+    }
+  };
+}
+
 export function saveNewScene (scene) {
   return {
     type: types.SAVE_NEW_SCENE,

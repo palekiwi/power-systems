@@ -25,6 +25,7 @@ ControlPanel.propTypes = {
   updateScene: PropTypes.func.isRequired,
   closeEditor: PropTypes.func.isRequired,
   setStructureCapacity: PropTypes.func.isRequired,
+  setStructureRamp: PropTypes.func.isRequired,
   editScene: PropTypes.func.isRequired,
   editor: PropTypes.bool.isRequired
 };
@@ -54,6 +55,7 @@ function ControlPanel (props) {
           <SystemSettings
             activeScene={props.activeScene}
             setStructureCapacity={props.setStructureCapacity}
+            setStructureRamp={props.setStructureRamp}
             setGridSize={props.setGridSize}
             saveNewScene={props.saveNewScene}
             updateScene={props.updateScene}
