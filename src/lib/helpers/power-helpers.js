@@ -10,7 +10,7 @@ const zipValuesWith = fn => (a,b) => {
   if (isEmpty(a) && isEmpty(b)) return [];
   if (isEmpty(a)) return b;
   if (isEmpty(b)) return a;
-  return zipWith(mergeWithKey((k,l,r) => k == 'value' ? fn(l, Math.abs(r)) : r), a, b);
+  return zipWith(mergeWithKey((k,l,r) => k == 'value' ? fn(l, r) : r), a, b);
 };
 
 const zipSum = (acc, arr) => (arr.length == 0) ? acc : zipSum(zipValuesWith(add)(acc, head(arr)), tail(arr));
