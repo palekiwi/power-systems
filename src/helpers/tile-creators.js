@@ -18,7 +18,8 @@ export const diesel = ({position, data}) => {
     type: 'non-variable',
     priority: 0,
     capacity: 0,
-    base: 0,
+    base: 0.2,
+    ramp: 0.1,
     max: 200
   }, data);
   return generator({texture, position, data: d});
@@ -31,7 +32,8 @@ export const gas = ({position, data}) => {
     type: 'non-variable',
     priority: 1,
     capacity: 0,
-    base: 0.3,
+    base: 0.2,
+    ramp: 0.1,
     max: 200
   }, data);
   return generator({texture, position, data: d});

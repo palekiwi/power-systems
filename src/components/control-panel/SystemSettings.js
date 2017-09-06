@@ -72,7 +72,7 @@ function SystemSetting (props) {
               <span>{t.capacity}kW</span>
             </div>
             {
-              !(isNil(battery) || isNil(t.ramp)) &&
+              !isNil(t.ramp) &&
               <div>
                 <div>
                   <span>Ramp: </span>
@@ -105,11 +105,10 @@ function SystemSetting (props) {
                 </div>
               </div>
             }
+          <hr/>
           </div>
         )}
       </div>
-
-      <hr/>
 
       <div>
         <h5>Load</h5>
