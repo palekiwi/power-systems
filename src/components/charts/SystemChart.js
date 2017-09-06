@@ -8,6 +8,7 @@ import propEq from 'ramda/src/propEq';
 import prop from 'ramda/src/prop';
 import range from 'ramda/src/range';
 import max from 'ramda/src/max';
+import min from 'ramda/src/min';
 import map from 'ramda/src/map';
 import compose from 'ramda/src/compose';
 import filter from 'ramda/src/filter';
@@ -15,6 +16,7 @@ import reduce from 'ramda/src/reduce';
 import pluck from 'ramda/src/pluck';
 import { parseHM, timeFromInt } from '../../helpers/format.js';
 import { addValues } from '../../lib/helpers/power-helpers.js';
+import './SystemChart.scss';
 
 class SystemChart extends React.Component {
   constructor (props) {
@@ -78,8 +80,15 @@ class SystemChart extends React.Component {
       filter(propEq('category', 'consumer'))
     )(structureTiles);
 
+    const low = compose(
+      reduce(min, 0),
+      pluck('value'),
+      addValues,
+      map(prop('power')),
+      filter(propEq('category', 'battery'))
+    )(structureTiles);
+
     const high = max(instantGen, instantLoad);
-    const low = 0;
 
     const scales = {
       x: x(state.width, range(0,25).map(timeFromInt).map(parseHM)),
@@ -89,36 +98,37 @@ class SystemChart extends React.Component {
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(range(0,10));
 
     return (
-      <div ref={(chart) => this.chart = chart} style={{height: '100%'}}>
-        <svg {...svgSize(state)}>
-          <g transform={transform(state)}>
-            <LineChart stroke={'black'} data={totalGen} {...scales}/>
-            <LineChart stroke={'red'} data={totalLoad} {...scales}/>
-            {structureTiles
-              .filter(x => x.category == 'generator' || x.category == 'battery')
-              .map((el, i) =>
-                <g key={el.id}>
-                  <LineChart
-                    stroke={colorScale(i)}
-                    data={el.power} {...scales}/>
-                  {el.control &&
+      <div className="SystemChart">
+        <div className="SystemChart__Chart" ref={(chart) => this.chart = chart} style={{height: '100%'}}>
+          <svg {...svgSize(state)}>
+            <g transform={transform(state)}>
+              <LineChart stroke={'black'} data={totalGen} {...scales}/>
+              <LineChart stroke={'red'} data={totalLoad} {...scales}/>
+              {structureTiles
+                .filter(x => x.category == 'generator' || x.category == 'battery')
+                .map((el, i) =>
+                  <g key={el.id}>
                     <LineChart
-                      stroke={'green'}
-                      data={el.control} {...scales}/>
-                  }
-                </g>
-              )
-            }
-            <g>
-              <line x1={pos} y1={this.state.height} x2={pos} y2="0" stroke="black"/>
+                      stroke={colorScale(i)}
+                      data={el.power} {...scales}/>
+                    {el.control &&
+                      <LineChart
+                        stroke={'green'}
+                        data={el.control} {...scales}/>
+                    }
+                  </g>
+                )
+              }
+              <g>
+                <line x1={pos} y1={this.state.height} x2={pos} y2="0" stroke="black"/>
+              </g>
+              <XYaxis
+                width={state.width}
+                height={state.height}
+                {...scales}/>
             </g>
-            <XYaxis
-              width={state.width}
-              height={state.height}
-              offset={low}
-              {...scales}/>
-          </g>
-        </svg>
+          </svg>
+        </div>
       </div>
     );
   }
