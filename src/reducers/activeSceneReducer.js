@@ -17,6 +17,7 @@ import where from 'ramda/src/where';
 import __ from 'ramda/src/__';
 import evolve from 'ramda/src/evolve';
 import filter from 'ramda/src/filter';
+import identity from 'ramda/src/identity';
 
 // operation that sets the value of active field in the data object of an array of objects
 const mapActive = compose(
@@ -82,6 +83,7 @@ const setStructureProperty = (fn, property) => (action, state) => {
 const setStructureCapacity = setStructureProperty(parseFloat, 'capacity');
 const setStructureRamp = setStructureProperty(parseFloat, 'ramp');
 const setStructureBase = setStructureProperty(parseFloat, 'base');
+const setStructureType = setStructureProperty(identity, 'type');
 
 export default function activeScene (state = initialState.activeScene, action) {
   switch (action.type) {
@@ -129,6 +131,9 @@ export default function activeScene (state = initialState.activeScene, action) {
 
   case types.SET_STRUCTURE_BASE:
     return setStructureBase(action, state);
+
+  case types.SET_STRUCTURE_TYPE:
+    return setStructureType(action, state);
 
   default:
     return state;

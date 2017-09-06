@@ -15,7 +15,7 @@ export const diesel = ({position, data}) => {
   const texture = st.dieselGenerator;
   const d = merge({
     name: 'Diesel Generator',
-    type: 'non-variable',
+    type: 'backup',
     priority: 0,
     capacity: 0,
     base: 0.2,
@@ -29,7 +29,7 @@ export const gas = ({position, data}) => {
   const texture = st.gasEngine;
   const d = merge({
     name: 'Gas Generator',
-    type: 'non-variable',
+    type: 'base',
     priority: 1,
     capacity: 0,
     base: 0.2,
@@ -72,7 +72,7 @@ export const battery = ({position, data}) => {
   const texture = st.batteryContainer;
   const d = merge({
     category: 'battery',
-    power: []
+    control: []
   }, data);
   return tile({texture, position, data: d});
 };
@@ -91,7 +91,6 @@ export const houseThatched = ({position, data}) => {
   const texture = st.houseThatched;
   const d = merge({
     name: 'Thatched House',
-    type: 'variable',
     capacity: 0,
     max: 200
   }, data);
@@ -102,7 +101,6 @@ export const communityCenter = ({position, data}) => {
   const texture = st.communityCenter;
   const d = merge({
     name: 'Community Center',
-    type: 'variable',
     capacity: 0,
     max: 200
   }, data);
@@ -113,7 +111,6 @@ export const hospital = ({position, data}) => {
   const texture = st.hospital;
   const d = merge({
     name: 'Hospital',
-    type: 'variable',
     capacity: 0,
     max: 200
   }, data);

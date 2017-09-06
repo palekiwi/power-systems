@@ -20,6 +20,7 @@ const village = scene2d({
       position: vector(0, 0),
       data: {
         capacity: 100,
+        type: 'base'
       }
     }),
     solar({

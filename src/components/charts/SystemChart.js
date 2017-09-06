@@ -56,7 +56,7 @@ class SystemChart extends React.Component {
       reduce(max, 0),
       pluck('value'),
       addValues,
-      map(prop('power')),
+      map(prop('control')),
       filter(propEq('category', 'generator'))
     )(structureTiles);
 
@@ -68,7 +68,7 @@ class SystemChart extends React.Component {
 
     const totalGen = compose(
       addValues,
-      map(prop('power')),
+      map(prop('control')),
       filter(propEq('category', 'generator'))
     )(structureTiles);
 
@@ -84,7 +84,7 @@ class SystemChart extends React.Component {
       reduce(min, 0),
       pluck('value'),
       addValues,
-      map(prop('power')),
+      map(prop('control')),
       filter(propEq('category', 'battery'))
     )(structureTiles);
 
@@ -110,12 +110,7 @@ class SystemChart extends React.Component {
                   <g key={el.id}>
                     <LineChart
                       stroke={colorScale(i)}
-                      data={el.power} {...scales}/>
-                    {el.control &&
-                      <LineChart
-                        stroke={'green'}
-                        data={el.control} {...scales}/>
-                    }
+                      data={el.control} {...scales}/>
                   </g>
                 )
               }

@@ -56,7 +56,7 @@ export const computeSystemOutput = data => xs => {
         setControl
       ),
       setVariablePower(data))),
-    filter(propEq('priority', 2))
+    filter(propEq('type', 'variable'))
   )(xs);
 
   const primaryPower = addValues(power(primary));
@@ -65,7 +65,7 @@ export const computeSystemOutput = data => xs => {
 
   const secondary = compose(
     map(compose(setControl, setNonVarPower(load1))),
-    filter(propEq('priority', 1))
+    filter(propEq('type', 'base'))
   )(xs);
 
   const secondaryControl = addValues(control(secondary));
@@ -73,7 +73,7 @@ export const computeSystemOutput = data => xs => {
 
   const bat = map(() => {
     const batState = subValues([primaryPower, primaryControl, load2]);
-    return assoc('power', batState, battery[0]);
+    return assoc('control', batState, battery[0]);
   }, battery);
 
   const load3 = ifElse(
@@ -84,7 +84,7 @@ export const computeSystemOutput = data => xs => {
 
   const backup = compose(
     map(compose(setControl, setNonVarPower(load3))),
-    filter(propEq('priority', 0))
+    filter(propEq('type', 'backup'))
   )(xs);
 
   return unionWith(

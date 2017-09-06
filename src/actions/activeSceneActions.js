@@ -107,6 +107,16 @@ export function setStructureBase (index, field) {
   };
 }
 
+export function setStructureType (index, field) {
+  return {
+    type: types.SET_STRUCTURE_TYPE,
+    payload: {
+      index,
+      field
+    }
+  };
+}
+
 export function saveNewScene (scene) {
   return {
     type: types.SAVE_NEW_SCENE,

@@ -105,6 +105,19 @@ function SystemSetting (props) {
                 </div>
               </div>
             }
+            {
+              t.type != 'variable' &&
+              <div>
+                <span>Type</span>
+                <select
+                  value={t.type}
+                  onChange={(e) => props.setStructureType(i, e.target.value)}
+                >
+                  <option value="base">Base</option>
+                  <option value="backup">Backup</option>
+                </select>
+              </div>
+            }
           <hr/>
           </div>
         )}
