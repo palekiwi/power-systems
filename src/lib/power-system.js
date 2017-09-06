@@ -26,13 +26,14 @@ const setVariablePowerBy = (fn, data) => compose(
   filter(fn)
 );
 
-const computeNonVarPower = load => cap =>
-  map(r => {
-    if (r.value <= 0) return assoc('value', 0, r);
-    return (r.value <= cap) ? r : assoc('value', cap, r);
+const computeNonVarPower = (load, x) =>
+  map(l => {
+    const base = x.capacity * x.base;
+    if (l.value <= base) return assoc('value', base, l);
+    return (l.value <= x.capacity) ? l : assoc('value', x.capacity, l);
   })(load);
 
-const setNonVarPower = load => x => set(lensProp('power'), computeNonVarPower(load)(prop('capacity', x)), x);
+const setNonVarPower = load => x => set(lensProp('power'), computeNonVarPower(load, x), x);
 const power = pluck('power');
 const control = pluck('control');
 

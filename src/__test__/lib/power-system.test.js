@@ -31,8 +31,8 @@ describe('computeSystemOutput', () => {
         {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
         {id: 2, name: 'communityCenter', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
         {id: 3, name: 'solar', category: 'generator', type: 'variable', capacity: 100, priority: 2, variation: 'solar', power: []},
-        {id: 4, name: 'gas', category: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: []},
-        {id: 5, name: 'diesel', category: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: []},
+        {id: 4, name: 'gas', category: 'generator', type: 'non-variable', capacity: 100, base: 0, priority: 1, power: []},
+        {id: 5, name: 'diesel', category: 'generator', type: 'non-variable', capacity: 100, base: 0, priority: 0, power: []},
         {id: 6, name: 'other', category: 'other'}
       ];
 
@@ -58,12 +58,12 @@ describe('computeSystemOutput', () => {
   });
 
   describe('given array of structureTiles with a battery', () => {
-    it.only('computes consumption and output of each relevant component', () => {
+    it('computes consumption and output of each relevant component', () => {
       const tiles = [
         {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
         {id: 3, name: 'solar', category: 'generator', type: 'variable', ramp: 0.1, capacity: 200, priority: 2, variation: 'solar', power: []},
-        {id: 4, name: 'gas', category: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: []},
-        {id: 5, name: 'diesel', category: 'generator', type: 'non-variable', capacity: 100, priority: 0, power: []},
+        {id: 4, name: 'gas', category: 'generator', type: 'non-variable', capacity: 100, base: 0, priority: 1, power: []},
+        {id: 5, name: 'diesel', category: 'generator', type: 'non-variable', capacity: 100, base: 0, priority: 0, power: []},
         {id: 6, name: 'battery', category: 'battery', power: []}
       ];
 
@@ -85,6 +85,31 @@ describe('computeSystemOutput', () => {
       expect(power('gas')).toEqual(expected.gas);
       expect(power('diesel')).toEqual(expected.diesel);
       expect(power('battery')).toEqual(expected.battery);
+    });
+  });
+
+  describe('given array of structureTiles with a base property', () => {
+    it.only('computes correct output', () => {
+      const tiles = [
+        {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
+        {id: 4, name: 'gas', category: 'generator', type: 'non-variable', capacity: 100, base: 0.5, priority: 1, power: []},
+        {id: 5, name: 'diesel', category: 'generator', type: 'non-variable', capacity: 100, base: 0, priority: 0, power: []},
+      ];
+
+      const expected = {
+        hospital:        [40, 40,  90,  40],
+        gas:             [50, 50,  90,  50],
+        diesel:          [ 0,  0,   0,   0],
+      };
+
+      const res = computeSystemOutput(data)(tiles);
+      const power = pluckField('power')(res);
+      const control = pluckField('control')(res);
+
+      expect(res.length).toEqual(tiles.length);
+      expect(power('hospital')).toEqual(expected.hospital);
+      expect(power('gas')).toEqual(expected.gas);
+      expect(power('diesel')).toEqual(expected.diesel);
     });
   });
 
