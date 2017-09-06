@@ -57,6 +57,7 @@ function SystemViewer (props) {
     />;
 
     let chart = <SystemChart
+      resizePane={props.ui.resizePane}
       structureTiles={props.activeScene.structureTiles}
       time={props.time}
     />;

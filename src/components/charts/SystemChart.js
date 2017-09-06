@@ -24,13 +24,26 @@ class SystemChart extends React.Component {
       height: 300,
       margin: { top: 30, bottom: 30, left: 60, right: 30}
     };
+
+    this.resize = this.resize.bind(this);
   }
 
   componentDidMount () {
-    let {margin} = this.state;
-    let w = this.chart.offsetWidth - margin.left - margin.right;
-    let h = this.chart.offsetHeight - margin.top - margin.bottom;
-    this.setState({width: w, height: h});
+    window.addEventListener('resize', this.resize);
+    this.resize ();
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (this.props.resizePane != prevProps.resizePane) this.resize();
+  }
+
+  resize () {
+    if (this.chart) {
+      let {margin} = this.state;
+      let w = this.chart.offsetWidth - margin.left - margin.right;
+      let h = this.chart.offsetHeight - margin.top - margin.bottom;
+      this.setState({width: w, height: h});
+    }
   }
 
   render () {
@@ -50,8 +63,6 @@ class SystemChart extends React.Component {
       map(prop('power')),
       filter(propEq('category', 'consumer'))
     )(structureTiles);
-
-    console.log(totalLoad);
 
     const totalGen = compose(
       addValues,
@@ -77,7 +88,7 @@ class SystemChart extends React.Component {
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(range(0,10));
 
     return (
-      <div ref={(chart) => this.chart = chart}>
+      <div ref={(chart) => this.chart = chart} style={{height: '100%'}}>
         <svg {...svgSize(state)}>
           <g transform={transform(state)}>
             <LineChart stroke={'black'} data={totalGen} {...scales}/>
@@ -112,6 +123,7 @@ class SystemChart extends React.Component {
 }
 
 SystemChart.propTypes = {
+  resizePane: PropTypes.object.isRequired,
   structureTiles: PropTypes.array.isRequired,
   time: PropTypes.number.isRequired
 };

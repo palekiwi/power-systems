@@ -19,7 +19,6 @@ import { addValues, subValues } from './helpers/power-helpers.js';
 import {setControl} from './helpers/ramp-control.js';
 
 // StructureTile -> (a -> b)
-const computeVariablePower = x => map(evolve({value: multiply(prop('capacity', x))}), prop('variation', x));
 const mapVariablePower = (data, x) => map(evolve({value: multiply(x.capacity)}), data[x.variation]);
 const setVariablePower = data => x => set(lensProp('power'), mapVariablePower(data, x), x);
 const setVariablePowerBy = (fn, data) => compose(
@@ -46,7 +45,6 @@ export const computeSystemOutput = data => xs => {
   const load0 = addValues(power(consumers));
 
   if (isEmpty(battery)) {
-    console.log('no battery');
     const primary = setVariablePowerBy(propEq('priority', 2), data)(xs);
     const primaryPower = addValues(power(primary));
     const load1 = subValues([load0, primaryPower]);
@@ -65,7 +63,6 @@ export const computeSystemOutput = data => xs => {
       unnest([consumers, primary, secondary, backup]),
       xs);
   } else {
-    console.log('battery');
     const primary = compose(map(setControl), setVariablePowerBy(propEq('priority', 2), data))(xs);
     const primaryPower = addValues(power(primary));
     const primaryControl = addValues(control(primary));
