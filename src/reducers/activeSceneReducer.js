@@ -71,21 +71,17 @@ const cropToGrid = (action, state) => {
   return evolve({terrainTiles: fn, structureTiles: fn})(state);
 };
 
-const setStructureCapacity = (action, state) => {
-  const {index, capacity} = action.payload;
+const setStructureProperty = (fn, property) => (action, state) => {
+  const {index, field} = action.payload;
   return set(
-    compose(lensPath(['structureTiles']), lensIndex(index), lensPath(['capacity'])),
-    parseInt(capacity)
+    compose(lensPath(['structureTiles']), lensIndex(index), lensPath([property])),
+    fn(field)
   )(state);
 };
 
-const setStructureRamp = (action, state) => {
-  const {index, ramp} = action.payload;
-  return set(
-    compose(lensPath(['structureTiles']), lensIndex(index), lensPath(['ramp'])),
-    parseFloat(ramp)
-  )(state);
-};
+const setStructureCapacity = setStructureProperty(parseFloat, 'capacity');
+const setStructureRamp = setStructureProperty(parseFloat, 'ramp');
+const setStructureBase = setStructureProperty(parseFloat, 'base');
 
 export default function activeScene (state = initialState.activeScene, action) {
   switch (action.type) {
@@ -130,6 +126,9 @@ export default function activeScene (state = initialState.activeScene, action) {
 
   case types.SET_STRUCTURE_RAMP:
     return setStructureRamp(action, state);
+
+  case types.SET_STRUCTURE_BASE:
+    return setStructureBase(action, state);
 
   default:
     return state;

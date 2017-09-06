@@ -77,22 +77,32 @@ export function deleteTile (payload) {
   };
 }
 
-export function setStructureCapacity (index, capacity) {
+export function setStructureCapacity (index, field) {
   return {
     type: types.SET_STRUCTURE_CAPACITY,
     payload: {
       index,
-      capacity
+      field
     }
   };
 }
 
-export function setStructureRamp (index, ramp) {
+export function setStructureRamp (index, field) {
   return {
     type: types.SET_STRUCTURE_RAMP,
     payload: {
       index,
-      ramp
+      field
+    }
+  };
+}
+
+export function setStructureBase (index, field) {
+  return {
+    type: types.SET_STRUCTURE_BASE,
+    payload: {
+      index,
+      field
     }
   };
 }

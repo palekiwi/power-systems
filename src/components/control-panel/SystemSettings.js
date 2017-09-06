@@ -15,6 +15,7 @@ SystemSetting.propTypes = {
   closeEditor: PropTypes.func.isRequired,
   setStructureCapacity: PropTypes.func.isRequired,
   setStructureRamp: PropTypes.func.isRequired,
+  setStructureBase: PropTypes.func.isRequired,
   activeScene: PropTypes.object.isRequired
 };
 
@@ -71,7 +72,7 @@ function SystemSetting (props) {
               <span>{t.capacity}kW</span>
             </div>
             {
-              battery && t.ramp &&
+              !(isNil(battery) || isNil(t.ramp)) &&
               <div>
                 <div>
                   <span>Ramp: </span>
@@ -81,9 +82,26 @@ function SystemSetting (props) {
                     max="100"
                     step="1"
                     value={Math.floor(t.ramp * 100)}
-                    onChange={(e) => props.setStructureRamp(i, e.target.value / 100)}
+                    onChange={(e) => props.setStructureRamp(i, (e.target.value == 0) ? 0 : e.target.value / 100)}
                   />
                   <span>%/5min</span>
+                </div>
+              </div>
+            }
+            {
+              !isNil(t.base) &&
+              <div>
+                <div>
+                  <span>Base: </span>
+                  <input type="number"
+                    style={{width: '30%'}}
+                    min="0"
+                    max="100"
+                    step="1"
+                    value={Math.floor(t.base * 100)}
+                    onChange={(e) => props.setStructureBase(i, (e.target.value == 0) ? 0 : e.target.value / 100)}
+                  />
+                  <span>%</span>
                 </div>
               </div>
             }
