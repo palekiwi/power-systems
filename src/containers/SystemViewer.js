@@ -36,7 +36,8 @@ SystemViewer.propTypes = {
   saveTile: PropTypes.func.isRequired,
   openSVModal: PropTypes.func.isRequired,
   closeSVModal: PropTypes.func.isRequired,
-  time: PropTypes.number.isRequired
+  time: PropTypes.number.isRequired,
+  powerData: PropTypes.object.isRequired,
 };
 
 function SystemViewer (props) {
@@ -59,6 +60,7 @@ function SystemViewer (props) {
     let chart = <SystemChart
       resizePane={props.ui.resizePane}
       structureTiles={props.activeScene.structureTiles}
+      powerData={props.powerData[props.activeScene.id]}
       time={props.time}
     />;
 
@@ -103,7 +105,7 @@ function SystemViewer (props) {
   );
 }
 
-const mapStateToProps = pick(['activeScene', 'ui', 'editor', 'activeTile', 'time']);
+const mapStateToProps = pick(['activeScene', 'ui', 'editor', 'activeTile', 'time', 'powerData']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SystemViewer);
