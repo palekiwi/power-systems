@@ -40,13 +40,13 @@ export function computeOutput (powerData, dates, data) {
   // (a -> b -> c -> d) -> [e]
   const f = (acc, val, i) => R.mergeWith(
     R.append,
-    computeCycle(i, acc),
+    computeCycle(acc, val, i),
     acc
   );
 
-  const computeCycle = (i, acc) => {
-    let load = R.map(x => ({power: x.capacity * powerData[x.variation][i]}), HASH.load);
-    let variable = R.map(x => ({power: x.capacity * powerData[x.variation][i]}), HASH.variable);
+  const computeCycle = (acc, date, i) => {
+    let load = R.map(x => ({date, power: x.capacity * powerData[x.variation][i]}), HASH.load);
+    let variable = R.map(x => ({date, power: x.capacity * powerData[x.variation][i]}), HASH.variable);
 
     let totalLoad = R.compose(R.sum, R.pluck('power'), R.values)(load);
     let totalVariable = R.compose(R.sum, R.pluck('power'), R.values)(variable);
@@ -71,7 +71,7 @@ export function computeOutput (powerData, dates, data) {
         let units = R.keys(bs).length;
         return R.map(b =>
           R.compose(
-            x => ({power: x / units, buffer: (totalVariable - x) / units}),
+            x => ({date, power: x / units, buffer: (totalVariable - x) / units}),
             x => R.clamp(lastVariable - x, lastVariable + x)(totalVariable)
           )(b.ramp * VARIABLE_CAPACITY)
         )(bs);
@@ -100,7 +100,7 @@ export function computeOutput (powerData, dates, data) {
           R.clamp(lastPower - ramp, lastPower + ramp)
         )(powerShare);
 
-        return {power};
+        return {date, power};
       },
       HASH.base
     );
@@ -111,7 +111,7 @@ export function computeOutput (powerData, dates, data) {
       ss => {
         let units = R.keys(ss).length;
         let powerBalance = (totalVariable - totalBuffer) + totalBase - totalLoad;
-        return R.map(s => ({storage: powerBalance / units}), ss);
+        return R.map(() => ({date, storage: powerBalance / units}), ss);
       },
       R.filter(R.prop('storage'))
     )(HASH.battery);

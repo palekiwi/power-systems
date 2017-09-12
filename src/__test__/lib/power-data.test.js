@@ -6,7 +6,7 @@ const powerData = {
   'solar' :         [0.0, 0.2, 0.6, 0.0]
 };
 
-const dates = [{date: "01:00"}, {date: "02:00"}, {date: "03:00"}, {date: "04:00"}];
+const dates = ["01:00", "02:00", "03:00", "04:00"];
 
 describe('computeOutput', () => {
   describe('given data with battery', () => {
@@ -20,12 +20,12 @@ describe('computeOutput', () => {
     ];
 
     const expected = {
-      c1: [{power: 30}, {power:  70}, {power:  50}, {power:   30}],
-      c2: [{power: 30}, {power:  70}, {power:  50}, {power:   30}],
-      v1: [{power:  0}, {power:  20}, {power:  60}, {power:    0}],
-      v2: [{power:  0}, {power:  20}, {power:  60}, {power:    0}],
-      gb: [{power: 60}, {power:  70}, {power:  60}, {power:   50}],
-      b1: [{power:  0, buffer: 0, storage: 0},  {power: 20, buffer: 20, storage: -50}, {power: 40, buffer: 80, storage: 0}, {power: 20, buffer: -20, storage: 10}]
+      c1: [{date: "01:00", power: 30}, {date: "02:00", power:  70}, {date: "03:00", power:  50}, {date: "04:00", power:   30}],
+      c2: [{date: "01:00", power: 30}, {date: "02:00", power:  70}, {date: "03:00", power:  50}, {date: "04:00", power:   30}],
+      v1: [{date: "01:00", power:  0}, {date: "02:00", power:  20}, {date: "03:00", power:  60}, {date: "04:00", power:    0}],
+      v2: [{date: "01:00", power:  0}, {date: "02:00", power:  20}, {date: "03:00", power:  60}, {date: "04:00", power:    0}],
+      gb: [{date: "01:00", power: 60}, {date: "02:00", power:  70}, {date: "03:00", power:  60}, {date: "04:00", power:   50}],
+      b1: [{date: "01:00", power:  0, buffer: 0, storage: 0},  {date: "02:00", power: 20, buffer: 20, storage: -50}, {date: "03:00", power: 40, buffer: 80, storage: 0}, {date: "04:00", power: 20, buffer: -20, storage: 10}]
     };
 
     it('computes output for each component', () => {
@@ -41,9 +41,9 @@ describe('computeOutput', () => {
     ];
 
     const expected = {
-      c1: [{power: 30}, {power:  70}, {power:  50}, {power:   30}],
-      v1: [{power:  0}, {power:  20}, {power:  60}, {power:    0}],
-      gb: [{power: 40}, {power:  50}, {power:  40}, {power:   40}]
+      c1: [{date: "01:00", power: 30}, {date: "02:00", power:  70}, {date: "03:00", power:  50}, {date: "04:00", power:   30}],
+      v1: [{date: "01:00", power:  0}, {date: "02:00", power:  20}, {date: "03:00", power:  60}, {date: "04:00", power:    0}],
+      gb: [{date: "01:00", power: 40}, {date: "02:00", power:  50}, {date: "03:00", power:  40}, {date: "04:00", power:   40}]
     };
 
     it('computes output for each component', () => {
@@ -58,8 +58,8 @@ describe('computeOutput', () => {
     ];
 
     const expected = {
-      v1: [{power:  0}, {power:  20}, {power:  60}, {power:    0}],
-      gb: [{power: 40}, {power:  40}, {power:  40}, {power:   40}]
+      v1: [{date: "01:00", power:  0}, {date: "02:00", power:  20}, {date: "03:00", power:  60}, {date: "04:00", power:    0}],
+      gb: [{date: "01:00", power: 40}, {date: "02:00", power:  40}, {date: "03:00", power:  40}, {date: "04:00", power:   40}]
     };
 
     it('computes output for each component', () => {
