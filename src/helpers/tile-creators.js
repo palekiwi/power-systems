@@ -72,6 +72,10 @@ export const battery = ({position, data}) => {
   const texture = st.batteryContainer;
   const d = merge({
     category: 'battery',
+    type: 'battery',
+    buffer: 'true',
+    storage: 'true',
+    ramp: 0.1,
     control: []
   }, data);
   return tile({texture, position, data: d});
@@ -82,6 +86,7 @@ export const consumer = ({texture, position, data}) => {
   const d = merge({
     category: 'consumer',
     variation: 'defaultLoad',
+    type: 'load',
     power: []
   }, data);
   return tile({texture, position, data: d});

@@ -2,8 +2,8 @@
 import { computeOutput } from '../../lib/power-data.js';
 
 const powerData = {
-  'defaultLoad':    [0.3, 0.7, 0.5, 0.3],
-  'solar' :         [0.0, 0.2, 0.6, 0.0]
+  'defaultLoad':    [{value: 0.3}, {value: 0.7}, {value: 0.5}, {value: 0.3}],
+  'solar' :         [{value: 0.0}, {value: 0.2}, {value: 0.6}, {value: 0.0}]
 };
 
 const dates = ["01:00", "02:00", "03:00", "04:00"];

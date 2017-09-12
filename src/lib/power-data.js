@@ -45,8 +45,8 @@ export function computeOutput (powerData, dates, data) {
   );
 
   const computeCycle = (acc, date, i) => {
-    let load = R.map(x => ({date, power: x.capacity * powerData[x.variation][i]}), HASH.load);
-    let variable = R.map(x => ({date, power: x.capacity * powerData[x.variation][i]}), HASH.variable);
+    let load = R.map(x => ({date, power: x.capacity * powerData[x.variation][i].value}), HASH.load);
+    let variable = R.map(x => ({date, power: x.capacity * powerData[x.variation][i].value}), HASH.variable);
 
     let totalLoad = R.compose(R.sum, R.pluck('power'), R.values)(load);
     let totalVariable = R.compose(R.sum, R.pluck('power'), R.values)(variable);
