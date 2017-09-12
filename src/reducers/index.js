@@ -3,6 +3,7 @@ import activeScene from './activeSceneReducer.js';
 import activeStructure from './activeStructureReducer.js';
 import scenes from './scenesReducer.js';
 import ui from './uiReducer.js';
+import powerData from './powerDataReducer.js';
 import time from './timeReducer.js';
 import SVModal from './svModalReducer.js';
 import editor from './editorReducer.js';
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   activeStructure,
   activeTile,
   ui,
+  powerData,
   SVModal,
   editor,
   time

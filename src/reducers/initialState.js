@@ -1,5 +1,6 @@
 export default {
   scenes: [],
+  powerData: {},
   activeScene: null,
   activeStructure: null,
   activeTile: null,
