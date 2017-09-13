@@ -105,9 +105,11 @@ class SystemChart extends React.Component {
               <g style={{'visibility': legend.totalGeneration ? 'visible' : 'hidden'}}>
                 <LineChart stroke={'black'} data={totalGen} value="power" {...scales}/>
               </g>
+
               <g style={{'visibility': legend.totalLoad ? 'visible' : 'hidden'}}>
                 <LineChart stroke={'red'} data={totalLoad} value="power" {...scales}/>
               </g>
+
               {structureTiles
                 .filter(x => x.category == 'generator')
                 .map((el, i) =>
@@ -119,24 +121,31 @@ class SystemChart extends React.Component {
                   </g>
                 )
               }
+
               {structureTiles
                 .filter(x => x.category == 'battery')
-                .map((el, i) =>
+                .map(el =>
                   <g key={el.id} style={{'visibility': el.active ? 'visible' : 'hidden'}}>
-                    <LineChart
-                      stroke={"green"}
-                      value="buffer"
-                      data={powerData[el.id]} {...scales}/>
-                    <LineChart
-                      stroke={"yellow"}
-                      value="storage"
-                      data={powerData[el.id]} {...scales}/>
+                    <g style={{'visibility': legend.buffer ? 'visible' : 'hidden'}}>
+                      <LineChart
+                        stroke={"green"}
+                        value="buffer"
+                        data={powerData[el.id]} {...scales}/>
+                    </g>
+                    <g style={{'visibility': legend.storage ? 'visible' : 'hidden'}}>
+                      <LineChart
+                        stroke={"yellow"}
+                        value="storage"
+                        data={powerData[el.id]} {...scales}/>
+                    </g>
                   </g>
                 )
               }
+
               <g>
                 <line x1={pos} y1={this.state.height} x2={pos} y2="0" stroke="black"/>
               </g>
+
               <XYaxis
                 width={state.width}
                 height={state.height}
