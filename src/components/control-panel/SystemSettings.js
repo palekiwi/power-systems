@@ -15,6 +15,9 @@ SystemSetting.propTypes = {
   setStructureCapacity: PropTypes.func.isRequired,
   setStructureRamp: PropTypes.func.isRequired,
   setStructureBase: PropTypes.func.isRequired,
+  setStructureType: PropTypes.func.isRequired,
+  setBatteryBuffer: PropTypes.func.isRequired,
+  setBatteryStorage: PropTypes.func.isRequired,
   activeScene: PropTypes.object.isRequired
 };
 
@@ -76,7 +79,7 @@ function SystemSetting (props) {
                 <div>
                   <span>Ramp: </span>
                   <input type="number"
-                    style={{width: '30%'}}
+                    style={{width: '20%'}}
                     min="0"
                     max="100"
                     step="1"
@@ -93,7 +96,7 @@ function SystemSetting (props) {
                 <div>
                   <span>Base: </span>
                   <input type="number"
-                    style={{width: '30%'}}
+                    style={{width: '20%'}}
                     min="0"
                     max="100"
                     step="1"
@@ -118,6 +121,47 @@ function SystemSetting (props) {
               </div>
             }
           <hr/>
+          </div>
+        )}
+      </div>
+
+      <div>
+        <h5>Battery</h5>
+        {props.activeScene.structureTiles.map((t,i) =>
+          <div key={t.name + i} style={{display: (t.category == 'battery') ? 'auto' : 'none'}}>
+            <div>{t.name}</div>
+            <div>
+              <input type="range"
+                value={t.capacity}
+                min="0"
+                max={t.max}
+                step="5"
+                onChange={(e) => props.setStructureCapacity(i,e.target.value)}
+              />
+              <span>{t.capacity}kWh</span>
+            </div>
+            <div>
+              <label>Buffer</label><input type="checkbox" checked={t.buffer} onChange={() => props.setBatteryBuffer(i)}/>
+              <label>Storage</label><input type="checkbox" checked={t.storage} onChange={() => props.setBatteryStorage(i)}/>
+            </div>
+            {
+              t.buffer &&
+              <div>
+                <div>
+                  <span>Ramp: </span>
+                  <input type="number"
+                    style={{width: '20%'}}
+                    min="0"
+                    max="100"
+                    step="1"
+                    value={Math.floor(t.ramp * 100)}
+                    onChange={(e) => props.setStructureRamp(i, (e.target.value == 0) ? 0 : e.target.value / 100)}
+                  />
+                  <span>%/5min</span>
+                </div>
+              </div>
+            }
+            <hr/>
           </div>
         )}
       </div>

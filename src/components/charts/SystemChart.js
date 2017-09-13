@@ -86,7 +86,7 @@ class SystemChart extends React.Component {
       filter(prop('storage'))
     )(structureTiles);
 
-    const low = min(d3.min(totalBuffer, d => d.buffer), d3.min(totalStorage, d => d.storage)) || 0;
+    const low = min(d3.min(totalBuffer, d => d.buffer) || 0, d3.min(totalStorage, d => d.storage) || 0);
 
     const scales = {
       x: x(state.width, range(0,25).map(timeFromInt).map(parseHM)),

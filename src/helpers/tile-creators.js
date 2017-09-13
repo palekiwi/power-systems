@@ -64,10 +64,12 @@ export const wind = ({position, data}) => {
 export const battery = ({position, data}) => {
   const texture = st.batteryContainer;
   const d = merge({
+    name: 'ESS',
     category: 'battery',
     type: 'battery',
     buffer: 'true',
     storage: 'true',
+    capacity: 50,
     ramp: 0.1,
   }, data);
   return tile({texture, position, data: d});

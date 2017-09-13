@@ -117,6 +117,20 @@ export function setStructureType (index, field) {
   };
 }
 
+export function setBatteryBuffer (index) {
+  return {
+    type: types.SET_BATTERY_BUFFER,
+    payload: index
+  };
+}
+
+export function setBatteryStorage (index) {
+  return {
+    type: types.SET_BATTERY_STORAGE,
+    payload: index
+  };
+}
+
 export function saveNewScene (scene) {
   return {
     type: types.SAVE_NEW_SCENE,

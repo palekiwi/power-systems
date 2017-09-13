@@ -14,6 +14,7 @@ import remove from 'ramda/src/remove';
 import path from 'ramda/src/path';
 import lt from 'ramda/src/lt';
 import where from 'ramda/src/where';
+import equals from 'ramda/src/equals';
 import __ from 'ramda/src/__';
 import evolve from 'ramda/src/evolve';
 import filter from 'ramda/src/filter';
@@ -33,15 +34,21 @@ const toggleSceneActiveState = (bool, state) =>
   )(state);
 
 // lens that focuses on the active field of data object inside a strtucture tile
-const activeLens = tileIdx =>
+const fieldLens = (tileIdx, field) =>
   compose(
     lensPath(['structureTiles']),
     lensIndex(tileIdx),
-    lensPath(['active'])
+    lensPath([field])
   );
 
-const toggleStructureActive = idx =>
-  over(activeLens(idx), not);
+const toggleStructureActive = (action, state) =>
+  over(fieldLens(action.payload, 'active'), not, state);
+
+const toggleBuffer = (action, state) =>
+  over(fieldLens(action.payload, 'buffer'), not, state);
+
+const toggleStorage = (action, state) =>
+  over(fieldLens(action.payload, 'storage'), not, state);
 
 const saveTile = (action, state) => {
   const {type, tile} = action.payload;
@@ -106,7 +113,7 @@ export default function activeScene (state = initialState.activeScene, action) {
     return toggleSceneActiveState(false, state);
 
   case types.TOGGLE_STRUCTURE_ACTIVE:
-    return toggleStructureActive(action.payload)(state);
+    return toggleStructureActive(action, state);
 
   case types.SET_SCENE_NAME:
     return assocPath(['name'], action.payload)(state);
@@ -134,6 +141,12 @@ export default function activeScene (state = initialState.activeScene, action) {
 
   case types.SET_STRUCTURE_TYPE:
     return setStructureType(action, state);
+
+  case types.SET_BATTERY_BUFFER:
+    return toggleBuffer(action, state);
+
+  case types.SET_BATTERY_STORAGE:
+    return toggleStorage(action, state);
 
   default:
     return state;
