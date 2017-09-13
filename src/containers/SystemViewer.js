@@ -3,9 +3,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Scene from '../components/system-viewer/SceneEditor.js';
 import SystemChart from '../components/charts/SystemChart.js';
+import scene2d from '../lib/scene-2d.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as uiActions from '../actions/uiActions.js';
+import * as editorActions from '../actions/editorActions.js';
 import * as activeStructureActions from '../actions/activeStructureActions.js';
 import * as svModalActions from '../actions/svModalActions.js';
 import * as activeTileActions from '../actions/activeTileActions.js';
@@ -17,6 +19,7 @@ import './SystemViewer.scss';
 
 const actions = mergeAll([
   uiActions,
+  editorActions,
   svModalActions,
   activeStructureActions,
   activeTileActions,
@@ -28,6 +31,10 @@ SystemViewer.propTypes = {
   ui: PropTypes.object,
   setViewerMode: PropTypes.func.isRequired,
   editor: PropTypes.bool,
+  editScene: PropTypes.func.isRequired,
+  closeEditor: PropTypes.func.isRequired,
+  saveNewScene: PropTypes.func.isRequired,
+  updateScene: PropTypes.func.isRequired,
   setActiveStructure: PropTypes.func.isRequired,
   setActiveTile: PropTypes.func.isRequired,
   resetActiveTile: PropTypes.func.isRequired,
@@ -96,6 +103,26 @@ function SystemViewer (props) {
         <button onClick={() => props.setViewerMode('chart')}>Chart</button>
         <button onClick={() => props.setViewerMode('split')}>Split</button>
       </div>
+
+      { !props.editor &&
+        <button onClick={props.editScene}>Edit</button>
+      }
+
+      { props.editor &&
+        <div>
+          { props.activeScene.id  ?
+            <div>
+              <button onClick={() => props.updateScene(props.activeScene)}>Update</button>
+              <button onClick={() => props.closeEditor()}>Cancel</button>
+            </div>
+            :
+            <div>
+              <button onClick={() => props.saveNewScene(scene2d(props.activeScene))}>Save</button>
+              <button onClick={() => props.closeEditor()}>Cancel</button>
+            </div>
+          }
+        </div>
+      }
 
       {isNil(props.activeScene) ?
         <div className="selection-prompt">
