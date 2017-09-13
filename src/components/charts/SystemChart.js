@@ -15,7 +15,7 @@ import filter from 'ramda/src/filter';
 import reduce from 'ramda/src/reduce';
 import pluck from 'ramda/src/pluck';
 import tap from 'ramda/src/tap';
-import { parseHM, timeFromInt } from '../../helpers/format.js';
+import { parseHM, timeFromInt, fromUnix } from '../../helpers/format.js';
 import { addPower, addBuffer, addStorage } from '../../lib/helpers/power-helpers.js';
 import './SystemChart.scss';
 
@@ -86,13 +86,15 @@ class SystemChart extends React.Component {
       filter(prop('storage'))
     )(structureTiles);
 
+    const feed = undefined;
+
     const low = min(d3.min(totalBuffer, d => d.buffer) || 0, d3.min(totalStorage, d => d.storage) || 0);
 
     const scales = {
       x: x(state.width, range(0,25).map(timeFromInt).map(parseHM)),
       y: y(state.height, low, high)};
 
-    const pos = scales.x(d3.timeParse('%H:%M')(timeFromInt(this.props.time)));
+    const pos = scales.x(d3.timeParse('%H:%M')(fromUnix(this.props.time)));
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(range(0,10));
 
     return (

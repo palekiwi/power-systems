@@ -67,8 +67,8 @@ export const battery = ({position, data}) => {
     name: 'ESS',
     category: 'battery',
     type: 'battery',
-    buffer: 'true',
-    storage: 'true',
+    buffer: false,
+    storage: false,
     capacity: 50,
     ramp: 0.1,
   }, data);

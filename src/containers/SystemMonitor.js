@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as timeActions from '../actions/timeActions.js';
-import { timeFromInt } from '../helpers/format.js';
+import { fromUnix } from '../helpers/format.js';
 import pick from 'ramda/src/pick';
 import compose from 'ramda/src/compose';
 import reduce from 'ramda/src/reduce';
@@ -55,7 +55,7 @@ function SystemMonitor ({activeScene, time, setTime}) {
             <div className="column is-2 has-text-centered">
               <span>Time</span>
               <div>
-                {timeFromInt(time)}
+                {fromUnix(time)}
               </div>
             </div>
             <div className="column is-2 has-text-centered">
@@ -85,7 +85,8 @@ function SystemMonitor ({activeScene, time, setTime}) {
           </div>
           <div className="columns">
             <div className="column is-2 has-text-centered">
-              <input type="range" min="0" max="24"
+              <input type="range" min="0" max={86400}
+                step={1800}
                 value={time}
                 onChange={(e) => setTime(parseInt(e.target.value))}
               />

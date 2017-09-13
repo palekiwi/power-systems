@@ -13,5 +13,5 @@ export default {
     resizePane: new Date(),
     viewerMode: 'chart'
   },
-  time: 12
+  time: 60*60*12
 };

@@ -5,6 +5,13 @@ export function timeFromInt (n) {
   return (n < 10) ? `0${n}:00` : `${n}:00`;
 }
 
+export function fromUnix (n) {
+  let t = new Date(n*1000);
+  let h = t.getUTCHours();
+  let m = t.getUTCMinutes();
+  return ((h < 10) ? `0${h}` : h) + ':' + ((m <10) ? `0${m}` : m);
+}
+
 // String -> Date
 export function parseHM (s) {
   return timeParse('%H:%M')(s);
