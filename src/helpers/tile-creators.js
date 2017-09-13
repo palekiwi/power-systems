@@ -17,7 +17,7 @@ export const diesel = ({position, data}) => {
     type: 'backup',
     capacity: 0,
     base: 0.2,
-    ramp: 0.1,
+    ramp: 0.05,
     max: 200
   }, data);
   return generator({texture, position, data: d});
@@ -30,7 +30,7 @@ export const gas = ({position, data}) => {
     type: 'base',
     capacity: 0,
     base: 0.2,
-    ramp: 0.1,
+    ramp: 0.05,
     max: 200
   }, data);
   return generator({texture, position, data: d});
@@ -67,7 +67,7 @@ export const battery = ({position, data}) => {
     name: 'ESS',
     category: 'battery',
     type: 'battery',
-    buffer: false,
+    buffer: true,
     storage: false,
     capacity: 50,
     ramp: 0.1,

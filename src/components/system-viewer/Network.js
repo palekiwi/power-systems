@@ -44,14 +44,14 @@ function Network ({grid, structureTiles, time}) {
     <div className="Network">
       <svg>
         {genLines.map((line, i) =>
-          <g key={i} className={(line[2].active && line[2].power[time].value > 0) ? 'active' : ''}>
+          <g key={i} className={'active'}>
             <path d={link(line)} className="powerline generation"/>
             <path d={link(line)} className="powerflow"/>
           </g>
         )}
 
         {distLines.map((line, i) =>
-          <g key={i} className={activeGens ? 'active' : ''}>
+          <g key={i} className={'active'}>
             <path d={link(line)} className="powerline distribution"/>
             <path d={link(line)} className="powerflow"/>
           </g>

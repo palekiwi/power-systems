@@ -107,7 +107,7 @@ class SystemChart extends React.Component {
               {structureTiles
                 .filter(x => x.category == 'generator')
                 .map((el, i) =>
-                  <g key={el.id}>
+                  <g key={el.id} style={{'visibility': el.active ? 'visible' : 'hidden'}}>
                     <LineChart
                       stroke={colorScale(i)}
                       value="power"
@@ -118,7 +118,7 @@ class SystemChart extends React.Component {
               {structureTiles
                 .filter(x => x.category == 'battery')
                 .map((el, i) =>
-                  <g key={el.id}>
+                  <g key={el.id} style={{'visibility': el.active ? 'visible' : 'hidden'}}>
                     <LineChart
                       stroke={"green"}
                       value="buffer"

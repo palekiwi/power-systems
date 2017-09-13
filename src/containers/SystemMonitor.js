@@ -73,13 +73,13 @@ function SystemMonitor ({activeScene, time, setTime}) {
             <div className="column is-2 has-text-centered">
               <span>Current Generation:</span>
               <div>
-                {currentGen(time, activeScene)}
+                0
               </div>
             </div>
             <div className="column is-2 has-text-centered">
               <span>Current Load:</span>
               <div>
-                {currentLoad(time, activeScene)}
+                0
               </div>
             </div>
           </div>

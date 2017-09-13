@@ -10,7 +10,7 @@ const tile = ({texture, position, data}) => {
   return Object.assign(
     {id: randomId()},
     {texture, position},
-    merge({active: false}, data)
+    merge({active: true}, data)
   );
 };
 

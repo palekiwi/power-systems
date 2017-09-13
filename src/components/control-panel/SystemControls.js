@@ -14,13 +14,9 @@ function SystemControls (props) {
     <div>
       <h4>Generators:</h4>
       <div>
-        <button onClick={() => props.sceneTogglePower(true)}>All ON</button>
-        <button onClick={() => props.sceneTogglePower(false)}>All OFF</button>
-      </div>
-      <div>
         {props.activeScene.structureTiles
           .map((s, i) => (
-            <div key={i} style={{display: propEq('class', 'generator', s) ? 'auto' : 'none'}}>
+            <div key={i} style={{display: propEq('category', 'generator', s) ? 'auto' : 'none'}}>
               <span>{s.name}</span>
               <input type="checkbox"
                 onChange={() => props.toggleStructureActive(i)}
@@ -28,6 +24,24 @@ function SystemControls (props) {
             </div>
           ))
         }
+      </div>
+
+      <h4>Batteries:</h4>
+      <div>
+        {props.activeScene.structureTiles
+          .map((s, i) => (
+            <div key={i} style={{display: propEq('category', 'battery', s) ? 'auto' : 'none'}}>
+              <span>{s.name}</span>
+              <input type="checkbox"
+                onChange={() => props.toggleStructureActive(i)}
+                checked={s.active}/>
+            </div>
+          ))
+        }
+      </div>
+      <div>
+        <button onClick={() => props.sceneTogglePower(true)}>All ON</button>
+        <button onClick={() => props.sceneTogglePower(false)}>All OFF</button>
       </div>
       <div>
         <button onClick={props.editScene}>Edit</button>
