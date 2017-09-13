@@ -103,11 +103,11 @@ class SystemChart extends React.Component {
           <svg {...svgSize(state)}>
             <g transform={transform(state)}>
               <g style={{'visibility': legend.totalGeneration ? 'visible' : 'hidden'}}>
-                <LineChart stroke={'black'} data={totalGen} value="power" {...scales}/>
+                <LineChart stroke={'black'} data={totalGen} tag="totalGen" value="power" {...scales}/>
               </g>
 
               <g style={{'visibility': legend.totalLoad ? 'visible' : 'hidden'}}>
-                <LineChart stroke={'red'} data={totalLoad} value="power" {...scales}/>
+                <LineChart stroke={'red'} data={totalLoad} tag="totalLoad" value="power" {...scales}/>
               </g>
 
               {structureTiles
@@ -116,6 +116,7 @@ class SystemChart extends React.Component {
                   <g key={el.id} style={{'visibility': el.active ? 'visible' : 'hidden'}}>
                     <LineChart
                       stroke={colorScale(i)}
+                      tag={el.tag}
                       value="power"
                       data={powerData[el.id]} {...scales}/>
                   </g>
@@ -129,12 +130,14 @@ class SystemChart extends React.Component {
                     <g style={{'visibility': legend.buffer ? 'visible' : 'hidden'}}>
                       <LineChart
                         stroke={"green"}
+                        tag={"buffer"}
                         value="buffer"
                         data={powerData[el.id]} {...scales}/>
                     </g>
                     <g style={{'visibility': legend.storage ? 'visible' : 'hidden'}}>
                       <LineChart
                         stroke={"yellow"}
+                        tag={"storage"}
                         value="storage"
                         data={powerData[el.id]} {...scales}/>
                     </g>

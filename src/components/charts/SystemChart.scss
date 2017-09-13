@@ -1,10 +1,47 @@
+@import '../../_variables.scss';
+
 .SystemChart {
   width: 100%;
   height: 100%;
   padding: 5%;
 }
 
-.SystemChart_Chart {
+.SystemChart__Chart {
   width: 100%;
   height: 100%;
+}
+
+.LineChart {
+  fill: none;
+  stroke: gray;
+  opacity: 0.8;
+  stroke-width: 0.15%;
+}
+
+.LineChart.totalLoad {
+  stroke: $totalLoad;
+}
+
+.LineChart.totalGen {
+  stroke: $totalGen;
+}
+
+.LineChart.solar {
+  stroke: $solar;
+}
+
+.LineChart.diesel {
+  stroke: $diesel;
+}
+
+.LineChart.gas {
+  stroke: $gas;
+}
+
+.LineChart.buffer {
+  stroke: $buffer;
+}
+
+.LineChart.storage {
+  stroke: $storage;
 }

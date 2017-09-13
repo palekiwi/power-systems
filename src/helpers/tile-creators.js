@@ -15,6 +15,7 @@ export const diesel = ({position, data}) => {
   const d = merge({
     name: 'Diesel Generator',
     type: 'backup',
+    tag: 'diesel',
     capacity: 0,
     base: 0.2,
     ramp: 0.05,
@@ -28,6 +29,7 @@ export const gas = ({position, data}) => {
   const d = merge({
     name: 'Gas Generator',
     type: 'base',
+    tag: 'gas',
     capacity: 0,
     base: 0.2,
     ramp: 0.05,
@@ -42,6 +44,7 @@ export const solar = ({position, data}) => {
     name: 'PV Solar',
     type: 'variable',
     variation: 'solar',
+    tag: 'solar',
     capacity: 0,
     max: 200,
   }, data);
@@ -54,6 +57,7 @@ export const wind = ({position, data}) => {
     name: 'Wind Generator',
     type: 'variable',
     variation: 'solar',
+    tag: 'wind',
     capacity: 0,
     max: 200
   }, data);
@@ -67,6 +71,7 @@ export const battery = ({position, data}) => {
     name: 'ESS',
     category: 'battery',
     type: 'battery',
+    tag: 'battery',
     buffer: true,
     storage: false,
     capacity: 50,
@@ -81,6 +86,7 @@ export const consumer = ({texture, position, data}) => {
     category: 'consumer',
     variation: 'defaultLoad',
     type: 'load',
+    tag: 'load',
   }, data);
   return tile({texture, position, data: d});
 };
