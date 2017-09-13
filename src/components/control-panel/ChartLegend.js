@@ -21,7 +21,7 @@ function ChartLegend (props) {
           <button
             onClick={() => props.toggleLegendField('totalLoad')}
             className={"button totalLoad is-small" + (props.legend.totalLoad ? '' : ' is-inverted')}>
-            Total Load
+            Load
           </button>
         </div>
 
@@ -29,7 +29,7 @@ function ChartLegend (props) {
           <button
             onClick={() => props.toggleLegendField('totalGeneration')}
             className={"button totalGen is-small" + (props.legend.totalGeneration ? '' : ' is-inverted')}>
-            Total Generation
+            Generation
           </button>
         </div>
 
@@ -57,7 +57,7 @@ function ChartLegend (props) {
 
         {props.activeScene.structureTiles
           .map((s, i) => (
-            <div key={i} style={{display: propEq('category', 'generator', s) ? 'auto' : 'none'}}>
+            <div key={i} style={{display: propEq('category', 'generator', s) ? 'block' : 'none'}}>
               <button
                 onClick={() => props.toggleStructureActive(i)}
                 className={"button is-small " + s.tag + (s.active ? '' : ' is-inverted')}>

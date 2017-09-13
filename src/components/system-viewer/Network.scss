@@ -1,3 +1,5 @@
+@import '../../_variables.scss';
+
 .Network {
   position: absolute;
   top: 0;
@@ -23,11 +25,22 @@
   stroke-width: 1.5%;
 }
 
-.active .powerline.generation {
-  stroke: rgba(204,255,153,0.5);
+.powerline.solar {
+  stroke: $solar;
 }
 
-.active .powerline.distribution {
+.powerline.gas {
+  stroke: $gas;
+}
+.powerline.diesel {
+  stroke: $diesel;
+}
+
+.powerline.load {
+  stroke: $totalLoad;
+}
+
+.powerline.distribution {
   stroke: rgba(255,153,153,0.5);
 }
 

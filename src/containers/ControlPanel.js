@@ -76,7 +76,7 @@ function ControlPanel (props) {
             setSceneName={props.setSceneName}
           />
         }
-        { props.activeScene && props.ui.viewerMode != 'graphic' &&
+        { props.activeScene &&
           <ChartLegend
             activeScene={props.activeScene}
             legend={props.legend}
