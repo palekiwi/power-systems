@@ -6,6 +6,9 @@ export const DELETE_SCENE = "DELETE_SCENE";
 // power data
 export const SET_POWER_DATA = "SET_POWER_DATA";
 
+// legend
+export const TOGGLE_LEGEND_FIELD = "TOGGLE_LEGEND_FIELD";
+
 // active scene
 export const SCENE_TOGGLE_POWER = "SCENE_TOGGLE_POWER";
 export const SET_ACTIVE_SCENE = "SET_ACTIVE_SCENE";

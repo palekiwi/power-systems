@@ -11,7 +11,13 @@ export default {
   editor: false,
   ui: {
     resizePane: new Date(),
-    viewerMode: 'chart'
+    viewerMode: 'chart',
+  },
+  legend: {
+    totalLoad: true,
+    totalGeneration: true,
+    buffer: true,
+    storage: true
   },
   time: 60*60*12
 };

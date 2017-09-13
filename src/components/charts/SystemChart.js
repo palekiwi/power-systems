@@ -50,7 +50,7 @@ class SystemChart extends React.Component {
   }
 
   render () {
-    const {structureTiles, powerData} = this.props;
+    const {structureTiles, powerData, legend} = this.props;
     const state = this.state;
 
     const totalLoad = compose(
@@ -102,8 +102,12 @@ class SystemChart extends React.Component {
         <div className="SystemChart__Chart" ref={(chart) => this.chart = chart} style={{height: '100%'}}>
           <svg {...svgSize(state)}>
             <g transform={transform(state)}>
-              <LineChart stroke={'red'} data={totalLoad} value="power" {...scales}/>
-              <LineChart stroke={'black'} data={totalGen} value="power" {...scales}/>
+              <g style={{'visibility': legend.totalGeneration ? 'visible' : 'hidden'}}>
+                <LineChart stroke={'black'} data={totalGen} value="power" {...scales}/>
+              </g>
+              <g style={{'visibility': legend.totalLoad ? 'visible' : 'hidden'}}>
+                <LineChart stroke={'red'} data={totalLoad} value="power" {...scales}/>
+              </g>
               {structureTiles
                 .filter(x => x.category == 'generator')
                 .map((el, i) =>
@@ -149,7 +153,8 @@ SystemChart.propTypes = {
   resizePane: PropTypes.object.isRequired,
   structureTiles: PropTypes.array.isRequired,
   time: PropTypes.number.isRequired,
-  powerData: PropTypes.object.isRequired
+  powerData: PropTypes.object.isRequired,
+  legend: PropTypes.object.isRequired
 };
 
 export default SystemChart;

@@ -38,6 +38,7 @@ SystemViewer.propTypes = {
   closeSVModal: PropTypes.func.isRequired,
   time: PropTypes.number.isRequired,
   powerData: PropTypes.object.isRequired,
+  legend: PropTypes.object.isRequired,
 };
 
 function SystemViewer (props) {
@@ -62,6 +63,7 @@ function SystemViewer (props) {
       structureTiles={props.activeScene.structureTiles}
       powerData={props.powerData[props.activeScene.id]}
       time={props.time}
+      legend={props.legend}
     />;
 
     switch (props.ui.viewerMode) {
@@ -105,7 +107,7 @@ function SystemViewer (props) {
   );
 }
 
-const mapStateToProps = pick(['activeScene', 'ui', 'editor', 'activeTile', 'time', 'powerData']);
+const mapStateToProps = pick(['activeScene', 'ui', 'editor', 'activeTile', 'time', 'powerData', 'legend']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SystemViewer);

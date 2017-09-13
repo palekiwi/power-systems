@@ -6,13 +6,16 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as activeSceneActions from '../actions/activeSceneActions.js';
 import * as editorActions from '../actions/editorActions.js';
+import * as legendActions from '../actions/legendActions.js';
 import SystemSelector from '../components/control-panel/SystemSelector.js';
 import SystemControls from '../components/control-panel/SystemControls.js';
 import SystemSettings from '../components/control-panel/SystemSettings.js';
+import ChartLegend from '../components/control-panel/ChartLegend.js';
 
-const actions = R.mergeAll([activeSceneActions, editorActions]);
+const actions = R.mergeAll([activeSceneActions, editorActions, legendActions]);
 
 ControlPanel.propTypes = {
+  ui: PropTypes.object,
   scenes: PropTypes.array.isRequired,
   activeScene: PropTypes.object,
   setActiveScene: PropTypes.func.isRequired,
@@ -31,7 +34,9 @@ ControlPanel.propTypes = {
   setBatteryBuffer: PropTypes.func.isRequired,
   setBatteryStorage: PropTypes.func.isRequired,
   editScene: PropTypes.func.isRequired,
-  editor: PropTypes.bool.isRequired
+  editor: PropTypes.bool.isRequired,
+  legend: PropTypes.object,
+  toggleLegendField: PropTypes.func.isRequired
 };
 
 function ControlPanel (props) {
@@ -71,12 +76,20 @@ function ControlPanel (props) {
             setSceneName={props.setSceneName}
           />
         }
+        { props.activeScene && props.ui.viewerMode != 'graphic' &&
+          <ChartLegend
+            activeScene={props.activeScene}
+            legend={props.legend}
+            toggleStructureActive={props.toggleStructureActive}
+            toggleLegendField={props.toggleLegendField}
+          />
+        }
       </div>
     </div>
   );
 }
 
-const mapStateToProps = R.pick(['scenes', 'activeScene', 'editor']);
+const mapStateToProps = R.pick(['scenes', 'activeScene', 'editor', 'ui', 'legend']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlPanel);
