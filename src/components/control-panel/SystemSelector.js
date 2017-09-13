@@ -14,7 +14,7 @@ function SystemSelector (props) {
       <h3>Power Systems</h3>
       <div>
         {props.scenes.map(s => (
-          <div key={s.name}>
+          <div key={s.id}>
           <button onClick={() => props.setActiveScene(s)}>
             {s.name}
           </button>

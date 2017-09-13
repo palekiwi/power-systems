@@ -6,7 +6,6 @@ import * as st from '../data/structure-textures.js';
 export const generator = ({texture, position, data}) => {
   const d = merge({
     category: 'generator',
-    power: [],
   }, data);
   return tile({texture, position, data: d});
 };
@@ -16,7 +15,6 @@ export const diesel = ({position, data}) => {
   const d = merge({
     name: 'Diesel Generator',
     type: 'backup',
-    priority: 0,
     capacity: 0,
     base: 0.2,
     ramp: 0.1,
@@ -30,7 +28,6 @@ export const gas = ({position, data}) => {
   const d = merge({
     name: 'Gas Generator',
     type: 'base',
-    priority: 1,
     capacity: 0,
     base: 0.2,
     ramp: 0.1,
@@ -44,12 +41,9 @@ export const solar = ({position, data}) => {
   const d = merge({
     name: 'PV Solar',
     type: 'variable',
-    priority: 2,
     variation: 'solar',
-    ramp: 0.1,
     capacity: 0,
     max: 200,
-    control: []
   }, data);
   return generator({texture, position, data: d});
 };
@@ -59,7 +53,6 @@ export const wind = ({position, data}) => {
   const d = merge({
     name: 'Wind Generator',
     type: 'variable',
-    priority: 2,
     variation: 'solar',
     capacity: 0,
     max: 200
@@ -76,7 +69,6 @@ export const battery = ({position, data}) => {
     buffer: 'true',
     storage: 'true',
     ramp: 0.1,
-    control: []
   }, data);
   return tile({texture, position, data: d});
 };
@@ -87,7 +79,6 @@ export const consumer = ({texture, position, data}) => {
     category: 'consumer',
     variation: 'defaultLoad',
     type: 'load',
-    power: []
   }, data);
   return tile({texture, position, data: d});
 };

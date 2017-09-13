@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import scene2d from '../../lib/scene-2d.js';
-import {computeSystemOutput} from '../../lib/power-system.js';
 import evolve from 'ramda/src/evolve';
 import propEq from 'ramda/src/propEq';
 import isNil from 'ramda/src/isNil';
@@ -27,12 +26,12 @@ function SystemSetting (props) {
       <div>
         { props.activeScene.id  ?
           <div>
-            <button onClick={() => props.updateScene(evolve({'structureTiles': computeSystemOutput(powerData)}, props.activeScene))}>Update</button>
+            <button onClick={() => props.updateScene(props.activeScene)}>Update</button>
             <button onClick={() => props.closeEditor()}>Cancel</button>
           </div>
           :
           <div>
-            <button onClick={() => props.saveNewScene(evolve({'structureTiles': computeSystemOutput(powerData)}, scene2d(props.activeScene)))}>Save</button>
+            <button onClick={() => props.saveNewScene(scene2d(props.activeScene))}>Save</button>
             <button onClick={() => props.closeEditor()}>Cancel</button>
           </div>
         }

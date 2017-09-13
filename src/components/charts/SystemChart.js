@@ -14,8 +14,9 @@ import compose from 'ramda/src/compose';
 import filter from 'ramda/src/filter';
 import reduce from 'ramda/src/reduce';
 import pluck from 'ramda/src/pluck';
+import tap from 'ramda/src/tap';
 import { parseHM, timeFromInt } from '../../helpers/format.js';
-import { addValues } from '../../lib/helpers/power-helpers.js';
+import { addPower, addBuffer, addStorage } from '../../lib/helpers/power-helpers.js';
 import './SystemChart.scss';
 
 class SystemChart extends React.Component {
@@ -49,46 +50,43 @@ class SystemChart extends React.Component {
   }
 
   render () {
-    const {structureTiles} = this.props;
+    const {structureTiles, powerData} = this.props;
     const state = this.state;
 
-    const instantGen = compose(
-      reduce(max, 0),
-      pluck('value'),
-      addValues,
-      map(prop('control')),
-      filter(propEq('category', 'generator'))
-    )(structureTiles);
-
     const totalLoad = compose(
-      addValues,
-      map(prop('power')),
+      addPower,
+      map(x => powerData[x]),
+      pluck('id'),
       filter(propEq('category', 'consumer'))
     )(structureTiles);
 
     const totalGen = compose(
-      addValues,
-      map(prop('control')),
+      addPower,
+      map(x => powerData[x]),
+      pluck('id'),
       filter(propEq('category', 'generator'))
     )(structureTiles);
 
-    const instantLoad = compose(
-      reduce(max, 0),
-      pluck('value'),
-      addValues,
-      map(prop('power')),
-      filter(propEq('category', 'consumer'))
+    const peakLoad = d3.max(totalLoad, d => d.power);
+    const peakGen = d3.max(totalGen, d => d.power);
+
+    const high = max(peakLoad, peakGen);
+
+    const totalBuffer = compose(
+      addBuffer,
+      map(x => powerData[x]),
+      pluck('id'),
+      filter(prop('buffer'))
     )(structureTiles);
 
-    const low = compose(
-      reduce(min, 0),
-      pluck('value'),
-      addValues,
-      map(prop('control')),
-      filter(propEq('category', 'battery'))
+    const totalStorage = compose(
+      addStorage,
+      map(x => powerData[x]),
+      pluck('id'),
+      filter(prop('storage'))
     )(structureTiles);
 
-    const high = max(instantGen, instantLoad);
+    const low = min(d3.min(totalBuffer, d => d.buffer), d3.min(totalStorage, d => d.storage)) || 0;
 
     const scales = {
       x: x(state.width, range(0,25).map(timeFromInt).map(parseHM)),
@@ -102,15 +100,31 @@ class SystemChart extends React.Component {
         <div className="SystemChart__Chart" ref={(chart) => this.chart = chart} style={{height: '100%'}}>
           <svg {...svgSize(state)}>
             <g transform={transform(state)}>
-              <LineChart stroke={'black'} data={totalGen} {...scales}/>
-              <LineChart stroke={'red'} data={totalLoad} {...scales}/>
+              <LineChart stroke={'red'} data={totalLoad} value="power" {...scales}/>
+              <LineChart stroke={'black'} data={totalGen} value="power" {...scales}/>
               {structureTiles
-                .filter(x => x.category == 'generator' || x.category == 'battery')
+                .filter(x => x.category == 'generator')
                 .map((el, i) =>
                   <g key={el.id}>
                     <LineChart
                       stroke={colorScale(i)}
-                      data={el.control} {...scales}/>
+                      value="power"
+                      data={powerData[el.id]} {...scales}/>
+                  </g>
+                )
+              }
+              {structureTiles
+                .filter(x => x.category == 'battery')
+                .map((el, i) =>
+                  <g key={el.id}>
+                    <LineChart
+                      stroke={"green"}
+                      value="buffer"
+                      data={powerData[el.id]} {...scales}/>
+                    <LineChart
+                      stroke={"yellow"}
+                      value="storage"
+                      data={powerData[el.id]} {...scales}/>
                   </g>
                 )
               }
@@ -132,7 +146,8 @@ class SystemChart extends React.Component {
 SystemChart.propTypes = {
   resizePane: PropTypes.object.isRequired,
   structureTiles: PropTypes.array.isRequired,
-  time: PropTypes.number.isRequired
+  time: PropTypes.number.isRequired,
+  powerData: PropTypes.object.isRequired
 };
 
 export default SystemChart;

@@ -1,6 +1,5 @@
 import scene2d from '../../lib/scene-2d.js';
 import vector from '../../lib/vector.js';
-import {computeSystemOutput} from '../../lib/power-system.js';
 import { flatmapToTilesArray } from '../../lib/tile.js';
 import { battery, diesel, solar, powerPole, houseThatched, farm } from '../../helpers/tile-creators.js';
 import { grass, dirt } from '../terrain-textures.js';
@@ -44,4 +43,4 @@ const village = scene2d({
   ]
 });
 
-export default evolve({structureTiles: computeSystemOutput(data)}, village);
+export default village;

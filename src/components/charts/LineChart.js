@@ -9,25 +9,25 @@ const defaultStyles = {
   strokeLinecap: 'round'
 };
 
-class LineChart extends React.Component {
-  render () {
-    const styles = Object.assign({}, defaultStyles, {stroke: this.props.stroke});
-    const line = d3.line()
-      .x(d => this.props.x(d.date))
-      .y(d => this.props.y(d.value))
-      .curve(d3.curveMonotoneX);
-
-    return (
-      <path ref={path => this.path = path} {...styles} d={line(this.props.data)}/>
-    );
-  }
-}
-
 LineChart.propTypes = {
   data: PropTypes.array.isRequired,
+  value: PropTypes.string.isRequired,
   x: PropTypes.func.isRequired,
   y: PropTypes.func.isRequired,
   stroke: PropTypes.string
 };
+
+function LineChart (props) {
+  const styles = Object.assign({}, defaultStyles, {stroke: props.stroke});
+
+  const line = d3.line()
+    .x(d => props.x(d.date))
+    .y(d => props.y(d[props.value]))
+    .curve(d3.curveMonotoneX);
+
+  return (
+    <path {...styles} d={line(props.data)}/>
+  );
+}
 
 export default LineChart;
