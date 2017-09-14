@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const R = require('ramda');
 const S = require('sanctuary');
 
@@ -8,7 +9,7 @@ export function computeOutput (powerData, dates, data) {
   const DATES = dates;
 
   // Object
-  let TYPES = ['load', 'variable', 'base', 'battery'];
+  let TYPES = ['load', 'variable', 'base', 'battery', 'backup'];
   let HASH = R.zipObj(
     TYPES,
     R.map(t =>
@@ -38,18 +39,20 @@ export function computeOutput (powerData, dates, data) {
   );
 
   // (a -> b -> c -> d) -> [e]
-  const f = (acc, val, i) => R.mergeWith(
+  const reducer = (acc, val, i) => R.mergeWith(
     R.append,
     computeCycle(acc, val, i),
     acc
   );
 
   const computeCycle = (acc, date, i) => {
+    let sumBy = field => R.compose(R.sum, R.pluck(field), R.values);
+
     let load = R.map(x => ({date, power: x.capacity * powerData[x.variation][i].value}), HASH.load);
     let variable = R.map(x => ({date, power: x.capacity * powerData[x.variation][i].value}), HASH.variable);
 
-    let totalLoad = R.compose(R.sum, R.pluck('power'), R.values)(load);
-    let totalVariable = R.compose(R.sum, R.pluck('power'), R.values)(variable);
+    let totalLoad = sumBy('power')(load);
+    let totalVariable = sumBy('power')(variable);
 
     let lastVariable = R.compose(
       S.fromMaybe(totalVariable),
@@ -79,12 +82,12 @@ export function computeOutput (powerData, dates, data) {
       R.filter(R.prop('buffer'))
     )(HASH.battery);
 
-    let totalBuffer = R.compose(R.sum, R.pluck('buffer'), R.values)(buffer);
+    let totalBuffer = sumBy('buffer')(buffer);
 
     let base = R.map(
       b => {
         let units = R.keys(HASH.base).length;
-        let powerShare = (totalLoad - (totalVariable - totalBuffer) / R.keys(HASH.base).length);
+        let powerShare = (totalLoad - (totalVariable - totalBuffer)) / units;
         let clampBase = R.clamp(b.capacity * b.base, b.capacity);
         let ramp = b.ramp * b.capacity;
 
@@ -105,7 +108,7 @@ export function computeOutput (powerData, dates, data) {
       HASH.base
     );
 
-    let totalBase = R.compose(R.sum, R.pluck('power'), R.values)(base);
+    let totalBase = sumBy('power')(base);
 
     let storage = R.compose(
       ss => {
@@ -116,8 +119,38 @@ export function computeOutput (powerData, dates, data) {
       R.filter(R.prop('storage'))
     )(HASH.battery);
 
-    return R.mergeAll([load, variable, R.mergeWith(R.merge, buffer, storage), base]);
+    let totalStorage = sumBy('storage')(storage);
+
+    let backup = R.map(
+      b => {
+        let units = R.keys(HASH.backup).length;
+        let powerShare = (totalLoad - totalBase - totalStorage) / units;
+        let ramp = b.ramp * b.capacity;
+
+        let lastPower = R.compose(
+          S.fromMaybe(powerShare),
+          S.map(R.prop('power')),
+          S.last
+        )(acc[b.id]);
+
+        let power = R.compose(
+          R.ifElse(R.gte(0),
+            R.always(0),
+            R.ifElse(R.always(lastPower == 0),
+              R.identity,
+              R.clamp(lastPower - ramp, lastPower + ramp)
+            )
+          )
+        )(powerShare);
+
+        return {date, power};
+      },
+      HASH.backup
+    );
+
+    return R.mergeAll([load, variable, R.mergeWith(R.merge, buffer, storage), base, backup]);
   };
 
-  return R.addIndex(R.reduce)(f, EMPTY, DATES);
+  const result = R.addIndex(R.reduce)(reducer, EMPTY, DATES);
+  return result;
 }
