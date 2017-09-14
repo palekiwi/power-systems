@@ -9,7 +9,7 @@ export function computeOutput (powerData, dates, data) {
   const DATES = dates;
 
   // Object
-  let TYPES = ['load', 'variable', 'base', 'battery', 'backup'];
+  let TYPES = ['load', 'variable', 'base', 'battery', 'grid', 'backup'];
   let HASH = R.zipObj(
     TYPES,
     R.map(t =>
@@ -121,11 +121,25 @@ export function computeOutput (powerData, dates, data) {
 
     let totalStorage = sumBy('storage')(storage);
 
+    let grid = R.map(
+      () => {
+        let units = R.keys(HASH.grid).length;
+        let powerShare = (totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage) / units;
+        let power = R.clamp(0, R.identity)(powerShare);
+
+        return {date, power};
+      },
+      HASH.grid
+    );
+
+    let totalGrid = sumBy('power')(grid);
+
     let backup = R.map(
       b => {
         let units = R.keys(HASH.backup).length;
-        let powerShare = (totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage) / units;
+        let powerShare = (totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage - totalGrid) / units;
         let clampBase = R.clamp(b.capacity * b.base, b.capacity);
+        let clampBounds = R.clamp(0, b.capacity);
         let ramp = b.ramp * b.capacity;
 
         let lastPower = R.compose(
@@ -136,7 +150,7 @@ export function computeOutput (powerData, dates, data) {
 
         let power = R.compose(
           R.ifElse(R.always(lastPower == 0),
-            R.identity,
+            clampBounds,
             R.compose(
               clampBase,
               R.clamp(lastPower - ramp, lastPower + ramp)
@@ -149,7 +163,9 @@ export function computeOutput (powerData, dates, data) {
       HASH.backup
     );
 
-    return R.mergeAll([load, variable, R.mergeWith(R.merge, buffer, storage), base, backup]);
+    return R.mergeAll(
+      [load, variable, R.mergeWith(R.merge, buffer, storage), base, grid, backup]
+    );
   };
 
   const result = R.addIndex(R.reduce)(reducer, EMPTY, DATES);

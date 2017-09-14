@@ -85,6 +85,26 @@ describe('computeOutput', () => {
     });
   });
 
+  describe('given data with power-grid', () => {
+    const data = [
+      {id: 'c1', category: 'consumer',  capacity: 200, type: 'load', variation: 'defaultLoad'},
+      {id: 'base', category: 'generator', capacity: 100, type: 'base', ramp: 0.1, base: 0.3},
+      {id: 'grid', category: 'grid', type: 'grid'},
+      {id: 'backup', category: 'generator', capacity: 100, type: 'backup', ramp: 0.1, base: 0.3},
+    ];
+
+    const expected = {
+      c1:     [{date: "01:00", power: 60}, {date: "02:00", power:  140}, {date: "03:00", power:  100}, {date: "04:00", power:   60}],
+      base:   [{date: "01:00", power: 60}, {date: "02:00", power:   70}, {date: "03:00", power:   80}, {date: "04:00", power:   70}],
+      grid:   [{date: "01:00", power:  0}, {date: "02:00", power:   70}, {date: "03:00", power:   20}, {date: "04:00", power:    0}],
+      backup: [{date: "01:00", power:  0}, {date: "02:00", power:    0}, {date: "03:00", power:    0}, {date: "04:00", power:    0}]
+    };
+
+    it('computes output for each component', () => {
+      expect(computeOutput(powerData, dates, data)).toEqual(expected);
+    });
+  });
+
   describe('given data without battery', () => {
     const data = [
       {id: 'c1', category: 'consumer',  capacity: 100, type: 'load', variation: 'defaultLoad'},
