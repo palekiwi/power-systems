@@ -47,13 +47,16 @@ export function computeOutput (powerData, dates, data) {
 
   const computeCycle = (acc, date, i) => {
     let sumBy = field => R.compose(R.sum, R.pluck(field), R.values);
+    let round = x => Math.round(x * 1000);
+
     let energy = (id, field, curr) => R.compose(
       R.ifElse(R.always(i == 0),
-        R.always(0),
-        x => R.mean([R.last(x[id])[field], curr]) / 12)
+        R.always(round(curr / 12)),
+        x => round(R.mean([R.last(x[id])[field], curr]) / 12)
+      )
     )(acc);
 
-    let batteryEnergy = (id, field, curr) => energy(id, field, curr);
+    let batteryEnergy = (id, field, curr) => (i == 0 ? 0 : R.last(acc[id]).energy) + energy(id, field, curr);
 
     let load = R.map(x => {
       let power = x.capacity * powerData[x.variation][i].value;
@@ -144,7 +147,7 @@ export function computeOutput (powerData, dates, data) {
         return R.map(s => ({
           date,
           storage: power,
-          energy: energy(s.id, 'storage', power)
+          energy: batteryEnergy(s.id, 'storage', power)
         }), ss);
       },
       R.filter(R.prop('storage'))

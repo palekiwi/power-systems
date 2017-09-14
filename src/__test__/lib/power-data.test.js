@@ -1,5 +1,6 @@
 /* global describe, it, expect */
 import { computeOutput } from '../../lib/power-data.js';
+import R from 'ramda';
 
 const powerData = {
   'defaultLoad':    [{value: 0.3}, {value: 0.7}, {value: 0.5}, {value: 0.3}],
@@ -28,8 +29,25 @@ describe('computeOutput', () => {
       b1: [{date: "01:00", power:  0, buffer: 0, storage: 0},  {date: "02:00", power: 20, buffer: 20, storage: -50}, {date: "03:00", power: 40, buffer: 80, storage: 0}, {date: "04:00", power: 20, buffer: -20, storage: 10}]
     };
 
-    it.only('computes output for each component', () => {
-      expect(computeOutput(powerData, dates, data)).toEqual(expected);
+    it('computes output for each component', () => {
+      let res = computeOutput(powerData, dates,data);
+      expect(res.length).toEqual(expected.length);
+      expect(R.pluck('power', res.c1)).toEqual(R.pluck('power', expected.c1));
+      expect(R.pluck('power', res.v1)).toEqual(R.pluck('power', expected.v1));
+      expect(R.pluck('power', res.gb)).toEqual(R.pluck('power', expected.gb));
+      expect(R.pluck('buffer', res.b1)).toEqual(R.pluck('buffer', expected.b1));
+      expect(R.pluck('storage', res.b1)).toEqual(R.pluck('storage', expected.b1));
+    });
+
+    it.only('computes energy for each component', () => {
+      let res = computeOutput(powerData, dates,data);
+      expect(res.length).toEqual(expected.length);
+      expect(R.pluck('energy', res.c1)).toEqual([2500,  4167,  5000, 3333]);
+      expect(R.pluck('energy', res.c2)).toEqual([2500,  4167,  5000, 3333]);
+      expect(R.pluck('energy', res.v1)).toEqual([   0,   833,  3333, 2500]);
+      expect(R.pluck('energy', res.v2)).toEqual([   0,   833,  3333, 2500]);
+      expect(R.pluck('energy', res.gb)).toEqual([5000,  5417,  5417, 4583]);
+      expect(R.pluck('energy', res.b1)).toEqual([   0, -1251,  2083, 3749]);
     });
   });
 
