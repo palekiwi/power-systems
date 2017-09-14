@@ -97,16 +97,19 @@ export function computeOutput (powerData, dates, data) {
     let buffer = R.compose(
       bs => {
         let units = R.keys(bs).length;
-        return R.map(b =>
-          R.compose(
-            x => ({
-              date,
-              power: x / units,
-              buffer: (totalVariable - x) / units,
-              energy: batteryEnergy(b.id, 'buffer', (totalVariable - x) / units)
-            }),
-            x => R.clamp(lastVariable - x, lastVariable + x)(totalVariable)
-          )(b.ramp * VARIABLE_CAPACITY)
+        return R.map(b => {
+          let ramp = b.ramp * VARIABLE_CAPACITY;
+          let clamped = R.clamp(lastVariable - ramp, lastVariable + ramp)(totalVariable);
+          let power = clamped / units;
+          let buffer = (totalVariable - clamped) / units;
+          let energy = batteryEnergy(b.id, 'buffer', buffer);
+          return {
+            date,
+            power,
+            buffer,
+            energy
+          };
+        }
         )(bs);
       },
       R.filter(R.prop('buffer'))
