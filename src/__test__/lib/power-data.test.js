@@ -28,7 +28,7 @@ describe('computeOutput', () => {
       b1: [{date: "01:00", power:  0, buffer: 0, storage: 0},  {date: "02:00", power: 20, buffer: 20, storage: -50}, {date: "03:00", power: 40, buffer: 80, storage: 0}, {date: "04:00", power: 20, buffer: -20, storage: 10}]
     };
 
-    it('computes output for each component', () => {
+    it.only('computes output for each component', () => {
       expect(computeOutput(powerData, dates, data)).toEqual(expected);
     });
   });
