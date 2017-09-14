@@ -26,7 +26,7 @@ describe('computeSystemOutput', () => {
   };
 
   describe('given array of structureTiles without a battery', () => {
-    it('computes consumption and output of each relevant component', () => {
+    it.skip('computes consumption and output of each relevant component', () => {
       const tiles = [
         {id: 1, name: 'hospital', category: 'consumer', capacity: 100, variation: 'defaultLoad', power: []},
         {id: 2, name: 'communityCenter', category: 'consumer', capacity: 100, variation: 'defaultLoad', power: []},
@@ -58,7 +58,7 @@ describe('computeSystemOutput', () => {
   });
 
   describe('given array of structureTiles with a battery', () => {
-    it.only('computes consumption and output of each relevant component', () => {
+    it.skip('computes consumption and output of each relevant component', () => {
       const tiles = [
         {id: 1, name: 'hospital', category: 'consumer', capacity: 100, variation: 'defaultLoad', power: []},
         {id: 3, name: 'solar', category: 'generator', ramp: 0.1, capacity: 200, type: 'variable', variation: 'solar', power: []},
@@ -89,7 +89,7 @@ describe('computeSystemOutput', () => {
   });
 
   describe('given array of structureTiles with a base property', () => {
-    it('computes correct output', () => {
+    it.skip('computes correct output', () => {
       const tiles = [
         {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: 'defaultLoad', power: []},
         {id: 4, name: 'gas', category: 'generator', type: 'base', capacity: 100, base: 0.5, priority: 1, power: []},
@@ -114,7 +114,7 @@ describe('computeSystemOutput', () => {
   });
 
   describe('given primary power supplies enough power', () => {
-    it('secondary and backup should output nothing', () => {
+    it.skip('secondary and backup should output nothing', () => {
       const tiles = [
         {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.1, 0.1, 0.1, 0.1]), power: []},
         {id: 2, name: 'communityCenter', category: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.1, 0.1, 0.1, 0.1]), power: []},
@@ -143,7 +143,7 @@ describe('computeSystemOutput', () => {
   });
 
   describe('given structureTiles without primary power', () => {
-    it('computes consumption and output of each component', () => {
+    it.skip('computes consumption and output of each component', () => {
       const tiles = [
         {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.4, 0.4, 0.9, 0.3]), power: []},
         {id: 2, name: 'communityCenter', category: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.3, 0.5, 0.7, 0.4]), power: []},
@@ -169,7 +169,7 @@ describe('computeSystemOutput', () => {
   });
 
   describe('given there is no secondary power', () => {
-    it('backup should output power', () => {
+    it.skip('backup should output power', () => {
       const tiles = [
         {id: 1, name: 'hospital', category: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.1, 0.1, 0.1, 0.1]), power: []},
         {id: 2, name: 'communityCenter', category: 'consumer', type: 'variable', capacity: 100, variation: zipToDates([0.1, 0.1, 0.1, 0.1]), power: []},
@@ -195,7 +195,7 @@ describe('computeSystemOutput', () => {
   });
 
   describe('given array of structureTiles without load', () => {
-    it('secondary power and backup output no power', () => {
+    it.skip('secondary power and backup output no power', () => {
       const tiles = [
         {id: 1, name: 'solar', category: 'generator', type: 'variable', capacity: 100, priority: 2, variation: zipToDates([0, 0.1, 0.5, 0]), power: []},
         {id: 2, name: 'gas', category: 'generator', type: 'non-variable', capacity: 100, priority: 1, power: []},

@@ -124,7 +124,8 @@ export function computeOutput (powerData, dates, data) {
     let backup = R.map(
       b => {
         let units = R.keys(HASH.backup).length;
-        let powerShare = (totalLoad - totalBase - totalStorage) / units;
+        let powerShare = (totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage) / units;
+        let clampBase = R.clamp(b.capacity * b.base, b.capacity);
         let ramp = b.ramp * b.capacity;
 
         let lastPower = R.compose(
@@ -134,10 +135,10 @@ export function computeOutput (powerData, dates, data) {
         )(acc[b.id]);
 
         let power = R.compose(
-          R.ifElse(R.gte(0),
-            R.always(0),
-            R.ifElse(R.always(lastPower == 0),
-              R.identity,
+          R.ifElse(R.always(lastPower == 0),
+            R.identity,
+            R.compose(
+              clampBase,
               R.clamp(lastPower - ramp, lastPower + ramp)
             )
           )

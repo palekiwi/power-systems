@@ -13,9 +13,13 @@ const zipFieldsWith = field => fn => (a,b) => {
   return zipWith(mergeWithKey((k,l,r) => k == field ? fn(l, r) : r), a, b);
 };
 
+const zipValues = zipFieldsWith('values');
 const zipPower = zipFieldsWith('power');
 const zipBuffer = zipFieldsWith('buffer');
 const zipStorage = zipFieldsWith('storage');
+
+const zipValuesSum = (acc, arr) => (arr.length == 0) ? acc : zipValuesSum(zipValues(add)(acc, head(arr)), tail(arr));
+const zipValuesDiff = (acc, arr) => (arr.length == 0) ? acc : zipValuesDiff(zipValues(subtract)(acc, head(arr)), tail(arr));
 
 const zipPowerSum = (acc, arr) => (arr.length == 0) ? acc : zipPowerSum(zipPower(add)(acc, head(arr)), tail(arr));
 const zipPowerDiff = (acc, arr) => (arr.length == 0) ? acc : zipPowerDiff(zipPower(subtract)(acc, head(arr)), tail(arr));
@@ -24,6 +28,9 @@ const zipBufferSum = (acc, arr) => (arr.length == 0) ? acc : zipBufferSum(zipBuf
 const zipStorageSum = (acc, arr) => (arr.length == 0) ? acc : zipStorageSum(zipStorage(add)(acc, head(arr)), tail(arr));
 
 const zipRec = fn => arr => (arr.length == 0) ? [] : fn(head(arr), tail(arr));
+
+export const addValues = zipRec(zipValuesSum);
+export const subValues = zipRec(zipValuesDiff);
 
 export const addPower = zipRec(zipPowerSum);
 export const subPower = zipRec(zipPowerDiff);

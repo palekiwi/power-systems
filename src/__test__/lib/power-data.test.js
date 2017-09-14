@@ -77,7 +77,7 @@ describe('computeOutput', () => {
     const expected = {
       c1:       [{date: "01:00", power: 60}, {date: "02:00", power:  140}, {date: "03:00", power:  100}, {date: "04:00", power:   60}],
       base:     [{date: "01:00", power: 60}, {date: "02:00", power:   70}, {date: "03:00", power:   80}, {date: "04:00", power:   70}],
-      backup:   [{date: "01:00", power:  0}, {date: "02:00", power:   70}, {date: "03:00", power:   60}, {date: "04:00", power:    0}],
+      backup:   [{date: "01:00", power:  0}, {date: "02:00", power:   70}, {date: "03:00", power:   60}, {date: "04:00", power:   50}],
     };
 
     it('computes output for each component', () => {
