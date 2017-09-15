@@ -163,6 +163,39 @@ describe('computeOutput', () => {
         expect(R.pluck('balance', res.bat)).toEqual(expected.bbal.balance);
       });
     });
+
+    describe('when the battery has insufficient capacity', () => {
+      beforeEach(() => {
+        data = [
+          {id: 'c1', category: 'consumer',    capacity:  100, type: 'load', variation: 'defaultLoad'},
+          {id: 'v1', category: 'generator',   capacity:  100, type: 'variable', variation: 'solar'},
+          {id: 'base', category: 'generator', capacity:  100, type: 'base', ramp: 0.1, base: 0.3},
+          {id: 'bat', category: 'battery',    capacity:    1, type: 'battery', soc: 0.5, c: 15, buffer: false, ramp: 0.1, storage: true}
+        ];
+
+        expected = {
+          c1:    {power:   [30,  70, 50,  30], energy:   [ 2500,  4167,  5000,  3333]},
+          v1:    {power:   [ 0,  20, 60,   0], energy:   [    0,   833,  3333,  2500]},
+          base:  {power:   [30,  40, 30,  30], energy:   [ 2500,  2917,  2917,  2500]},
+          bstor: {storage: [ 0, -10, 32,   0], stored:   [    0,  -417,   917,     0]},
+          bbal:  {balance:                               [  500,    83,  1000,  1000]}
+        };
+
+        res = computeOutput(powerData, dates,data);
+      });
+
+      it('computes storage power', () => {
+        expect(R.pluck('storage', res.bat)).toEqual(expected.bstor.storage);
+      });
+
+      it('computes stored energy', () => {
+        expect(R.pluck('stored', res.bat)).toEqual(expected.bstor.stored);
+      });
+
+      it('computes battery balance', () => {
+        expect(R.pluck('balance', res.bat)).toEqual(expected.bbal.balance);
+      });
+    });
   });
 
   describe('given a sytem with a single buffer and storage battery', () => {
