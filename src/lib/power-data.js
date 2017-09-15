@@ -81,6 +81,7 @@ export function computeOutput (powerData, dates, data) {
     let totalVariable = sumBy('power')(variable);
     let totalVarEnergy = sumBy('energy')(variable);
 
+    // the total of power from variable sources at last gime mark
     let lastVariable = R.compose(
       S.fromMaybe(totalVariable),
       R.map(R.sum),
@@ -167,9 +168,8 @@ export function computeOutput (powerData, dates, data) {
         let targetPower = ((totalVariable - totalBuffer) + totalBase - totalLoad) / units;
         let targetEnergy = ((totalVarEnergy - totalBufferedEnergy) + totalBaseEnergy - totalLoadEnergy) / units;
         return R.map(s => {
-          let soc = buffer[s.id] ? buffer[s.id].balance : s.capacity * 1000 * s.soc;
+          let soc = buffer[s.id] ? buffer[s.id].balance : s.capacity * 1000 * s.soc; // get from the same battery if exists
           let c = s.capacity * 1000 * s.c / 60 * 5; // 5min charge/discharge limit
-          let ramp = s.ramp * VARIABLE_CAPACITY; // required ramp rate
 
           let storedAfterC = R.clamp(-c, c)(targetEnergy);
           let storedAfterSoC = R.clamp(0 - soc, s.capacity * 1000 - soc)(storedAfterC);

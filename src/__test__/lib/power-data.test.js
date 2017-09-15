@@ -1,4 +1,4 @@
-/* global describe, it, expect */
+/* global beforeEach, describe, it, expect */
 import { computeOutput } from '../../lib/power-data.js';
 import R from 'ramda';
 
@@ -10,38 +10,55 @@ const powerData = {
 const dates = ["01:00", "02:00", "03:00", "04:00"];
 
 describe('computeOutput', () => {
-  describe('given data with battery', () => {
-    describe('with only a buffer', () => {
-      it('computes energy for each component and buffer', () => {
-        const data = [
-          {id: 'c1', category: 'consumer',  capacity:  100, type: 'load', variation: 'defaultLoad'},
-          {id: 'v1', category: 'generator', capacity:  100, type: 'variable', variation: 'solar'},
-          {id: 'base', category: 'generator', capacity:  100, type: 'base', ramp: 0.1, base: 0.3},
-          {id: 'bat', category: 'battery',  capacity:  100, type: 'battery', soc: 0.5, c: 3, buffer: true, ramp: 0.1, storage: false}
+  let data, expected, res;
+  describe('given a sytem with a buffer battery', () => {
+    describe('when the battery has proper spec', () => {
+
+      beforeEach(() => {
+        data = [
+          {id: 'c1',   category: 'consumer',  capacity:  100, type: 'load',     variation: 'defaultLoad'},
+          {id: 'v1',   category: 'generator', capacity:  100, type: 'variable', variation: 'solar'},
+          {id: 'base', category: 'generator', capacity:  100, type: 'base',     ramp: 0.1, base: 0.3},
+          {id: 'bat',  category: 'battery',   capacity:  100, type: 'battery',  soc: 0.5, c: 3, buffer: true, ramp: 0.1, storage: false}
         ];
 
-        const expected = {
-          v1:     {power: [ 0, 20, 60,  0], energy: [   0,  833, 3333, 2500]},
-          bat:    {power: [ 0, 10, 20, 10], energy: [   0,  417, 1250, 1250], buffer: [0, 10, 40, -10], buffered: [0, 416, 2083, 1250], balance: [50000, 50416, 52499, 53749]},
-          c1:     {power: [30, 70, 50, 30], energy: [2500, 4167, 5000, 3333]},
-          base:   {power: [30, 40, 30, 30], energy: [2500, 2917, 2917, 2500]}
+        expected = {
+          v1:    {power:  [ 0, 20, 60,   0],  energy:   [    0,   833,  3333,  2500]},
+          bramp: {power:  [ 0, 10, 20,  10],  energy:   [    0,   417,  1250,  1250]},
+          bbuff: {buffer: [ 0, 10, 40, -10],  buffered: [    0,   416,  2083,  1250]},
+          c1:    {power:  [30, 70, 50,  30],  energy:   [ 2500,  4167,  5000,  3333]},
+          base:  {power:  [30, 40, 30,  30],  energy:   [ 2500,  2917,  2917,  2500]},
+          bbal:  {                            balance:  [50000, 50416, 52499, 53749]},
         };
 
-        let res = computeOutput(powerData, dates,data);
+        res = computeOutput(powerData, dates,data);
+      });
 
-        expect(res.length).toEqual(expected.length);
+      it('computes correct power outputs according to given ramp', () => {
+        expect(R.pluck('power', res.c1)).toEqual(expected.c1.power);
+        expect(R.pluck('power', res.v1)).toEqual(expected.v1.power);
+        expect(R.pluck('power', res.base)).toEqual(expected.base.power);
+        expect(R.pluck('power', res.bat)).toEqual(expected.bramp.power);
+      });
 
+      it('computes correct energy outputs according to given ramp', () => {
         expect(R.pluck('energy', res.c1)).toEqual(expected.c1.energy);
         expect(R.pluck('energy', res.v1)).toEqual(expected.v1.energy);
         expect(R.pluck('energy', res.base)).toEqual(expected.base.energy);
-        expect(R.pluck('energy', res.bat)).toEqual(expected.bat.energy);
-        expect(R.pluck('balance', res.bat)).toEqual(expected.bat.balance);
-        expect(R.pluck('buffer', res.bat)).toEqual(expected.bat.buffer);
+        expect(R.pluck('energy', res.bat)).toEqual(expected.bramp.energy);
+      });
+
+      it('computes correct battery buffered energy', () => {
+        expect(R.pluck('balance', res.bat)).toEqual(expected.bbal.balance);
+      });
+
+      it('computes correct battery balance', () => {
+        expect(R.pluck('balance', res.bat)).toEqual(expected.bbal.balance);
       });
     });
 
     describe('with buffer and storage', () => {
-      it.only('computes energy for each component and buffer', () => {
+      it('computes energy for each component and buffer', () => {
         const data = [
           {id: 'c1', category: 'consumer',    capacity:  100, type: 'load', variation: 'defaultLoad'},
           {id: 'v1', category: 'generator',   capacity:  100, type: 'variable', variation: 'solar'},
