@@ -100,22 +100,29 @@ export function computeOutput (powerData, dates, data) {
         let units = R.keys(bs).length;
         return R.map(
           b => {
-            let soc = (i > 0) ? R.last(acc[b.id]).energy : b.soc * b.capacity * 1000; // mutliply by 1000 to convert from kWh to Wh
+            let soc = (i > 0) ? R.last(acc[b.id]).balance : b.soc * b.capacity * 1000; // mutliply by 1000 to convert from kWh to Wh
             let c = b.capacity * 1000 * b.c / 60 * 5;
             let ramp = b.ramp * VARIABLE_CAPACITY; // required ramp rate
-            let ramped = R.clamp(lastVariable - ramp, lastVariable + ramp)(totalVariable); // desired ramp power output
-            let rampedEnergy = round(R.mean([lastVariable, ramped]) / 12); // desired ramped energy output
-            let bufferEnergy = (totalVarEnergy - rampedEnergy) / units; // desired buffered energy
-            let clampC = R.clamp(-c, c)(bufferEnergy);
-            let clampSoC = R.clamp(0 - soc, b.capacity * 1000 - soc)(clampC);
-            let ideal = clampSoC == bufferEnergy;
-            let power = ideal ? (ramped / units) : (totalVarEnergy / units - clampSoC) * 2 * 12 - (lastVariable / units); // convert energy to power
-            let buffer = (totalVariable - power) / units;
+
+            let targetTotalPower = R.clamp(lastVariable - ramp, lastVariable + ramp)(totalVariable); // desired ramp power output
+            let targetTotalEnergy = round(R.mean([lastVariable, targetTotalPower]) / 12); // desired ramped energy output
+            let targetBuffered = (totalVarEnergy - targetTotalEnergy) / units; // desired buffered energy
+
+            let bufferedAfterC = R.clamp(-c, c)(targetBuffered);
+            let bufferedAfterSoC = R.clamp(0 - soc, b.capacity * 1000 - soc)(bufferedAfterC);
+
+            let target = bufferedAfterSoC == targetBuffered;
+
+            let power = target ? (targetTotalPower / units) : undefined; // convert energy to power
+            let buffer = totalVariable / units - power;
+            let energy = totalVarEnergy / units - bufferedAfterSoC;
             return {
               date,
+              buffered: bufferedAfterSoC,
+              balance: soc + bufferedAfterSoC,
               power,
               buffer,
-              energy: soc + clampSoC
+              energy
             };
           }
         )(bs);
