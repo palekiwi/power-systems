@@ -168,7 +168,7 @@ export function computeOutput (powerData, dates, data) {
         let targetPower = ((totalVariable - totalBuffer) + totalBase - totalLoad) / units;
         let targetEnergy = ((totalVarEnergy - totalBufferedEnergy) + totalBaseEnergy - totalLoadEnergy) / units;
         return R.map(s => {
-          let soc = buffer[s.id] ? buffer[s.id].balance : s.capacity * 1000 * s.soc; // get from the same battery if exists
+          let soc = buffer[s.id] ? buffer[s.id].balance : (i > 0) ? R.last(acc[s.id]).balance : s.capacity * 1000 * s.soc; // get from the same battery if exists
           let c = s.capacity * 1000 * s.c / 60 * 5; // 5min charge/discharge limit
 
           let storedAfterC = R.clamp(-c, c)(targetEnergy);
