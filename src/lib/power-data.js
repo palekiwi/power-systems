@@ -78,6 +78,7 @@ export function computeOutput (powerData, dates, data) {
 
     let totalLoad = sumBy('power')(load);
     let totalVariable = sumBy('power')(variable);
+    let totalVarEnergy = sumBy('energy')(variable);
 
     let lastVariable = R.compose(
       S.fromMaybe(totalVariable),
@@ -97,19 +98,26 @@ export function computeOutput (powerData, dates, data) {
     let buffer = R.compose(
       bs => {
         let units = R.keys(bs).length;
-        return R.map(b => {
-          let ramp = b.ramp * VARIABLE_CAPACITY;
-          let clamped = R.clamp(lastVariable - ramp, lastVariable + ramp)(totalVariable);
-          let power = clamped / units;
-          let buffer = (totalVariable - clamped) / units;
-          let energy = batteryEnergy(b.id, 'buffer', buffer);
-          return {
-            date,
-            power,
-            buffer,
-            energy
-          };
-        }
+        return R.map(
+          b => {
+            let soc = (i > 0) ? R.last(acc[b.id]).energy : b.soc * b.capacity * 1000; // mutliply by 1000 to convert from kWh to Wh
+            let c = b.capacity * 1000 * b.c / 60 * 5;
+            let ramp = b.ramp * VARIABLE_CAPACITY; // required ramp rate
+            let ramped = R.clamp(lastVariable - ramp, lastVariable + ramp)(totalVariable); // desired ramp power output
+            let rampedEnergy = round(R.mean([lastVariable, ramped]) / 12); // desired ramped energy output
+            let bufferEnergy = (totalVarEnergy - rampedEnergy) / units; // desired buffered energy
+            let clampC = R.clamp(-c, c)(bufferEnergy);
+            let clampSoC = R.clamp(0 - soc, b.capacity * 1000 - soc)(clampC);
+            let ideal = clampSoC == bufferEnergy;
+            let power = ideal ? (ramped / units) : (totalVarEnergy / units - clampSoC) * 2 * 12 - (lastVariable / units); // convert energy to power
+            let buffer = (totalVariable - power) / units;
+            return {
+              date,
+              power,
+              buffer,
+              energy: soc + clampSoC
+            };
+          }
         )(bs);
       },
       R.filter(R.prop('buffer'))
@@ -200,7 +208,7 @@ export function computeOutput (powerData, dates, data) {
       HASH.backup
     );
 
-    let battery = R.mergeWith(R.mergeWithKey((k,l,r) => k == 'energy' ? R.add(l,r) : r), buffer, storage);
+    let battery = R.mergeWith(R.mergeWithKey((k,l,r) => k == 'energy' ? l : r), buffer, storage);
 
     return R.mergeAll([load, variable, battery, base, grid, backup]);
   };

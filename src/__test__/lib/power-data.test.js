@@ -12,12 +12,12 @@ const dates = ["01:00", "02:00", "03:00", "04:00"];
 describe('computeOutput', () => {
   describe('given data with battery', () => {
     const data = [
-      {id: 'c1', category: 'consumer',  capacity: 100, type: 'load', variation: 'defaultLoad'},
-      {id: 'c2', category: 'consumer',  capacity: 100, type: 'load', variation: 'defaultLoad'},
-      {id: 'v1', category: 'generator', capacity: 100, type: 'variable', variation: 'solar'},
-      {id: 'v2', category: 'generator', capacity: 100, type: 'variable', variation: 'solar'},
-      {id: 'gb', category: 'generator', capacity: 100, type: 'base', ramp: 0.1, base: 0.3},
-      {id: 'b1',  category: 'battery', type: 'battery', buffer: true, ramp: 0.1, storage: true}
+      {id: 'c1', category: 'consumer',  capacity:  100, type: 'load', variation: 'defaultLoad'},
+      {id: 'c2', category: 'consumer',  capacity:  100, type: 'load', variation: 'defaultLoad'},
+      {id: 'v1', category: 'generator', capacity:  100, type: 'variable', variation: 'solar'},
+      {id: 'v2', category: 'generator', capacity:  100, type: 'variable', variation: 'solar'},
+      {id: 'gb', category: 'generator', capacity:  100, type: 'base', ramp: 0.1, base: 0.3},
+      {id: 'b1',  category: 'battery',  capacity:  100, type: 'battery', soc: 0.5, c: 3, buffer: true, ramp: 0.1, storage: true}
     ];
 
     const expected = {
@@ -29,7 +29,7 @@ describe('computeOutput', () => {
       b1: [{date: "01:00", power:  0, buffer: 0, storage: 0},  {date: "02:00", power: 20, buffer: 20, storage: -50}, {date: "03:00", power: 40, buffer: 80, storage: 0}, {date: "04:00", power: 20, buffer: -20, storage: 10}]
     };
 
-    it('computes output for each component', () => {
+    it('computes power output for each component', () => {
       let res = computeOutput(powerData, dates,data);
       expect(res.length).toEqual(expected.length);
       expect(R.pluck('power', res.c1)).toEqual(R.pluck('power', expected.c1));
@@ -39,15 +39,31 @@ describe('computeOutput', () => {
       expect(R.pluck('storage', res.b1)).toEqual(R.pluck('storage', expected.b1));
     });
 
-    it.only('computes energy for each component', () => {
+    it.only('computes energy for each component and buffer', () => {
+      const data = [
+        {id: 'c1', category: 'consumer',  capacity:  100, type: 'load', variation: 'defaultLoad'},
+        {id: 'v1', category: 'generator', capacity:  100, type: 'variable', variation: 'solar'},
+        {id: 'base', category: 'generator', capacity:  100, type: 'base', ramp: 0.1, base: 0.3},
+        {id: 'bat', category: 'battery',  capacity:  100, type: 'battery', soc: 0.5, c: 3, buffer: true, ramp: 0.1, storage: false}
+      ];
+
+      const expected = {
+        v1:     {power: [ 0, 20, 60,  0], energy: [   0,  833, 3333, 2500]},
+        bat:    {power: [ 0, 10, 20, 10], energy: [   0,  417, 1250, 1250], buffer: [0, 10, 40, -20], buffered: [0, 416, 2083, 1250], balance: [50000, 50416, 52499, 53749]},
+        c1:     {power: [30, 70, 50, 30], energy: [2500, 4167, 5000, 3333]},
+        base:     {power: [30, 40, 30, 30], energy: [2500, 2917, 2917, 2500]}
+      };
+
       let res = computeOutput(powerData, dates,data);
+
       expect(res.length).toEqual(expected.length);
-      expect(R.pluck('energy', res.c1)).toEqual([2500,  4167,  5000, 3333]);
-      expect(R.pluck('energy', res.c2)).toEqual([2500,  4167,  5000, 3333]);
-      expect(R.pluck('energy', res.v1)).toEqual([   0,   833,  3333, 2500]);
-      expect(R.pluck('energy', res.v2)).toEqual([   0,   833,  3333, 2500]);
-      expect(R.pluck('energy', res.gb)).toEqual([5000,  5417,  5417, 4583]);
-      expect(R.pluck('energy', res.b1)).toEqual([   0, -1251,  2083, 3749]);
+
+      expect(R.pluck('energy', res.c1)).toEqual(expected.c1.energy);
+      expect(R.pluck('energy', res.v1)).toEqual(expected.v1.energy);
+      expect(R.pluck('energy', res.base)).toEqual(expected.base.energy);
+      expect(R.pluck('energy', res.bat)).toEqual(expected.bat.energy);
+      expect(R.pluck('balance', res.bat)).toEqual(expected.bat.balance);
+      expect(R.pluck('buffer', res.bat)).toEqual(expected.bat.buffer);
     });
   });
 
