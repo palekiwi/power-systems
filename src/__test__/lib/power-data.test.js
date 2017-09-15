@@ -66,7 +66,7 @@ describe('computeOutput', () => {
           {id: 'c1',   category: 'consumer',  capacity:  100, type: 'load',     variation: 'defaultLoad'},
           {id: 'v1',   category: 'generator', capacity:  100, type: 'variable', variation: 'solar'},
           {id: 'base', category: 'generator', capacity:  100, type: 'base',     ramp: 0.1, base: 0.3},
-          {id: 'bat',  category: 'battery',   capacity:    1, type: 'battery',  soc: 0.5, c: 3, buffer: true, ramp: 0.1, storage: false}
+          {id: 'bat',  category: 'battery',   capacity:    1, type: 'battery',  soc: 0.5, c: 15, buffer: true, ramp: 0.1, storage: false}
         ];
 
         expected = {
@@ -93,16 +93,16 @@ describe('computeOutput', () => {
         expect(R.pluck('energy', res.base)).toEqual(expected.base.energy);
       });
 
-      it('computes ramped power and energy for variable power', () => {
+      it.only('computes ramped power and energy for variable power', () => {
         expect(R.pluck('power', res.bat)).toEqual(expected.bramp.power);
         expect(R.pluck('energy', res.bat)).toEqual(expected.bramp.energy);
       });
 
       it('computes battery buffered energy', () => {
-        expect(R.pluck('balance', res.bat)).toEqual(expected.bbal.balance);
+        expect(R.pluck('buffer', res.bat)).toEqual(expected.bbuff.buffer);
       });
 
-      it.only('computes battery balance', () => {
+      it('computes battery balance', () => {
         expect(R.pluck('balance', res.bat)).toEqual(expected.bbal.balance);
       });
     });

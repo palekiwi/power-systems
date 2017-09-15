@@ -81,6 +81,21 @@ export function computeOutput (powerData, dates, data) {
     let totalVariable = sumBy('power')(variable);
     let totalVarEnergy = sumBy('energy')(variable);
 
+    // needed to compute buffering
+    let lastRawVariable = R.compose(
+      S.fromMaybe(totalVariable),
+      R.map(R.sum),
+      S.sequence(S.Maybe),
+      R.map(R.pluck('power')),
+      R.map(
+        R.compose(
+          S.last,
+          R.prop(R.__, acc)
+        )
+      ),
+      R.keys
+    )(HASH.variable);
+
     // the total of power from variable sources at last gime mark
     let lastVariable = R.compose(
       S.fromMaybe(totalVariable),
@@ -106,16 +121,23 @@ export function computeOutput (powerData, dates, data) {
             let c = b.capacity * 1000 * b.c / 60 * 5;
             let ramp = b.ramp * VARIABLE_CAPACITY; // required ramp rate
 
+            console.log(i + 'lastVariable:', lastVariable);
             let targetTotalPower = R.clamp(lastVariable - ramp, lastVariable + ramp)(totalVariable); // desired ramp power output
+            console.log(i + 'targetTotalPower', targetTotalPower);
             let targetTotalEnergy = round(R.mean([lastVariable, targetTotalPower]) / 12); // desired ramped energy output
+            console.log(i + 'targetTotalEnergy:', targetTotalEnergy);
             let targetBuffered = (totalVarEnergy - targetTotalEnergy) / units; // desired buffered energy
+            console.log(i + 'totalVarEnergy:', totalVarEnergy);
+            console.log(i + 'targetBuffered:', targetBuffered);
 
             let bufferedAfterC = R.clamp(-c, c)(targetBuffered);
             let bufferedAfterSoC = R.clamp(0 - soc, b.capacity * 1000 - soc)(bufferedAfterC);
+            console.log(i + 'bufferedAfterSoC:', bufferedAfterSoC);
 
             let target = bufferedAfterSoC == targetBuffered;
 
-            let power = target ? (targetTotalPower / units) : undefined; // convert energy to power
+            console.log('raw:', lastRawVariable);
+            let power = target ? (targetTotalPower / units) : (((totalVarEnergy / units) - bufferedAfterSoC) * 2 * 12 / 1000) - (lastRawVariable / units); // convert energy to power
             let buffer = totalVariable / units - power;
             let energy = totalVarEnergy / units - bufferedAfterSoC;
             return {
