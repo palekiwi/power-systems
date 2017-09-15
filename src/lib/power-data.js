@@ -191,7 +191,7 @@ export function computeOutput (powerData, dates, data) {
 
           let target = targetEnergy == storedAfterSoC;
 
-          let storage = target ? targetPower : undefined; // convert energy to power
+          let storage = target ? targetPower : (storedAfterSoC == 0 && (soc == 0 || soc == s.capacity * 1000)) ? 0 : (storedAfterSoC * 2 * 12 / 1000) - R.last(acc[s.id]).storage; // convert energy to power
 
           return {
             date,

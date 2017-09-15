@@ -4,7 +4,9 @@ import R from 'ramda';
 
 const powerData = {
   'defaultLoad':    [{value: 0.3}, {value: 0.7}, {value: 0.5}, {value: 0.3}],
-  'solar' :         [{value: 0.0}, {value: 0.2}, {value: 0.6}, {value: 0.0}]
+  'solar'      :    [{value: 0.0}, {value: 0.2}, {value: 0.6}, {value: 0.0}],
+  'testBufferEmpty' :    [{value: 0.4}, {value: 0.0}],
+  'testBufferFull'  :    [{value: 0.0}, {value: 0.4}]
 };
 
 const dates = ["01:00", "02:00", "03:00", "04:00"];
@@ -53,6 +55,45 @@ describe('computeOutput', () => {
 
       it('computes battery buffered energy', () => {
         expect(R.pluck('balance', res.bat)).toEqual(expected.bbal.balance);
+      });
+
+      it('computes battery balance', () => {
+        expect(R.pluck('balance', res.bat)).toEqual(expected.bbal.balance);
+      });
+    });
+
+    describe('when the battery is empty', () => {
+      beforeEach(() => {
+        data = [
+          {id: 'v1',   category: 'generator', capacity:  100, type: 'variable', variation: 'testBufferEmpty'},
+          {id: 'bat',  category: 'battery',   capacity:    1, type: 'battery',  soc: 0.0, c: 15, buffer: true, ramp: 0.1, storage: false}
+        ];
+
+        expected = {
+          v1:    {power:  [  40,  0],  energy:   [    3333,  1667]},
+          bramp: {power:  [  40,  0],  energy:   [       0,     0]},
+          bbuff: {buffer: [   0,  0],  buffered: [       0,     0]},
+          bbal:  {                     balance:  [       0,     0]},
+        };
+
+        res = computeOutput(powerData, ["0", "1"],data);
+      });
+
+      it('computes power outputs according to given ramp', () => {
+        expect(R.pluck('power', res.v1)).toEqual(expected.v1.power);
+      });
+
+      it('computes energy outputs according to given ramp', () => {
+        expect(R.pluck('energy', res.v1)).toEqual(expected.v1.energy);
+      });
+
+      it('computes ramped power and energy for variable power', () => {
+        expect(R.pluck('power', res.bat)).toEqual(expected.bramp.power);
+        expect(R.pluck('energy', res.bat)).toEqual(expected.bramp.energy);
+      });
+
+      it('computes battery buffered energy', () => {
+        expect(R.pluck('buffer', res.bat).map(x => Math.round(x * 1000) / 1000)).toEqual(expected.bbuff.buffer);
       });
 
       it('computes battery balance', () => {
@@ -164,6 +205,29 @@ describe('computeOutput', () => {
       });
     });
 
+    describe('battery is empty', () => {
+      beforeEach(() => {
+        data = [
+          {id: 'c1', category: 'consumer',    capacity:  100, type: 'load', variation: 'defaultLoad'},
+          {id: 'bat', category: 'battery',    capacity:    1, type: 'battery', soc: 0, c: 15, buffer: false, ramp: 0.1, storage: true}
+        ];
+
+        expected = {
+          bstor: {storage: [ 0, 0, 0, 0], stored: [ 0, 0, 0, 0]},
+          bbal:  {balance:                        [ 0, 0, 0, 0]}
+        };
+
+        res = computeOutput(powerData, dates,data);
+      });
+
+      it('battery balance, storage and stored energy will be 0', () => {
+        expect(R.pluck('balance', res.bat)).toEqual(expected.bbal.balance);
+        expect(R.pluck('storage', res.bat)).toEqual(expected.bstor.storage);
+        expect(R.pluck('stored', res.bat)).toEqual(expected.bstor.stored);
+      });
+
+    });
+
     describe('when the battery has insufficient capacity', () => {
       beforeEach(() => {
         data = [
@@ -184,8 +248,8 @@ describe('computeOutput', () => {
         res = computeOutput(powerData, dates,data);
       });
 
-      it('computes storage power', () => {
-        expect(R.pluck('storage', res.bat)).toEqual(expected.bstor.storage);
+      it.only('computes storage power', () => {
+        R.pluck('storage', res.bat).forEach((r,i) => expect(Math.floor(r * 100) / 100).toEqual(expected.bstor.storage[i]));
       });
 
       it('computes stored energy', () => {
