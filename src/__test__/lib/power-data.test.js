@@ -59,6 +59,53 @@ describe('computeOutput', () => {
         expect(R.pluck('balance', res.bat)).toEqual(expected.bbal.balance);
       });
     });
+
+    describe('when the battery has insufficient capacity', () => {
+      beforeEach(() => {
+        data = [
+          {id: 'c1',   category: 'consumer',  capacity:  100, type: 'load',     variation: 'defaultLoad'},
+          {id: 'v1',   category: 'generator', capacity:  100, type: 'variable', variation: 'solar'},
+          {id: 'base', category: 'generator', capacity:  100, type: 'base',     ramp: 0.1, base: 0.3},
+          {id: 'bat',  category: 'battery',   capacity:    1, type: 'battery',  soc: 0.5, c: 3, buffer: true, ramp: 0.1, storage: false}
+        ];
+
+        expected = {
+          v1:    {power:  [ 0, 20,     60,   0],  energy:   [    0,   833,  3333,  2500]},
+          bramp: {power:  [ 0, 10, 57.976,  24],  energy:   [    0,   417,  3249,  3500]},
+          bbuff: {buffer: [ 0, 10,  2.024, -10],  buffered: [    0,   416,    84, -1000]},
+          c1:    {power:  [30, 70,     50,  30],  energy:   [ 2500,  4167,  5000,  3333]},
+          base:  {power:  [30, 40,     30,  30],  energy:   [ 2500,  2917,  2917,  2500]},
+          bbal:  {                                balance:  [  500,   916,  1000,     0]},
+        };
+
+        res = computeOutput(powerData, dates,data);
+      });
+
+      it('computes power outputs according to given ramp', () => {
+        expect(R.pluck('power', res.c1)).toEqual(expected.c1.power);
+        expect(R.pluck('power', res.v1)).toEqual(expected.v1.power);
+        expect(R.pluck('power', res.base)).toEqual(expected.base.power);
+      });
+
+      it('computes energy outputs according to given ramp', () => {
+        expect(R.pluck('energy', res.c1)).toEqual(expected.c1.energy);
+        expect(R.pluck('energy', res.v1)).toEqual(expected.v1.energy);
+        expect(R.pluck('energy', res.base)).toEqual(expected.base.energy);
+      });
+
+      it('computes ramped power and energy for variable power', () => {
+        expect(R.pluck('power', res.bat)).toEqual(expected.bramp.power);
+        expect(R.pluck('energy', res.bat)).toEqual(expected.bramp.energy);
+      });
+
+      it('computes battery buffered energy', () => {
+        expect(R.pluck('balance', res.bat)).toEqual(expected.bbal.balance);
+      });
+
+      it.only('computes battery balance', () => {
+        expect(R.pluck('balance', res.bat)).toEqual(expected.bbal.balance);
+      });
+    });
   });
 
   describe('given a system with a storage battery only', () => {
