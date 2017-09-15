@@ -121,22 +121,15 @@ export function computeOutput (powerData, dates, data) {
             let c = b.capacity * 1000 * b.c / 60 * 5;
             let ramp = b.ramp * VARIABLE_CAPACITY; // required ramp rate
 
-            console.log(i + 'lastVariable:', lastVariable);
             let targetTotalPower = R.clamp(lastVariable - ramp, lastVariable + ramp)(totalVariable); // desired ramp power output
-            console.log(i + 'targetTotalPower', targetTotalPower);
             let targetTotalEnergy = round(R.mean([lastVariable, targetTotalPower]) / 12); // desired ramped energy output
-            console.log(i + 'targetTotalEnergy:', targetTotalEnergy);
             let targetBuffered = (totalVarEnergy - targetTotalEnergy) / units; // desired buffered energy
-            console.log(i + 'totalVarEnergy:', totalVarEnergy);
-            console.log(i + 'targetBuffered:', targetBuffered);
 
             let bufferedAfterC = R.clamp(-c, c)(targetBuffered);
             let bufferedAfterSoC = R.clamp(0 - soc, b.capacity * 1000 - soc)(bufferedAfterC);
-            console.log(i + 'bufferedAfterSoC:', bufferedAfterSoC);
 
             let target = bufferedAfterSoC == targetBuffered;
 
-            console.log('raw:', lastRawVariable);
             let power = target ? (targetTotalPower / units) : (((totalVarEnergy / units) - bufferedAfterSoC) * 2 * 12 / 1000) - (lastRawVariable / units); // convert energy to power
             let buffer = totalVariable / units - power;
             let energy = totalVarEnergy / units - bufferedAfterSoC;
