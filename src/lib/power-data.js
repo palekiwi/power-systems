@@ -77,6 +77,7 @@ export function computeOutput (powerData, dates, data) {
     }, HASH.variable);
 
     let totalLoad = sumBy('power')(load);
+    let totalLoadEnergy = sumBy('energy')(load);
     let totalVariable = sumBy('power')(variable);
     let totalVarEnergy = sumBy('energy')(variable);
 
@@ -131,6 +132,7 @@ export function computeOutput (powerData, dates, data) {
     )(HASH.battery);
 
     let totalBuffer = sumBy('buffer')(buffer);
+    let totalBufferedEnergy = sumBy('buffered')(buffer);
 
     let base = R.map(
       b => {
@@ -157,16 +159,32 @@ export function computeOutput (powerData, dates, data) {
     );
 
     let totalBase = sumBy('power')(base);
+    let totalBaseEnergy = sumBy('energy')(base);
 
     let storage = R.compose(
       ss => {
         let units = R.keys(ss).length;
-        let power = ((totalVariable - totalBuffer) + totalBase - totalLoad) / units;
-        return R.map(s => ({
-          date,
-          storage: power,
-          energy: batteryEnergy(s.id, 'storage', power)
-        }), ss);
+        let targetPower = ((totalVariable - totalBuffer) + totalBase - totalLoad) / units;
+        let targetEnergy = ((totalVarEnergy - totalBufferedEnergy) + totalBaseEnergy - totalLoadEnergy) / units;
+        return R.map(s => {
+          let soc = buffer[s.id] ? buffer[s.id].balance : s.capacity * 1000 * s.soc;
+          let c = s.capacity * 1000 * s.c / 60 * 5; // 5min charge/discharge limit
+          let ramp = s.ramp * VARIABLE_CAPACITY; // required ramp rate
+
+          let storedAfterC = R.clamp(-c, c)(targetEnergy);
+          let storedAfterSoC = R.clamp(0 - soc, s.capacity * 1000 - soc)(storedAfterC);
+
+          let target = targetEnergy == storedAfterSoC;
+
+          let storage = target ? targetPower : undefined; // convert energy to power
+
+          return {
+            date,
+            storage,
+            stored: storedAfterSoC,
+            balance: soc + storedAfterSoC
+          };
+        }, ss);
       },
       R.filter(R.prop('storage'))
     )(HASH.battery);
@@ -215,7 +233,7 @@ export function computeOutput (powerData, dates, data) {
       HASH.backup
     );
 
-    let battery = R.mergeWith(R.mergeWithKey((k,l,r) => k == 'energy' ? l : r), buffer, storage);
+    let battery = R.mergeWith(R.merge, buffer, storage);
 
     return R.mergeAll([load, variable, battery, base, grid, backup]);
   };

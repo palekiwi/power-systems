@@ -56,7 +56,7 @@ describe('computeOutput', () => {
           c1:   {power:   [30,  70, 50,  30], energy:   [ 2500,  4167,  5000,  3333]},
           base: {power:   [30,  40, 30,  30], energy:   [ 2500,  2917,  2917,  2500]},
           stor: {storage: [ 0, -20,  0,  10], stored:   [    0,  -833,  -833,   417]},
-          bal:  {balance:                               [50000, 49583, 48750, 49167]}
+          bal:  {balance:                               [50000, 49583, 50833, 52500]}
         };
 
         let res = computeOutput(powerData, dates,data);
@@ -68,9 +68,9 @@ describe('computeOutput', () => {
         expect(R.pluck('energy', res.base)).toEqual(expected.base.energy);
         expect(R.pluck('energy', res.bat)).toEqual(expected.bat.energy);
         expect(R.pluck('buffered', res.bat)).toEqual(expected.buff.buffered);
-        expect(R.pluck('balance', res.bat)).toEqual(expected.bal.balance);
         expect(R.pluck('stored', res.bat)).toEqual(expected.stor.stored);
         expect(R.pluck('storage', res.bat)).toEqual(expected.stor.storage);
+        expect(R.pluck('balance', res.bat)).toEqual(expected.bal.balance);
       });
     });
   });
