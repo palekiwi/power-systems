@@ -248,7 +248,7 @@ describe('computeOutput', () => {
         res = computeOutput(powerData, dates,data);
       });
 
-      it.only('computes storage power', () => {
+      it('computes storage power', () => {
         R.pluck('storage', res.bat).forEach((r,i) => expect(Math.floor(r * 100) / 100).toEqual(expected.bstor.storage[i]));
       });
 

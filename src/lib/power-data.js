@@ -56,8 +56,6 @@ export function computeOutput (powerData, dates, data) {
       )
     )(acc);
 
-    let batteryEnergy = (id, field, curr) => (i == 0 ? 0 : R.last(acc[id]).energy) + energy(id, field, curr);
-
     let load = R.map(x => {
       let power = x.capacity * powerData[x.variation][i].value;
       return {
@@ -115,28 +113,31 @@ export function computeOutput (powerData, dates, data) {
     let buffer = R.compose(
       bs => {
         let units = R.keys(bs).length;
+        let meanRamp = R.mean(R.pluck('ramp', R.values(bs)));                                    // mean ramp value of all units
+        let ramp = meanRamp * VARIABLE_CAPACITY;                                                 // required ramp rate
+        let targetTotalPower = R.clamp(lastVariable - ramp, lastVariable + ramp)(totalVariable); // target ramp power output
+        let targetTotalEnergy = round(R.mean([lastVariable, targetTotalPower]) / 12);            // target ramped energy output over 5min period
+        let targetBuffered = (totalVarEnergy - targetTotalEnergy) / units;                       // target buffered energy
+
         return R.map(
           b => {
-            let soc = (i > 0) ? R.last(acc[b.id]).balance : b.soc * b.capacity * 1000; // mutliply by 1000 to convert from kWh to Wh
+            let balance = (i > 0) ? R.last(acc[b.id]).balance : b.soc * b.capacity * 1000;           // mutliply by 1000 to convert from kWh to Wh
             let c = b.capacity * 1000 * b.c / 60 * 5;
-            let ramp = b.ramp * VARIABLE_CAPACITY; // required ramp rate
 
-            let targetTotalPower = R.clamp(lastVariable - ramp, lastVariable + ramp)(totalVariable); // desired ramp power output
-            let targetTotalEnergy = round(R.mean([lastVariable, targetTotalPower]) / 12); // desired ramped energy output
-            let targetBuffered = (totalVarEnergy - targetTotalEnergy) / units; // desired buffered energy
+            let buffered = R.compose(
+              R.clamp(0 - balance, b.capacity * 1000 - balance), // clamp by capacity
+              R.clamp(-c, c)                                     // clamp by C-rating
+            )(targetBuffered);
 
-            let bufferedAfterC = R.clamp(-c, c)(targetBuffered);
-            let bufferedAfterSoC = R.clamp(0 - soc, b.capacity * 1000 - soc)(bufferedAfterC);
-
-            let target = bufferedAfterSoC == targetBuffered;
-
-            let power = target ? (targetTotalPower / units) : (((totalVarEnergy / units) - bufferedAfterSoC) * 2 * 12 / 1000) - (lastRawVariable / units); // convert energy to power
+            let power = buffered == targetBuffered ?
+              (targetTotalPower / units) :
+              (((totalVarEnergy / units) - buffered) * 2 * 12 / 1000) - (lastRawVariable / units); // calculate instant power from buffered energy
             let buffer = totalVariable / units - power;
-            let energy = totalVarEnergy / units - bufferedAfterSoC;
+            let energy = totalVarEnergy / units - buffered;
             return {
               date,
-              buffered: bufferedAfterSoC,
-              balance: soc + bufferedAfterSoC,
+              buffered,
+              balance: balance + buffered,
               power,
               buffer,
               energy
@@ -183,21 +184,32 @@ export function computeOutput (powerData, dates, data) {
         let targetPower = ((totalVariable - totalBuffer) + totalBase - totalLoad) / units;
         let targetEnergy = ((totalVarEnergy - totalBufferedEnergy) + totalBaseEnergy - totalLoadEnergy) / units;
         return R.map(s => {
-          let soc = buffer[s.id] ? buffer[s.id].balance : (i > 0) ? R.last(acc[s.id]).balance : s.capacity * 1000 * s.soc; // get from the same battery if exists
-          let c = s.capacity * 1000 * s.c / 60 * 5; // 5min charge/discharge limit
+          let balance = buffer[s.id] ? // read balance from the same battery in this cycle if exists
+            buffer[s.id].balance :
+            (i > 0) ?
+            R.last(acc[s.id]).balance :
+            s.capacity * 1000 * s.soc;
 
-          let storedAfterC = R.clamp(-c, c)(targetEnergy);
-          let storedAfterSoC = R.clamp(0 - soc, s.capacity * 1000 - soc)(storedAfterC);
+          let c = s.capacity * 1000 * s.c / 12; // 5min charge and discharge limit
 
-          let target = targetEnergy == storedAfterSoC;
+          let stored = R.compose(
+            R.clamp(0 - balance, s.capacity * 1000 - balance), // clamp by capacity
+            R.clamp(-c, c)                                     // clamp by C-rating
+          )(targetEnergy);
 
-          let storage = target ? targetPower : (storedAfterSoC == 0 && (soc == 0 || soc == s.capacity * 1000)) ? 0 : (storedAfterSoC * 2 * 12 / 1000) - R.last(acc[s.id]).storage; // convert energy to power
+          let target = targetEnergy == stored;
+
+          //let storage = target ? targetPower : (i == 0 || stored == 0 && (balance == 0 || balance == s.capacity * 1000)) ? 0 : (stored * 2 * 12 / 1000) - R.last(acc[s.id]).storage; // convert energy to power
+          let storage = target ? targetPower :
+            i == 0 ? ((targetPower - stored) * 2 * 12 / 1000) - targetPower :
+            (stored == 0 && (balance == 0 || balance == s.capacity * 1000)) ? 0 :
+            (stored * 2 * 12 / 1000) - R.last(acc[s.id]).storage; // convert energy to power
 
           return {
             date,
             storage,
-            stored: storedAfterSoC,
-            balance: soc + storedAfterSoC
+            stored,
+            balance: balance + stored
           };
         }, ss);
       },

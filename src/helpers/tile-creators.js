@@ -76,6 +76,8 @@ export const battery = ({position, data}) => {
     storage: false,
     capacity: 50,
     ramp: 0.1,
+    c: 3,
+    soc: 0.5
   }, data);
   return tile({texture, position, data: d});
 };

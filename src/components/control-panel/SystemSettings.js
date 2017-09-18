@@ -16,6 +16,7 @@ SystemSetting.propTypes = {
   setStructureRamp: PropTypes.func.isRequired,
   setStructureBase: PropTypes.func.isRequired,
   setStructureType: PropTypes.func.isRequired,
+  setBatteryC: PropTypes.func.isRequired,
   setBatteryBuffer: PropTypes.func.isRequired,
   setBatteryStorage: PropTypes.func.isRequired,
   activeScene: PropTypes.object.isRequired
@@ -139,6 +140,17 @@ function SystemSetting (props) {
                 onChange={(e) => props.setStructureCapacity(i,e.target.value)}
               />
               <span>{t.capacity}kWh</span>
+            </div>
+            <div>
+              <span>C: </span>
+              <input type="number"
+                style={{width: '20%'}}
+                min="0"
+                max="5"
+                step="1"
+                value={t.c}
+                onChange={(e) => props.setBatteryC(i, e.target.value)}
+              />
             </div>
             <div>
               <label>Buffer</label><input type="checkbox" checked={t.buffer} onChange={() => props.setBatteryBuffer(i)}/>

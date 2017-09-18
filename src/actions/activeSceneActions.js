@@ -117,6 +117,16 @@ export function setStructureType (index, field) {
   };
 }
 
+export function setBatteryC (index, field) {
+  return {
+    type: types.SET_BATTERY_C,
+    payload: {
+      index,
+      field
+    }
+  };
+}
+
 export function setBatteryBuffer (index) {
   return {
     type: types.SET_BATTERY_BUFFER,

@@ -91,6 +91,7 @@ const setStructureCapacity = setStructureProperty(parseFloat, 'capacity');
 const setStructureRamp = setStructureProperty(parseFloat, 'ramp');
 const setStructureBase = setStructureProperty(parseFloat, 'base');
 const setStructureType = setStructureProperty(identity, 'type');
+const setBatteryC = setStructureProperty(parseInt, 'c');
 
 export default function activeScene (state = initialState.activeScene, action) {
   switch (action.type) {
@@ -138,6 +139,9 @@ export default function activeScene (state = initialState.activeScene, action) {
 
   case types.SET_STRUCTURE_TYPE:
     return setStructureType(action, state);
+
+  case types.SET_BATTERY_C:
+    return setBatteryC(action, state);
 
   case types.SET_BATTERY_BUFFER:
     return toggleBuffer(action, state);

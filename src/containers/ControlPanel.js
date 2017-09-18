@@ -31,6 +31,7 @@ ControlPanel.propTypes = {
   setStructureRamp: PropTypes.func.isRequired,
   setStructureBase: PropTypes.func.isRequired,
   setStructureType: PropTypes.func.isRequired,
+  setBatteryC: PropTypes.func.isRequired,
   setBatteryBuffer: PropTypes.func.isRequired,
   setBatteryStorage: PropTypes.func.isRequired,
   editScene: PropTypes.func.isRequired,
@@ -67,6 +68,7 @@ function ControlPanel (props) {
             setStructureRamp={props.setStructureRamp}
             setStructureBase={props.setStructureBase}
             setStructureType={props.setStructureType}
+            setBatteryC={props.setBatteryC}
             setBatteryBuffer={props.setBatteryBuffer}
             setBatteryStorage={props.setBatteryStorage}
             setGridSize={props.setGridSize}
