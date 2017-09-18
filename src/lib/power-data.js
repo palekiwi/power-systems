@@ -131,9 +131,11 @@ export function computeOutput (powerData, dates, data) {
 
             let power = buffered == targetBuffered ?
               (targetTotalPower / units) :
+              (buffered == 0 && (balance == 0 || balance == b.capacity * 1000)) ? (totalVariable / units) :
               (((totalVarEnergy / units) - buffered) * 2 * 12 / 1000) - (lastRawVariable / units); // calculate instant power from buffered energy
             let buffer = totalVariable / units - power;
             let energy = totalVarEnergy / units - buffered;
+
             return {
               date,
               buffered,
@@ -201,7 +203,9 @@ export function computeOutput (powerData, dates, data) {
 
           //let storage = target ? targetPower : (i == 0 || stored == 0 && (balance == 0 || balance == s.capacity * 1000)) ? 0 : (stored * 2 * 12 / 1000) - R.last(acc[s.id]).storage; // convert energy to power
           let storage = target ? targetPower :
-            i == 0 ? ((targetPower - stored) * 2 * 12 / 1000) - targetPower :
+            //i == 0 ? ((targetEnergy - stored) * 2 * 12 / 1000) - targetPower :
+            (balance + target) <= 0 || (balance + target) >= s.capacity * 1000 ? 0 :
+            i == 0 ? 0 :
             (stored == 0 && (balance == 0 || balance == s.capacity * 1000)) ? 0 :
             (stored * 2 * 12 / 1000) - R.last(acc[s.id]).storage; // convert energy to power
 

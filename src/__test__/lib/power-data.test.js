@@ -71,7 +71,7 @@ describe('computeOutput', () => {
 
         expected = {
           v1:    {power:  [  40,  0],  energy:   [    3333,  1667]},
-          bramp: {power:  [  40,  0],  energy:   [       0,     0]},
+          bramp: {power:  [  40,  0],  energy:   [    3333,  1667]},
           bbuff: {buffer: [   0,  0],  buffered: [       0,     0]},
           bbal:  {                     balance:  [       0,     0]},
         };
@@ -87,7 +87,7 @@ describe('computeOutput', () => {
         expect(R.pluck('energy', res.v1)).toEqual(expected.v1.energy);
       });
 
-      it('computes ramped power and energy for variable power', () => {
+      it.only('computes ramped power and energy for variable power', () => {
         expect(R.pluck('power', res.bat)).toEqual(expected.bramp.power);
         expect(R.pluck('energy', res.bat)).toEqual(expected.bramp.energy);
       });
@@ -113,7 +113,7 @@ describe('computeOutput', () => {
         expected = {
           v1:    {power:  [ 0, 20,     60,   0],  energy:   [    0,   833,  3333,  2500]},
           bramp: {power:  [ 0, 10, 57.976,  24],  energy:   [    0,   417,  3249,  3500]},
-          bbuff: {buffer: [ 0, 10,  2.024, -24],  buffered: [    0,   416,    84, -1000]},
+          bbuff: {buffer: [ 0, 10,   2.02, -24],  buffered: [    0,   416,    84, -1000]},
           c1:    {power:  [30, 70,     50,  30],  energy:   [ 2500,  4167,  5000,  3333]},
           base:  {power:  [30, 40,     30,  30],  energy:   [ 2500,  2917,  2917,  2500]},
           bbal:  {                                balance:  [  500,   916,  1000,     0]},
@@ -140,7 +140,7 @@ describe('computeOutput', () => {
       });
 
       it('computes battery buffered energy', () => {
-        expect(R.pluck('buffer', res.bat).map(x => Math.round(x * 1000) / 1000)).toEqual(expected.bbuff.buffer);
+        expect(R.pluck('buffer', res.bat).map(round)).toEqual(expected.bbuff.buffer);
       });
 
       it('computes battery balance', () => {
@@ -166,7 +166,7 @@ describe('computeOutput', () => {
       });
 
       it('computes battery balance', () => {
-        R.pluck('balance', res.bat).forEach((r,i) => expect(Math.floor(r * 100) / 100).toEqual(expected.bbal.balance[i]));
+        R.pluck('balance', res.bat).forEach((r,i) => expect(round(r)).toEqual(expected.bbal.balance[i]));
       });
     });
   });
@@ -249,7 +249,7 @@ describe('computeOutput', () => {
       });
 
       it('computes storage power', () => {
-        R.pluck('storage', res.bat).forEach((r,i) => expect(Math.floor(r * 100) / 100).toEqual(expected.bstor.storage[i]));
+        R.pluck('storage', res.bat).forEach((r,i) => expect(round(r)).toEqual(expected.bstor.storage[i]));
       });
 
       it('computes stored energy', () => {
@@ -315,3 +315,7 @@ describe('computeOutput', () => {
   describe('given data with power-grid', () => {
   });
 });
+
+function round (val) {
+  return Math.floor(val * 100) / 100;
+}
