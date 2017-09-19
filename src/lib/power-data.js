@@ -51,26 +51,19 @@ export function computeOutput (powerData, dates, data) {
 }
 
 function computeCycle (acc, date, i, hash, powerData, capacity) {
-  let sumBy = field => R.compose(R.sum, R.pluck(field), R.values);
-  let round = x => Math.round(x * 1000);
+  const sumBy = field => R.compose(R.sum, R.pluck(field), R.values);
+  const round = x => Math.round(x * 1000);
 
-  let getEnergy = (id, field, curr) => R.compose(
+  const getEnergy = (id, field, curr) => R.compose(
     R.ifElse(R.always(i == 0),
       R.always(round(curr / 12)),
       x => round(R.mean([R.last(x[id])[field], curr]) / 12)
     )
   )(acc);
 
-  let load = R.map(x => {
-    let power = x.capacity * powerData[x.variation][i].value;
-    let energy = getEnergy(x.id, 'power', power);
-    return {
-      date,
-      power,
-      energy,
-      consumption: i > 0 ? energy + R.last(acc[x.id]).consumption : energy
-    };
-  }, hash.load);
+  const load =  getLoad(i, date, acc, hash.load, getEnergy, powerData);
+  const totalLoad = sumBy('power')(load);
+  const totalLoadEnergy = sumBy('energy')(load);
 
   let variable = R.map(x => {
     let power = x.capacity * powerData[x.variation][i].value;
@@ -81,8 +74,6 @@ function computeCycle (acc, date, i, hash, powerData, capacity) {
     };
   }, hash.variable);
 
-  let totalLoad = sumBy('power')(load);
-  let totalLoadEnergy = sumBy('energy')(load);
   let totalVariable = sumBy('power')(variable);
   let totalVarEnergy = sumBy('energy')(variable);
 
@@ -136,6 +127,18 @@ function computeCycle (acc, date, i, hash, powerData, capacity) {
   let battery = R.mergeWith(R.merge, buffer, storage);
 
   return R.mergeAll([load, variable, battery, base, grid, backup, {stat: 'sisiak'}]);
+}
+function getLoad (i, date, acc, items, getEnergy, powerData) {
+  return R.map(x => {
+    let power = x.capacity * powerData[x.variation][i].value;
+    let energy = getEnergy(x.id, 'power', power);
+    return {
+      date,
+      power,
+      energy,
+      consumption: i > 0 ? energy + R.last(acc[x.id]).consumption : energy
+    };
+  }, items);
 }
 
 function getBackup (date, acc, energy, load, items) {
