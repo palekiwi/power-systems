@@ -65,34 +65,12 @@ function computeCycle (acc, date, i, hash, powerData, capacity) {
   const totalLoad = sumBy('power')(load);
   const totalLoadEnergy = sumBy('energy')(load);
 
-  let variable = R.map(x => {
-    let power = x.capacity * powerData[x.variation][i].value;
-    return {
-      date,
-      power,
-      energy: getEnergy(x.id, 'power', power)
-    };
-  }, hash.variable);
+  const variable = getVariable(i, date, acc, hash.variable, getEnergy, powerData);
+  const totalVariable = sumBy('power')(variable);
+  const totalVarEnergy = sumBy('energy')(variable);
+  const lastVariable = getLastVariable(acc, totalVariable, hash.battery);
 
-  let totalVariable = sumBy('power')(variable);
-  let totalVarEnergy = sumBy('energy')(variable);
-
-  // the total of power from variable sources at last gime mark
-  let lastVariable = R.compose(
-    S.fromMaybe(totalVariable),
-    R.map(R.sum),
-    S.sequence(S.Maybe),
-    R.map(R.pluck('power')),
-    R.map(
-      R.compose(
-        S.last,
-        R.prop(R.__, acc)
-      )
-    ),
-    R.keys,
-    R.filter(R.prop('buffer'))
-  )(hash.battery);
-
+  // the total of power from variable sources at last time mark
   let buffer = getBuffer(i, date, acc, hash.battery, capacity, lastVariable, totalVariable, totalVarEnergy);
   let totalBuffer = sumBy('buffer')(buffer);
   let totalBufferedEnergy = sumBy('buffered')(buffer);
@@ -139,6 +117,34 @@ function getLoad (i, date, acc, items, getEnergy, powerData) {
       consumption: i > 0 ? energy + R.last(acc[x.id]).consumption : energy
     };
   }, items);
+}
+
+function getVariable (i, date, acc, items, getEnergy, powerData) {
+  return R.map(x => {
+    let power = x.capacity * powerData[x.variation][i].value;
+    return {
+      date,
+      power,
+      energy: getEnergy(x.id, 'power', power)
+    };
+  }, items);
+}
+
+function getLastVariable (acc, defaultVal, batteries) {
+  return R.compose(
+    S.fromMaybe(defaultVal),
+    R.map(R.sum),
+    S.sequence(S.Maybe),
+    R.map(R.pluck('power')),
+    R.map(
+      R.compose(
+        S.last,
+        R.prop(R.__, acc)
+      )
+    ),
+    R.keys,
+    R.filter(R.prop('buffer'))
+  )(batteries);
 }
 
 function getBackup (date, acc, energy, load, items) {
