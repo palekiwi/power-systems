@@ -251,7 +251,6 @@ function getStorage (i, date, acc, items, buffer, currPower, currEnergy) {
   return R.compose(
     ss => {
       let units = R.keys(ss).length;
-      let targetPower = currPower / units;
       let targetEnergy = currEnergy / units;
       return R.map(s => {
         let balance = buffer[s.id] ? // read balance from the same battery in this cycle if exists
@@ -262,20 +261,25 @@ function getStorage (i, date, acc, items, buffer, currPower, currEnergy) {
 
         let c = s.capacity * 1000 * s.c / 12; // 5min charge and discharge limit
 
-        let stored = R.compose(
+        let prestored = R.compose(
           R.clamp(0 - balance, s.capacity * 1000 - balance), // clamp by capacity
           R.clamp(-c, c)                                     // clamp by C-rating
         )(targetEnergy);
 
-        let target = targetEnergy == stored;
+        let storage;
+        let stop = false;
+        if (prestored == targetEnergy) {
+          storage = currPower / units;
+        } else if (i == 0 || (prestored == 0 && (balance == 0 || balance == s.capacity * 1000))) {
+          storage = 0;
+        } else if (Math.abs(prestored * 2 * 12 / 1000) - R.last(acc[s.id]).buffer < 0) { // not enough energy to output over a 5m interval
+          storage = 0;
+          stop = true;
+        } else {
+          storage = (prestored * 2 * 12 / 1000) - R.last(acc[s.id]).storage;
+        }
 
-        //let storage = target ? targetPower : (i == 0 || stored == 0 && (balance == 0 || balance == s.capacity * 1000)) ? 0 : (stored * 2 * 12 / 1000) - R.last(acc[s.id]).storage; // convert energy to power
-        let storage = target ? targetPower :
-          //i == 0 ? ((targetEnergy - stored) * 2 * 12 / 1000) - targetPower :
-          (balance + target) <= 0 || (balance + target) >= s.capacity * 1000 ? 0 :
-          i == 0 ? 0 :
-          (stored == 0 && (balance == 0 || balance == s.capacity * 1000)) ? 0 :
-          (stored * 2 * 12 / 1000) - R.last(acc[s.id]).storage; // convert energy to power
+        let stored = stop ? 0 : prestored;
 
         return {
           date,
