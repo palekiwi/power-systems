@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const R = require('ramda');
 const S = require('sanctuary');
+import {addStorage, addBuffer} from './helpers/power-helpers.js';
 
 // Object -> [a] -> [b] -> [c]
 export function computeOutput (powerData, dates, data) {
@@ -33,10 +34,10 @@ export function computeOutput (powerData, dates, data) {
     R.filter(R.propEq('type', 'variable'))
   )(data);
 
-  const EMPTY = R.zipObj(
+  const EMPTY = R.assoc('stat', {}, R.zipObj(
     R.pluck('id', data),
     R.map(R.always([]), data)
-  );
+  ));
 
   // (a -> b -> c -> d) -> [e]
   const reducer = (acc, val, i) => R.mergeWith(
@@ -110,7 +111,7 @@ export function computeOutput (powerData, dates, data) {
       R.filter(R.prop('buffer'))
     )(HASH.battery);
 
-    let buffer = R.compose(
+    let buffer1 = R.compose(
       bs => {
         let units = R.keys(bs).length;
         let meanRamp = R.mean(R.pluck('ramp', R.values(bs)));                                    // mean ramp value of all units
@@ -149,6 +150,8 @@ export function computeOutput (powerData, dates, data) {
       },
       R.filter(R.prop('buffer'))
     )(HASH.battery);
+
+    let buffer = getBuffer(i, date, acc, HASH.battery, VARIABLE_CAPACITY, lastVariable, totalVariable, totalVarEnergy);
 
     let totalBuffer = sumBy('buffer')(buffer);
     let totalBufferedEnergy = sumBy('buffered')(buffer);
@@ -235,40 +238,101 @@ export function computeOutput (powerData, dates, data) {
 
     let totalGrid = sumBy('power')(grid);
 
-    let backup = R.map(
-      b => {
-        let units = R.keys(HASH.backup).length;
-        let powerShare = (totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage - totalGrid) / units;
-        let clampBase = R.clamp(b.capacity * b.base, b.capacity);
-        let clampBounds = R.clamp(0, b.capacity);
-        let ramp = b.ramp * b.capacity;
-
-        let lastPower = R.compose(
-          S.fromMaybe(powerShare),
-          S.map(R.prop('power')),
-          S.last
-        )(acc[b.id]);
-
-        let power = R.compose(
-          R.ifElse(R.always(lastPower == 0),
-            clampBounds,
-            R.compose(
-              clampBase,
-              R.clamp(lastPower - ramp, lastPower + ramp)
-            )
-          )
-        )(powerShare);
-
-        return {date, power, energy: energy(b.id, 'power', power)};
-      },
-      HASH.backup
-    );
+    let backupLoad = (totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage - totalGrid);
+    let backup = getBackup(date, acc, energy, backupLoad, HASH.backup);
 
     let battery = R.mergeWith(R.merge, buffer, storage);
 
-    return R.mergeAll([load, variable, battery, base, grid, backup]);
+    return R.mergeAll([load, variable, battery, base, grid, backup, {stat: 'sisiak'}]);
   };
 
   const result = R.addIndex(R.reduce)(reducer, EMPTY, DATES);
+
+  console.log('result: ', result);
   return result;
+}
+
+function getAgg (data, res, pred, field, f) {
+  return R.compose(
+    R.sum,
+    R.map(R.compose(
+      R.reduce(f, 0),
+      R.pluck(field),
+      x => res[x.id]
+    )),
+    R.filter(pred)
+  )(data);
+}
+
+function getBackup (date, acc, energy, load, items) {
+  return R.map(
+    b => {
+      let units = R.keys(items).length;
+      let powerShare = load / units;
+      let clampBase = R.clamp(b.capacity * b.base, b.capacity);
+      let clampBounds = R.clamp(0, b.capacity);
+      let ramp = b.ramp * b.capacity;
+
+      let lastPower = R.compose(
+        S.fromMaybe(powerShare),
+        S.map(R.prop('power')),
+        S.last
+      )(acc[b.id]);
+
+      let power = R.compose(
+        R.ifElse(R.always(lastPower == 0),
+          clampBounds,
+          R.compose(
+            clampBase,
+            R.clamp(lastPower - ramp, lastPower + ramp)
+          )
+        )
+      )(powerShare);
+
+      return {date, power, energy: energy(b.id, 'power', power)};
+    },
+    items
+  );
+}
+
+function getBuffer (i, date, acc, items, capacity, lastPower, currPower, currEnergy) {
+  return R.compose(
+    bs => {
+      let units = R.keys(bs).length;
+      let meanRamp = R.mean(R.pluck('ramp', R.values(bs)));                                    // mean ramp value of all units
+      let ramp = meanRamp * capacity;                                                          // required ramp rate
+      let targetTotalPower = R.clamp(lastPower - ramp, lastPower + ramp)(currPower);           // target ramp power output
+      let targetTotalEnergy = Math.floor(R.mean([lastPower, targetTotalPower]) / 12 * 1000);               // target ramped energy output over 5min period
+      let targetBuffered = (currEnergy - targetTotalEnergy) / units;                           // target buffered energy
+
+      return R.map(
+        b => {
+          let balance = (i > 0) ? R.last(acc[b.id]).balance : b.soc * b.capacity * 1000;           // mutliply by 1000 to convert from kWh to Wh
+          let c = b.capacity * 1000 * b.c / 60 * 5;
+
+          let buffered = R.compose(
+            R.clamp(0 - balance, b.capacity * 1000 - balance), // clamp by capacity
+            R.clamp(-c, c)                                     // clamp by C-rating
+          )(targetBuffered);
+
+          let power = buffered == targetBuffered ?
+            (targetTotalPower / units) :
+            i == 0 || (buffered == 0 && (balance == 0 || balance == b.capacity * 1000)) ? (currPower / units) :
+            (buffered * 2 * 12 / 1000) - R.last(acc[b.id]).buffered;                                // calculate instant power from buffered energy
+          let buffer = currPower / units - power;
+          let energy = currEnergy / units - buffered;
+
+          return {
+            date,
+            buffered,
+            balance: balance + buffered,
+            power,
+            buffer,
+            energy
+          };
+        }
+      )(bs);
+    },
+    R.filter(R.prop('buffer'))
+  )(items);
 }

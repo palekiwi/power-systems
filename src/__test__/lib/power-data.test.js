@@ -13,6 +13,34 @@ const dates = ["01:00", "02:00", "03:00", "04:00"];
 
 describe('computeOutput', () => {
   let data, expected, res;
+
+  it('contains a stat object', () => {
+    data = [
+      {id: 'c1',   category: 'consumer',  capacity:  100, type: 'load',     variation: 'defaultLoad'},
+      {id: 'v1',   category: 'generator', capacity:  100, type: 'variable', variation: 'solar'},
+      {id: 'base', category: 'generator', capacity:  100, type: 'base',     ramp: 0.1, base: 0.3},
+      {id: 'bat',  category: 'battery',   capacity:  100, type: 'battery',  soc: 0.5, c: 3, buffer: true, ramp: 0.1, storage: false}
+    ];
+
+    expected = {
+      c1:    {power:  [30, 70, 50,  30],  energy:   [ 2500,  4167,  5000,  3333]},
+      v1:    {power:  [ 0, 20, 60,   0],  energy:   [    0,   833,  3333,  2500]},
+      base:  {power:  [30, 40, 30,  30],  energy:   [ 2500,  2917,  2917,  2500]},
+      bramp: {power:  [ 0, 10, 20,  10],  energy:   [    0,   417,  1250,  1250]},
+      bbuff: {buffer: [ 0, 10, 40, -10],  buffered: [    0,   416,  2083,  1250]},
+      bbal:  {                            balance:  [50000, 50416, 52499, 53749]},
+    };
+
+    res = computeOutput(powerData, dates,data).stat;
+    expect(res).toBeDefined();
+    expect(res.minOutput).toEqual(-10);
+    expect(res.maxOutput).toEqual(70);
+    expect(res.totalConsumption).toEqual(R.sum(expected.c1.energy));
+    expect(res.totalGeneration).toEqual(R.sum([R.sum(expected.v1.energy, R.sum(expected.base.energy))]));
+    expect(res.totalVariable).toEqual(R.sum(expected.v1.energy));
+    expect(res.totalBase).toEqual(R.sum(expected.base.energy));
+  });
+
   describe('given a sytem with a buffer battery', () => {
     describe('when the battery has sufficient spec', () => {
 
@@ -26,11 +54,11 @@ describe('computeOutput', () => {
 
         expected = {
           v1:    {power:  [ 0, 20, 60,   0],  energy:   [    0,   833,  3333,  2500]},
-          bramp: {power:  [ 0, 10, 20,  10],  energy:   [    0,   417,  1250,  1250]},
-          bbuff: {buffer: [ 0, 10, 40, -10],  buffered: [    0,   416,  2083,  1250]},
+          bramp: {power:  [ 0, 10, 20,  10],  energy:   [    0,   416,  1250,  1250]},
+          bbuff: {buffer: [ 0, 10, 40, -10],  buffered: [    0,   417,  2083,  1250]},
           c1:    {power:  [30, 70, 50,  30],  energy:   [ 2500,  4167,  5000,  3333]},
           base:  {power:  [30, 40, 30,  30],  energy:   [ 2500,  2917,  2917,  2500]},
-          bbal:  {                            balance:  [50000, 50416, 52499, 53749]},
+          bbal:  {                            balance:  [50000, 50417, 52500, 53750]},
         };
 
         res = computeOutput(powerData, dates,data);
@@ -87,7 +115,7 @@ describe('computeOutput', () => {
         expect(R.pluck('energy', res.v1)).toEqual(expected.v1.energy);
       });
 
-      it.only('computes ramped power and energy for variable power', () => {
+      it('computes ramped power and energy for variable power', () => {
         expect(R.pluck('power', res.bat)).toEqual(expected.bramp.power);
         expect(R.pluck('energy', res.bat)).toEqual(expected.bramp.energy);
       });
