@@ -129,7 +129,7 @@ describe('computeOutput', () => {
       });
     });
 
-    describe.only('when the battery has insufficient capacity', () => {
+    describe('when the battery has insufficient capacity', () => {
       beforeEach(() => {
         data = [
           {id: 'c1',   category: 'consumer',  capacity:  100, type: 'load',     variation: 'defaultLoad'},
