@@ -43,7 +43,9 @@ export function computeOutput (powerData, dates, data) {
   );
 
   const result = R.addIndex(R.reduce)(reducer, EMPTY, DATES);
-  console.log(result);
+
+  result.minPower = result.min.reduce(R.minBy(R.prop('power'))).power;
+  result.maxPower = result.max.reduce(R.maxBy(R.prop('power'))).power;
 
   return result;
 }
@@ -104,7 +106,9 @@ function computeCycle (acc, date, i, hash, powerData, capacity) {
     totalGen: {date, power: totalGen},
     totalFeed: {date, power: totalFeed},
     totalRamped: {date, power: totalRamped},
-    balance: {date, power: balance}
+    balance: {date, power: balance},
+    min: {power: R.min(totalBuffer, totalStorage)},
+    max: {power: R.max(totalLoad, totalGen)}
   };
 
   return R.mergeAll([load, variable, battery, base, grid, backup, stat]);

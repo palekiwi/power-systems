@@ -31,10 +31,10 @@ describe('computeOutput', () => {
       bbal:  {                            balance:  [50000, 50416, 52499, 53749]},
     };
 
-    res = computeOutput(powerData, dates,data).stat;
+    res = computeOutput(powerData, dates,data);
     expect(res).toBeDefined();
-    expect(res.minOutput).toEqual(-10);
-    expect(res.maxOutput).toEqual(70);
+    expect(res.minPower).toEqual(-10);
+    expect(res.maxPower).toEqual(90);
     expect(res.totalConsumption).toEqual(R.sum(expected.c1.energy));
     expect(res.totalGeneration).toEqual(R.sum([R.sum(expected.v1.energy, R.sum(expected.base.energy))]));
     expect(res.totalVariable).toEqual(R.sum(expected.v1.energy));
