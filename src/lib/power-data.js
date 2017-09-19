@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 const R = require('ramda');
 const S = require('sanctuary');
-import {addStorage, addBuffer} from './helpers/power-helpers.js';
 
 // Object -> [a] -> [b] -> [c]
 export function computeOutput (powerData, dates, data) {
@@ -42,126 +41,101 @@ export function computeOutput (powerData, dates, data) {
   // (a -> b -> c -> d) -> [e]
   const reducer = (acc, val, i) => R.mergeWith(
     R.append,
-    computeCycle(acc, val, i),
+    computeCycle(acc, val, i, HASH, powerData, VARIABLE_CAPACITY),
     acc
   );
-
-  const computeCycle = (acc, date, i) => {
-    let sumBy = field => R.compose(R.sum, R.pluck(field), R.values);
-    let round = x => Math.round(x * 1000);
-
-    let energy = (id, field, curr) => R.compose(
-      R.ifElse(R.always(i == 0),
-        R.always(round(curr / 12)),
-        x => round(R.mean([R.last(x[id])[field], curr]) / 12)
-      )
-    )(acc);
-
-    let load = R.map(x => {
-      let power = x.capacity * powerData[x.variation][i].value;
-      return {
-        date,
-        power,
-        energy: energy(x.id, 'power', power)
-      };
-    }, HASH.load);
-
-    let variable = R.map(x => {
-      let power = x.capacity * powerData[x.variation][i].value;
-      return {
-        date,
-        power,
-        energy: energy(x.id, 'power', power)
-      };
-    }, HASH.variable);
-
-    let totalLoad = sumBy('power')(load);
-    let totalLoadEnergy = sumBy('energy')(load);
-    let totalVariable = sumBy('power')(variable);
-    let totalVarEnergy = sumBy('energy')(variable);
-
-    // needed to compute buffering
-    let lastRawVariable = R.compose(
-      S.fromMaybe(totalVariable),
-      R.map(R.sum),
-      S.sequence(S.Maybe),
-      R.map(R.pluck('power')),
-      R.map(
-        R.compose(
-          S.last,
-          R.prop(R.__, acc)
-        )
-      ),
-      R.keys
-    )(HASH.variable);
-
-    // the total of power from variable sources at last gime mark
-    let lastVariable = R.compose(
-      S.fromMaybe(totalVariable),
-      R.map(R.sum),
-      S.sequence(S.Maybe),
-      R.map(R.pluck('power')),
-      R.map(
-        R.compose(
-          S.last,
-          R.prop(R.__, acc)
-        )
-      ),
-      R.keys,
-      R.filter(R.prop('buffer'))
-    )(HASH.battery);
-
-    let buffer = getBuffer(i, date, acc, HASH.battery, VARIABLE_CAPACITY, lastVariable, totalVariable, totalVarEnergy);
-    let totalBuffer = sumBy('buffer')(buffer);
-    let totalBufferedEnergy = sumBy('buffered')(buffer);
-
-    let baseLoad = totalLoad - (totalVariable - totalBuffer);
-    let base = getBase(date, acc, HASH.base, energy, baseLoad);
-    let totalBase = sumBy('power')(base);
-    let totalBaseEnergy = sumBy('energy')(base);
-
-
-    let storagePower = ((totalVariable - totalBuffer) + totalBase - totalLoad);
-    let storageEnergy = ((totalVarEnergy - totalBufferedEnergy) + totalBaseEnergy - totalLoadEnergy);
-    let storage = getStorage(i, date, acc, HASH.battery, buffer, storagePower, storageEnergy);
-    let totalStorage = sumBy('storage')(storage);
-
-    let grid = R.map(
-      g => {
-        let units = R.keys(HASH.grid).length;
-        let powerShare = (totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage) / units;
-        let power = R.clamp(0, R.identity)(powerShare);
-
-        return {date, power, energy: energy(g.id, 'power', power)};
-      },
-      HASH.grid
-    );
-
-    let totalGrid = sumBy('power')(grid);
-
-    let backupLoad = (totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage - totalGrid);
-    let backup = getBackup(date, acc, energy, backupLoad, HASH.backup);
-
-    let battery = R.mergeWith(R.merge, buffer, storage);
-
-    return R.mergeAll([load, variable, battery, base, grid, backup, {stat: 'sisiak'}]);
-  };
 
   const result = R.addIndex(R.reduce)(reducer, EMPTY, DATES);
 
   return result;
 }
 
-function getAgg (data, res, pred, field, f) {
-  return R.compose(
-    R.sum,
-    R.map(R.compose(
-      R.reduce(f, 0),
-      R.pluck(field),
-      x => res[x.id]
-    )),
-    R.filter(pred)
-  )(data);
+function computeCycle (acc, date, i, hash, powerData, capacity) {
+  let sumBy = field => R.compose(R.sum, R.pluck(field), R.values);
+  let round = x => Math.round(x * 1000);
+
+  let getEnergy = (id, field, curr) => R.compose(
+    R.ifElse(R.always(i == 0),
+      R.always(round(curr / 12)),
+      x => round(R.mean([R.last(x[id])[field], curr]) / 12)
+    )
+  )(acc);
+
+  let load = R.map(x => {
+    let power = x.capacity * powerData[x.variation][i].value;
+    let energy = getEnergy(x.id, 'power', power);
+    return {
+      date,
+      power,
+      energy,
+      consumption: i > 0 ? energy + R.last(acc[x.id]).consumption : energy
+    };
+  }, hash.load);
+
+  let variable = R.map(x => {
+    let power = x.capacity * powerData[x.variation][i].value;
+    return {
+      date,
+      power,
+      energy: getEnergy(x.id, 'power', power)
+    };
+  }, hash.variable);
+
+  let totalLoad = sumBy('power')(load);
+  let totalLoadEnergy = sumBy('energy')(load);
+  let totalVariable = sumBy('power')(variable);
+  let totalVarEnergy = sumBy('energy')(variable);
+
+  // the total of power from variable sources at last gime mark
+  let lastVariable = R.compose(
+    S.fromMaybe(totalVariable),
+    R.map(R.sum),
+    S.sequence(S.Maybe),
+    R.map(R.pluck('power')),
+    R.map(
+      R.compose(
+        S.last,
+        R.prop(R.__, acc)
+      )
+    ),
+    R.keys,
+    R.filter(R.prop('buffer'))
+  )(hash.battery);
+
+  let buffer = getBuffer(i, date, acc, hash.battery, capacity, lastVariable, totalVariable, totalVarEnergy);
+  let totalBuffer = sumBy('buffer')(buffer);
+  let totalBufferedEnergy = sumBy('buffered')(buffer);
+
+  let baseLoad = totalLoad - (totalVariable - totalBuffer);
+  let base = getBase(date, acc, hash.base, getEnergy, baseLoad);
+  let totalBase = sumBy('power')(base);
+  let totalBaseEnergy = sumBy('energy')(base);
+
+
+  let storagePower = ((totalVariable - totalBuffer) + totalBase - totalLoad);
+  let storageEnergy = ((totalVarEnergy - totalBufferedEnergy) + totalBaseEnergy - totalLoadEnergy);
+  let storage = getStorage(i, date, acc, hash.battery, buffer, storagePower, storageEnergy);
+  let totalStorage = sumBy('storage')(storage);
+
+  let grid = R.map(
+    g => {
+      let units = R.keys(hash.grid).length;
+      let powerShare = (totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage) / units;
+      let power = R.clamp(0, R.identity)(powerShare);
+
+      return {date, power, energy: getEnergy(g.id, 'power', power)};
+    },
+    hash.grid
+  );
+
+  let totalGrid = sumBy('power')(grid);
+
+  let backupLoad = (totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage - totalGrid);
+  let backup = getBackup(date, acc, getEnergy, backupLoad, hash.backup);
+
+  let battery = R.mergeWith(R.merge, buffer, storage);
+
+  return R.mergeAll([load, variable, battery, base, grid, backup, {stat: 'sisiak'}]);
 }
 
 function getBackup (date, acc, energy, load, items) {
