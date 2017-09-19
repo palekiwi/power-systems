@@ -112,56 +112,18 @@ export function computeOutput (powerData, dates, data) {
     )(HASH.battery);
 
     let buffer = getBuffer(i, date, acc, HASH.battery, VARIABLE_CAPACITY, lastVariable, totalVariable, totalVarEnergy);
-
     let totalBuffer = sumBy('buffer')(buffer);
     let totalBufferedEnergy = sumBy('buffered')(buffer);
 
     let baseLoad = totalLoad - (totalVariable - totalBuffer);
     let base = getBase(date, acc, HASH.base, energy, baseLoad);
-
     let totalBase = sumBy('power')(base);
     let totalBaseEnergy = sumBy('energy')(base);
 
-    let storage = R.compose(
-      ss => {
-        let units = R.keys(ss).length;
-        let targetPower = ((totalVariable - totalBuffer) + totalBase - totalLoad) / units;
-        let targetEnergy = ((totalVarEnergy - totalBufferedEnergy) + totalBaseEnergy - totalLoadEnergy) / units;
-        return R.map(s => {
-          let balance = buffer[s.id] ? // read balance from the same battery in this cycle if exists
-            buffer[s.id].balance :
-            (i > 0) ?
-            R.last(acc[s.id]).balance :
-            s.capacity * 1000 * s.soc;
 
-          let c = s.capacity * 1000 * s.c / 12; // 5min charge and discharge limit
-
-          let stored = R.compose(
-            R.clamp(0 - balance, s.capacity * 1000 - balance), // clamp by capacity
-            R.clamp(-c, c)                                     // clamp by C-rating
-          )(targetEnergy);
-
-          let target = targetEnergy == stored;
-
-          //let storage = target ? targetPower : (i == 0 || stored == 0 && (balance == 0 || balance == s.capacity * 1000)) ? 0 : (stored * 2 * 12 / 1000) - R.last(acc[s.id]).storage; // convert energy to power
-          let storage = target ? targetPower :
-            //i == 0 ? ((targetEnergy - stored) * 2 * 12 / 1000) - targetPower :
-            (balance + target) <= 0 || (balance + target) >= s.capacity * 1000 ? 0 :
-            i == 0 ? 0 :
-            (stored == 0 && (balance == 0 || balance == s.capacity * 1000)) ? 0 :
-            (stored * 2 * 12 / 1000) - R.last(acc[s.id]).storage; // convert energy to power
-
-          return {
-            date,
-            storage,
-            stored,
-            balance: balance + stored
-          };
-        }, ss);
-      },
-      R.filter(R.prop('storage'))
-    )(HASH.battery);
-
+    let storagePower = ((totalVariable - totalBuffer) + totalBase - totalLoad);
+    let storageEnergy = ((totalVarEnergy - totalBufferedEnergy) + totalBaseEnergy - totalLoadEnergy);
+    let storage = getStorage(i, date, acc, HASH.battery, buffer, storagePower, storageEnergy);
     let totalStorage = sumBy('storage')(storage);
 
     let grid = R.map(
@@ -282,6 +244,48 @@ function getBuffer (i, date, acc, items, capacity, lastPower, currPower, currEne
       )(bs);
     },
     R.filter(R.prop('buffer'))
+  )(items);
+}
+
+function getStorage (i, date, acc, items, buffer, currPower, currEnergy) {
+  return R.compose(
+    ss => {
+      let units = R.keys(ss).length;
+      let targetPower = currPower / units;
+      let targetEnergy = currEnergy / units;
+      return R.map(s => {
+        let balance = buffer[s.id] ? // read balance from the same battery in this cycle if exists
+          buffer[s.id].balance :
+          (i > 0) ?
+          R.last(acc[s.id]).balance :
+          s.capacity * 1000 * s.soc;
+
+        let c = s.capacity * 1000 * s.c / 12; // 5min charge and discharge limit
+
+        let stored = R.compose(
+          R.clamp(0 - balance, s.capacity * 1000 - balance), // clamp by capacity
+          R.clamp(-c, c)                                     // clamp by C-rating
+        )(targetEnergy);
+
+        let target = targetEnergy == stored;
+
+        //let storage = target ? targetPower : (i == 0 || stored == 0 && (balance == 0 || balance == s.capacity * 1000)) ? 0 : (stored * 2 * 12 / 1000) - R.last(acc[s.id]).storage; // convert energy to power
+        let storage = target ? targetPower :
+          //i == 0 ? ((targetEnergy - stored) * 2 * 12 / 1000) - targetPower :
+          (balance + target) <= 0 || (balance + target) >= s.capacity * 1000 ? 0 :
+          i == 0 ? 0 :
+          (stored == 0 && (balance == 0 || balance == s.capacity * 1000)) ? 0 :
+          (stored * 2 * 12 / 1000) - R.last(acc[s.id]).storage; // convert energy to power
+
+        return {
+          date,
+          storage,
+          stored,
+          balance: balance + stored
+        };
+      }, ss);
+    },
+    R.filter(R.prop('storage'))
   )(items);
 }
 
