@@ -48,8 +48,8 @@ export function computeOutput (powerData, dates, data) {
   result.maxPower = result.max.reduce(R.maxBy(R.prop('power'))).power;
   result.totalConsumption = R.compose(R.sum, R.pluck('energy'))(result.consumption);
   result.totalProduction = R.compose(R.sum, R.pluck('energy'))(result.production);
+  result.netEnergy = R.compose(R.sum, R.pluck('energy'))(result.energyBalance);
 
-  console.log(result);
   return result;
 }
 
