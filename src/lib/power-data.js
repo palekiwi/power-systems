@@ -46,6 +46,7 @@ export function computeOutput (powerData, dates, data) {
   );
 
   const result = R.addIndex(R.reduce)(reducer, EMPTY, DATES);
+  console.log(result);
 
   return result;
 }
@@ -61,11 +62,13 @@ function computeCycle (acc, date, i, hash, powerData, capacity) {
     )
   )(acc);
 
-  const load =  getLoad(i, date, acc, hash.load, getEnergy, powerData);
+  const getTotal = (i, acc, id, energy) => i > 0 ? energy + R.last(acc[id]).total : energy;
+
+  const load =  getLoad(i, date, acc, hash.load, getEnergy, getTotal, powerData);
   const totalLoad = sumBy('power')(load);
   const totalLoadEnergy = sumBy('energy')(load);
 
-  const variable = getVariable(i, date, acc, hash.variable, getEnergy, powerData);
+  const variable = getVariable(i, date, acc, hash.variable, getEnergy, getTotal, powerData);
   const totalVariable = sumBy('power')(variable);
   const totalVarEnergy = sumBy('energy')(variable);
   const lastVariable = getLastVariable(acc, totalVariable, hash.battery);
@@ -76,30 +79,28 @@ function computeCycle (acc, date, i, hash, powerData, capacity) {
   const totalBufferedEnergy = sumBy('buffered')(buffer);
 
   const baseLoad = totalLoad - (totalVariable - totalBuffer);
-  const base = getBase(date, acc, hash.base, getEnergy, baseLoad);
+  const base = getBase(i, date, acc, hash.base, getEnergy,getTotal, baseLoad);
   const totalBase = sumBy('power')(base);
   const totalBaseEnergy = sumBy('energy')(base);
-
 
   const storagePower = ((totalVariable - totalBuffer) + totalBase - totalLoad);
   const storageEnergy = ((totalVarEnergy - totalBufferedEnergy) + totalBaseEnergy - totalLoadEnergy);
   const storage = getStorage(i, date, acc, hash.battery, buffer, storagePower, storageEnergy);
   const totalStorage = sumBy('storage')(storage);
 
-
   const gridLoad = totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage;
-  const grid = getGrid(date, hash.grid, getEnergy, gridLoad);
+  const grid = getGrid(i, date, acc, hash.grid, getEnergy, getTotal, gridLoad);
   const totalGrid = sumBy('power')(grid);
 
   const backupLoad = (totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage - totalGrid);
-  const backup = getBackup(date, acc, getEnergy, backupLoad, hash.backup);
+  const backup = getBackup(i, date, acc, getEnergy, getTotal, backupLoad, hash.backup);
 
   const battery = R.mergeWith(R.merge, buffer, storage);
 
   return R.mergeAll([load, variable, battery, base, grid, backup, {stat: 'sisiak'}]);
 }
 
-function getLoad (i, date, acc, items, getEnergy, powerData) {
+function getLoad (i, date, acc, items, getEnergy, getTotal, powerData) {
   return R.map(x => {
     let power = x.capacity * powerData[x.variation][i].value;
     let energy = getEnergy(x.id, 'power', power);
@@ -107,18 +108,20 @@ function getLoad (i, date, acc, items, getEnergy, powerData) {
       date,
       power,
       energy,
-      consumption: i > 0 ? energy + R.last(acc[x.id]).consumption : energy
+      total: getTotal(i, acc, x.id, energy)
     };
   }, items);
 }
 
-function getVariable (i, date, acc, items, getEnergy, powerData) {
+function getVariable (i, date, acc, items, getEnergy, getTotal, powerData) {
   return R.map(x => {
     let power = x.capacity * powerData[x.variation][i].value;
+    let energy = getEnergy(x.id, 'power', power);
     return {
       date,
       power,
-      energy: getEnergy(x.id, 'power', power)
+      energy,
+      total: getTotal(i, acc, x.id, energy)
     };
   }, items);
 }
@@ -140,7 +143,7 @@ function getLastVariable (acc, defaultVal, batteries) {
   )(batteries);
 }
 
-function getBackup (date, acc, energy, load, items) {
+function getBackup (i, date, acc, getEnergy, getTotal, load, items) {
   return R.map(
     b => {
       let units = R.keys(items).length;
@@ -165,7 +168,14 @@ function getBackup (date, acc, energy, load, items) {
         )
       )(powerShare);
 
-      return {date, power, energy: energy(b.id, 'power', power)};
+      let energy = getEnergy(b.id, 'power', power);
+
+      return {
+        date,
+        power,
+        energy,
+        total: getTotal(i, acc, b.id, energy)
+      };
     },
     items
   );
@@ -269,7 +279,7 @@ function getStorage (i, date, acc, items, buffer, currPower, currEnergy) {
   )(items);
 }
 
-function getBase (date, acc, items, energy, currPower) {
+function getBase (i, date, acc, items, getEnergy, getTotal, currPower) {
   return R.map(
     b => {
       let units = R.keys(items).length;
@@ -289,20 +299,33 @@ function getBase (date, acc, items, energy, currPower) {
         R.clamp(lastPower - ramp, lastPower + ramp)
       )(powerShare);
 
-      return {date, power, energy: energy(b.id, 'power', power)};
+      let energy = getEnergy(b.id, 'power', power);
+
+      return {
+        date,
+        power,
+        energy,
+        total: getTotal(i, acc, b.id, energy)
+      };
     },
     items
   );
 }
 
-function getGrid (date, items, getEnergy, currPower) {
+function getGrid (i, date, acc, items, getEnergy, getTotal, currPower) {
   return R.map(
     g => {
       let units = R.keys(items).length;
       let powerShare = currPower / units;
       let power = R.clamp(0, R.identity)(powerShare);
+      let energy = getEnergy(g.id, 'power', power);
 
-      return {date, power, energy: getEnergy(g.id, 'power', power)};
+      return {
+        date,
+        power,
+        energy,
+        total: getTotal(i, acc, g.id, energy)
+      };
     },
     items
   );
