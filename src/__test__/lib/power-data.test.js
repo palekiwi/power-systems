@@ -36,9 +36,7 @@ describe('computeOutput', () => {
     expect(res.minPower).toEqual(-10);
     expect(res.maxPower).toEqual(90);
     expect(res.totalConsumption).toEqual(R.sum(expected.c1.energy));
-    expect(res.totalGeneration).toEqual(R.sum([R.sum(expected.v1.energy, R.sum(expected.base.energy))]));
-    expect(res.totalVariable).toEqual(R.sum(expected.v1.energy));
-    expect(res.totalBase).toEqual(R.sum(expected.base.energy));
+    expect(res.totalProduction).toEqual(R.add(R.sum(expected.v1.energy), R.sum(expected.base.energy)));
   });
 
   describe('given a sytem with a buffer battery', () => {

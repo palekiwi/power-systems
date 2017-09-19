@@ -28,7 +28,7 @@ export function computeOutput (powerData, dates, data) {
   )(data);
 
   const EMPTY = R.merge(
-    {totalLoad: [], totalGen: [], totalFeed: [], totalRamped: [], balance: []},
+    {totalLoad: [], totalGen: [], totalFeed: [], totalRamped: [], consumption: [], production: [], energyBalance: [], powerBalance: [], min: [], max: []},
     R.zipObj(
       R.pluck('id', data),
       R.map(R.always([]), data)
@@ -46,7 +46,10 @@ export function computeOutput (powerData, dates, data) {
 
   result.minPower = result.min.reduce(R.minBy(R.prop('power'))).power;
   result.maxPower = result.max.reduce(R.maxBy(R.prop('power'))).power;
+  result.totalConsumption = R.compose(R.sum, R.pluck('energy'))(result.consumption);
+  result.totalProduction = R.compose(R.sum, R.pluck('energy'))(result.production);
 
+  console.log(result);
   return result;
 }
 
@@ -77,6 +80,7 @@ function computeCycle (acc, date, i, hash, powerData, capacity) {
   const totalBuffer = sumBy('buffer')(buffer);
   const totalBuffered = sumBy('buffered')(buffer);
   const totalRamped = sumBy('power')(buffer);
+  const totalRampedEnergy = sumBy('energy')(buffer);
 
   const baseLoad = totalLoad - (totalVariable - totalBuffer);
   const base = getBase(i, date, acc, hash.base, getEnergy,getTotal, baseLoad);
@@ -87,26 +91,35 @@ function computeCycle (acc, date, i, hash, powerData, capacity) {
   const storageEnergy = ((totalVarEnergy - totalBuffered) + totalBaseEnergy - totalLoadEnergy);
   const storage = getStorage(i, date, acc, hash.battery, buffer, storagePower, storageEnergy);
   const totalStorage = sumBy('storage')(storage);
+  const totalStored = sumBy('stored')(storage);
 
   const gridLoad = totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage;
   const grid = getGrid(i, date, acc, hash.grid, getEnergy, getTotal, gridLoad);
   const totalGrid = sumBy('power')(grid);
+  const totalGridEnergy = sumBy('energy')(grid);
 
   const backupLoad = (totalLoad - (totalVariable - totalBuffer)  - totalBase + totalStorage - totalGrid);
   const backup = getBackup(i, date, acc, getEnergy, getTotal, backupLoad, hash.backup);
   const totalBackup = sumBy('power')(backup);
+  const totalBackupEnergy = sumBy('energy')(backup);
 
   const battery = R.mergeWith(R.merge, buffer, storage);
   const totalGen = totalVariable + totalBase + totalBackup;
   const totalFeed = totalVariable + totalBase + totalBackup - totalBuffer - totalStorage;
-  const balance = totalLoad - totalFeed;
+  const totalProduction = totalVarEnergy + totalBaseEnergy + totalBackupEnergy;
+  const totalConsumption = totalLoadEnergy;
+  const powerBalance = totalLoad - totalFeed;
+  const energyBalance = totalRampedEnergy + totalBaseEnergy + totalGridEnergy + totalBackupEnergy - totalLoadEnergy - totalStored;
 
   const stat = {
     totalLoad: {date, power: totalLoad},
     totalGen: {date, power: totalGen},
     totalFeed: {date, power: totalFeed},
     totalRamped: {date, power: totalRamped},
-    balance: {date, power: balance},
+    powerBalance: {date, power: powerBalance},
+    energyBalance: {date, energy: energyBalance},
+    production: {date, energy: totalProduction},
+    consumption: {date, energy: totalConsumption},
     min: {power: R.min(totalBuffer, totalStorage)},
     max: {power: R.max(totalLoad, totalGen)}
   };
