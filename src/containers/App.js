@@ -14,6 +14,22 @@ import * as activeSceneActions from '../actions/activeSceneActions.js';
 import '../App.scss';
 
 class App extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      top: {
+        split: 'vertical',
+        a: 'SystemMonitor',
+        b: 'SystemViewer'
+      },
+      bottom: {
+        split: 'horizontal',
+        a: 'SystemViewer',
+        b: 'SystemMonitor'
+      }
+    };
+  }
+
   componentDidMount () {
     const {scenes, setActiveScene} = this.props;
     setTimeout(() => setActiveScene(R.head(scenes)), 1000);
@@ -21,6 +37,22 @@ class App extends Component {
 
   render() {
     let {resizePane} = this.props;
+    let {top, bottom} = this.state;
+
+    const setContent = (content) => {
+      switch (content) {
+
+      case 'SystemMonitor':
+        return <SystemMonitor/>;
+
+      case 'SystemViewer':
+        return <SystemViewer/>;
+
+      default:
+        <div>Nothing</div>;
+      }
+    };
+
     return (
       <div className="App">
         <SystemViewerModal />
@@ -32,16 +64,49 @@ class App extends Component {
           </div>
 
           <SplitPane split="horizontal" defaultSize={200} onDragFinished={resizePane}>
-            <div className="ContentPanel top">
-              <div className="Content">
-                <SystemMonitor />
-             </div>
-            </div>
-            <div className="ContentPanel bottom">
-              <div className="Content">
-                <SystemViewer />
+            {
+              top.split ?
+              <SplitPane split={top.split} onDragFinished={resizePane}>
+                <div className="ContentPanel top">
+                  <div className="Content">
+                    <button className='delete'>X</button>
+                    {setContent(top.a)}
+                  </div>
+                </div>
+                <div className={"ContentPanel" + (top.split == 'vertical' ? ' top' : '')}>
+                  <div className="Content">
+                    {setContent(top.b)}
+                  </div>
+                </div>
+              </SplitPane>
+              :
+              <div className="ContentPanel top">
+                <div className="Content">
+                  <SystemMonitor />
+                </div>
               </div>
-            </div>
+            }
+            {
+              bottom.split ?
+              <SplitPane split={bottom.split} onDragFinished={resizePane}>
+                <div className="ContentPanel">
+                  <div className="Content">
+                    {setContent(bottom.a)}
+                  </div>
+                </div>
+                <div className="ContentPanel">
+                  <div className="Content">
+                    {setContent(bottom.b)}
+                  </div>
+                </div>
+              </SplitPane>
+              :
+              <div className="ContentPanel bottom">
+                <div className="Content">
+                  <SystemMonitor />
+                </div>
+              </div>
+            }
           </SplitPane>
         </SplitPane>
       </div>
