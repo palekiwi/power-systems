@@ -16,7 +16,6 @@ import reduce from 'ramda/src/reduce';
 import pluck from 'ramda/src/pluck';
 import tap from 'ramda/src/tap';
 import { parseHM, timeFromInt, fromUnix } from '../../helpers/format.js';
-import { addPower, addBuffer, addStorage } from '../../lib/helpers/power-helpers.js';
 import './SystemChart.scss';
 
 class SystemChart extends React.Component {
@@ -53,46 +52,10 @@ class SystemChart extends React.Component {
     const {structureTiles, powerData, legend} = this.props;
     const state = this.state;
 
-    const totalLoad = compose(
-      addPower,
-      map(x => powerData[x]),
-      pluck('id'),
-      filter(propEq('category', 'consumer'))
-    )(structureTiles);
-
-    const totalGen = compose(
-      addPower,
-      map(x => powerData[x]),
-      pluck('id'),
-      filter(propEq('category', 'generator'))
-    )(structureTiles);
-
-    const peakLoad = d3.max(totalLoad, d => d.power);
-    const peakGen = d3.max(totalGen, d => d.power);
-
-    const high = max(peakLoad, peakGen);
-
-    const totalBuffer = compose(
-      addBuffer,
-      map(x => powerData[x]),
-      pluck('id'),
-      filter(prop('buffer'))
-    )(structureTiles);
-
-    const totalStorage = compose(
-      addStorage,
-      map(x => powerData[x]),
-      pluck('id'),
-      filter(prop('storage'))
-    )(structureTiles);
-
-    const feed = undefined;
-
-    const low = min(d3.min(totalBuffer, d => d.buffer) || 0, d3.min(totalStorage, d => d.storage) || 0);
 
     const scales = {
       x: x(state.width, range(0,25).map(timeFromInt).map(parseHM)),
-      y: y(state.height, low, high)};
+      y: y(state.height, powerData.minPower, powerData.maxPower)};
 
     const pos = scales.x(d3.timeParse('%H:%M')(fromUnix(this.props.time)));
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(range(0,10));
@@ -103,11 +66,15 @@ class SystemChart extends React.Component {
           <svg {...svgSize(state)}>
             <g transform={transform(state)}>
               <g style={{'visibility': legend.totalGeneration ? 'visible' : 'hidden'}}>
-                <LineChart stroke={'black'} data={totalGen} tag="totalGen" value="power" {...scales}/>
+                <LineChart stroke={'black'} data={powerData.totalGen} tag="totalGen" value="power" {...scales}/>
               </g>
 
               <g style={{'visibility': legend.totalLoad ? 'visible' : 'hidden'}}>
-                <LineChart stroke={'red'} data={totalLoad} tag="totalLoad" value="power" {...scales}/>
+                <LineChart stroke={'red'} data={powerData.totalLoad} tag="totalLoad" value="power" {...scales}/>
+              </g>
+
+              <g style={{'visibility': legend.totalLoad ? 'visible' : 'hidden'}}>
+                <LineChart data={powerData.totalRamped} tag="totalLoad" value="power" {...scales}/>
               </g>
 
               {structureTiles

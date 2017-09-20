@@ -234,7 +234,7 @@ function getBuffer (i, date, acc, items, capacity, lastPower, currPower, currEne
             buffer = (currPower - targetTotalPower) / units;
           } else if (i == 0 || (prebuffered == 0 && (balance == 0 || balance == b.capacity * 1000))) {
             buffer = 0;
-          } else if (Math.abs(prebuffered * 2 * 12 / 1000) - R.last(acc[b.id]).buffer < 0) { // not enough energy to output over a 5m interval
+          } else if (Math.abs(prebuffered * 2 * 12 / 1000) - Math.abs(R.last(acc[b.id]).buffer) < 0) { // not enough energy to output over a 5m interval
             buffer = 0;
             stop = true;
           } else {
