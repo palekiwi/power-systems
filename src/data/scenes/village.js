@@ -3,8 +3,6 @@ import vector from '../../lib/vector.js';
 import { flatmapToTilesArray } from '../../lib/tile.js';
 import { battery, diesel, solar, powerPole, houseThatched, farm } from '../../helpers/tile-creators.js';
 import { grass, dirt } from '../terrain-textures.js';
-import evolve from 'ramda/src/evolve';
-import data from '../power/index.js';
 
 const village = scene2d({
   name: 'Village Microgrid',
@@ -20,6 +18,12 @@ const village = scene2d({
       data: {
         capacity: 100,
         type: 'base'
+      }
+    }),
+    battery({
+      position: vector(1, 0),
+      data:{
+        capacity: 100,
       }
     }),
     solar({

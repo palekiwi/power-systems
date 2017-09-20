@@ -1,5 +1,9 @@
 @import '../../_variables.scss';
 
+.ChartLegend__Controls .button {
+  width: 100%;
+}
+
 .button.totalLoad {
   background: $totalLoad;
   color: white;
@@ -17,6 +21,26 @@
 
 .button.totalGen.is-inverted {
   color: $totalGen;
+  background: white;
+}
+
+.button.totalFeed {
+  background: $totalFeed;
+  color: white;
+}
+
+.button.totalFeed.is-inverted {
+  color: $totalFeed;
+  background: white;
+}
+
+.button.totalRamped {
+  background: $totalRamped;
+  color: white;
+}
+
+.button.totalRamped.is-inverted {
+  color: $totalRamped;
   background: white;
 }
 

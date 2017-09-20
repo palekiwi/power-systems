@@ -73,8 +73,12 @@ class SystemChart extends React.Component {
                 <LineChart stroke={'red'} data={powerData.totalLoad} tag="totalLoad" value="power" {...scales}/>
               </g>
 
-              <g style={{'visibility': legend.totalLoad ? 'visible' : 'hidden'}}>
-                <LineChart data={powerData.totalRamped} tag="totalLoad" value="power" {...scales}/>
+              <g style={{'visibility': legend.totalRamped ? 'visible' : 'hidden'}}>
+                <LineChart data={powerData.totalRamped} tag="totalRamped" value="power" {...scales}/>
+              </g>
+
+              <g style={{'visibility': legend.totalFeed ? 'visible' : 'hidden'}}>
+                <LineChart data={powerData.totalFeed} tag="totalFeed" value="power" {...scales}/>
               </g>
 
               {structureTiles

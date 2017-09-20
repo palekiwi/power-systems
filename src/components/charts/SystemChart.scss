@@ -26,6 +26,14 @@
   stroke: $totalGen;
 }
 
+.LineChart.totalFeed {
+  stroke: $totalFeed;
+}
+
+.LineChart.totalRamped {
+  stroke: $totalRamped;
+}
+
 .LineChart.solar {
   stroke: $solar;
 }

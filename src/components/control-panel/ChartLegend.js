@@ -15,7 +15,7 @@ function ChartLegend (props) {
   return (
     <div>
       <h4>Chart Legend</h4>
-      <div>
+      <div className="ChartLegend__Controls">
 
         <div>
           <button
@@ -33,14 +33,31 @@ function ChartLegend (props) {
           </button>
         </div>
 
+        <div>
+          <button
+            onClick={() => props.toggleLegendField('totalFeed')}
+            className={"button totalFeed is-small" + (props.legend.totalFeed ? '' : ' is-inverted')}>
+            Feed
+          </button>
+        </div>
+
         {
           props.activeScene.structureTiles.filter(prop('buffer')).length > 0 &&
           <div>
-            <button
-              onClick={() => props.toggleLegendField('buffer')}
-              className={"button buffer is-small" + (props.legend.buffer ? '' : ' is-inverted')}>
-              Battery Buffer
-            </button>
+            <div>
+              <button
+                onClick={() => props.toggleLegendField('buffer')}
+                className={"button buffer is-small" + (props.legend.buffer ? '' : ' is-inverted')}>
+                Battery Buffer
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={() => props.toggleLegendField('totalRamped')}
+                className={"button totalRamped is-small" + (props.legend.totalRamped ? '' : ' is-inverted')}>
+                Ramped Variable
+              </button>
+            </div>
           </div>
         }
 

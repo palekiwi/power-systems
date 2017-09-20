@@ -15,9 +15,11 @@ export default {
   },
   legend: {
     totalLoad: true,
-    totalGeneration: true,
-    buffer: true,
-    storage: true
+    totalGeneration: false,
+    totalFeed: true,
+    totalRamped: false,
+    buffer: false,
+    storage: false
   },
   time: 60*60*12
 };
