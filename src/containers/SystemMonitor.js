@@ -47,7 +47,6 @@ function SystemMonitor ({activeScene, time, setTime}) {
   return (
     <div className="SystemMonitor has-text-centered">
       <h3>{defaultTo('System Monitor', path(['name'], activeScene))}</h3>
-      <hr />
       {
         activeScene &&
         <div>

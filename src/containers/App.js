@@ -19,13 +19,13 @@ class App extends Component {
     this.state = {
       top: {
         split: 'vertical',
-        a: 'SystemMonitor',
-        b: 'SystemViewer'
+        a: 'System Monitor',
+        b: 'System Viewer'
       },
       bottom: {
         split: 'horizontal',
-        a: 'SystemViewer',
-        b: 'SystemMonitor'
+        a: 'System Viewer',
+        b: 'System Monitor'
       }
     };
   }
@@ -42,10 +42,10 @@ class App extends Component {
     const setContent = (content) => {
       switch (content) {
 
-      case 'SystemMonitor':
+      case 'System Monitor':
         return <SystemMonitor/>;
 
-      case 'SystemViewer':
+      case 'System Viewer':
         return <SystemViewer/>;
 
       default:
@@ -69,7 +69,18 @@ class App extends Component {
               <SplitPane split={top.split} onDragFinished={resizePane}>
                 <div className="ContentPanel top">
                   <div className="Content">
-                    <button className='delete'>X</button>
+                    <div className="Content__Header">
+                      {top.a}
+                      <div className="field has-addons is-pulled-right">
+                        <div className="control">
+                          <a className="button is-small">
+                            <span className="icon is-small">
+                              <i className="fa fa-github"></i>
+                            </span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
                     {setContent(top.a)}
                   </div>
                 </div>
