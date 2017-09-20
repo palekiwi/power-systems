@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import R from 'ramda';
 import SplitPane from '@kadira/react-split-pane';
+import ContentPanel from '../components/ui/ContentPanel.js';
 import ControlPanel from './ControlPanel.js';
 import SystemViewer from './SystemViewer.js';
 import SystemViewerModal from './SystemViewerModal.js';
@@ -12,32 +12,69 @@ import { bindActionCreators } from 'redux';
 import * as uiActions from '../actions/uiActions.js';
 import * as activeSceneActions from '../actions/activeSceneActions.js';
 import '../App.scss';
+import assocPath from 'ramda/src/assocPath';
+import path from 'ramda/src/path';
+import head from 'ramda/src/head';
+import pick from 'ramda/src/pick';
+import merge from 'ramda/src/merge';
+import remove from 'ramda/src/remove';
 
 class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      components: ['System Monitor', 'System Viewer'],
       top: {
-        split: 'vertical',
-        a: 'System Monitor',
-        b: 'System Viewer'
+        split: null,
+        panes: [
+          { content: 'System Monitor', dropdown: false }
+        ]
       },
       bottom: {
-        split: 'horizontal',
-        a: 'System Viewer',
-        b: 'System Monitor'
+        split: null,
+        panes: [
+          { content: 'System Monitor', dropdown: false }
+        ]
       }
     };
+
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.setPaneContent = this.setPaneContent.bind(this);
+    this.setSplit = this.setSplit.bind(this);
+    this.closePane = this.closePane.bind(this);
+    this.addPane = this.addPane.bind(this);
   }
 
   componentDidMount () {
     const {scenes, setActiveScene} = this.props;
-    setTimeout(() => setActiveScene(R.head(scenes)), 1000);
+    setTimeout(() => setActiveScene(head(scenes)), 1000);
+  }
+
+  toggleDropdown (pos, i) {
+    let p = [pos, 'panes', i, 'dropdown'];
+    let val = path(p, this.state);
+    this.setState(assocPath(p, !val, this.state));
+  }
+
+  setPaneContent (pos, i, c) {
+    this.setState(assocPath([pos, 'panes', i], {content: c, dropdown: false}, this.state));
+  }
+
+  setSplit(ns, s) {
+    this.setState(assocPath([...ns, 'split'], s, this.state));
+  }
+
+  closePane (pos, i) {
+    this.setState(assocPath([pos], {split: null, panes: remove(i, 1, this.state[pos].panes)}, this.state));
+  }
+
+  addPane (pos) {
+    this.setState(assocPath([pos], {split: 'vertical', panes: [...this.state[pos].panes, {content: null, dropdown: false}]}, this.state));
   }
 
   render() {
     let {resizePane} = this.props;
-    let {top, bottom} = this.state;
+    let {components, top, bottom} = this.state;
 
     const setContent = (content) => {
       switch (content) {
@@ -67,47 +104,51 @@ class App extends Component {
             {
               top.split ?
               <SplitPane split={top.split} onDragFinished={resizePane}>
-                <div className="ContentPanel top">
-                  <div className="Content">
-                    <div className="Content__Header">
-                      {top.a}
-                      <div className="field has-addons is-pulled-right">
-                        <div className="control">
-                          <a className="button is-small">
-                            <span className="icon is-small">
-                              <i className="fa fa-github"></i>
-                            </span>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    {setContent(top.a)}
-                  </div>
-                </div>
-                <div className={"ContentPanel" + (top.split == 'vertical' ? ' top' : '')}>
-                  <div className="Content">
-                    {setContent(top.b)}
-                  </div>
-                </div>
+                {top.panes.map((p, i) =>
+                  <ContentPanel
+                    item={p}
+                    components={components}
+                    key={i}
+                    index={i}
+                    pos="top"
+                    split={top.split}
+                    toggleDropdown={this.toggleDropdown}
+                    setSplit={this.setSplit}
+                    setPaneContent={this.setPaneContent}
+                    addPane={this.addPane}
+                    closePane={this.closePane}
+                  >
+                    {setContent(p.content)}
+                  </ContentPanel>
+                )}
               </SplitPane>
               :
-              <div className="ContentPanel top">
-                <div className="Content">
-                  <SystemMonitor />
-                </div>
-              </div>
+              <ContentPanel
+                item={top.panes[0]}
+                components={components}
+                index={0}
+                pos="top"
+                split={top.split}
+                toggleDropdown={this.toggleDropdown}
+                setSplit={this.setSplit}
+                setPaneContent={this.setPaneContent}
+                addPane={this.addPane}
+                closePane={this.closePane}
+              >
+                {setContent(top.panes[0].content)}
+              </ContentPanel>
             }
             {
               bottom.split ?
               <SplitPane split={bottom.split} onDragFinished={resizePane}>
                 <div className="ContentPanel">
                   <div className="Content">
-                    {setContent(bottom.a)}
+                    {setContent(bottom.a.content)}
                   </div>
                 </div>
                 <div className="ContentPanel">
                   <div className="Content">
-                    {setContent(bottom.b)}
+                    {setContent(bottom.b.content)}
                   </div>
                 </div>
               </SplitPane>
@@ -133,7 +174,7 @@ App.propTypes = {
   resizePane: PropTypes.func.isRequired
 };
 
-const mapStateToProps = R.pick(['scenes', 'activeScene']);
-const mapDispatchToProps = (dispatch) => bindActionCreators(R.merge(activeSceneActions, uiActions), dispatch);
+const mapStateToProps = pick(['scenes', 'activeScene']);
+const mapDispatchToProps = (dispatch) => bindActionCreators(merge(activeSceneActions, uiActions), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
