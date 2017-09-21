@@ -32,11 +32,10 @@ class App extends Component {
       content: [
         [
           ['System Monitor'],
-          ['System Viewer']
+          ['System Viz']
         ],
         [
-          ['System Monitor'],
-          ['System Viewer']
+          'System Graph'
         ],
       ]
     };
@@ -84,7 +83,7 @@ class App extends Component {
               <ContentPanel
                 addPane={this.addPane}
                 closePane={this.closePane}
-                split="horizontal"
+                split="vertical"
                 setContent={this.setContent}
                 resizePane={this.props.resizePane}
                 content={this.state.content}

@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SplitPane from '@kadira/react-split-pane';
 import SystemMonitor from '../../containers/SystemMonitor.js';
-import SystemViewer from '../../containers/SystemViewer.js';
 import SystemViz from '../../containers/SystemViz.js';
 import SystemGraph from '../../containers/SystemGraph.js';
+import BatteryGraph from '../../containers/BatteryGraph.js';
 
 class ControlPanel extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
       components: ['System Monitor' , 'SystemViewer'],
-      split: 'vertical',
+      split: 'horizontal',
       dropdown: false
     };
 
@@ -36,14 +36,14 @@ class ControlPanel extends React.Component {
       case 'System Monitor':
         return <SystemMonitor/>;
 
-      case 'System Viewer':
-        return <SystemViewer/>;
-
       case 'System Viz':
         return <SystemViz/>;
 
       case 'System Graph':
         return <SystemGraph/>;
+
+      case 'Battery Graph':
+        return <BatteryGraph/>;
 
       default:
         <div>Nothing</div>;
@@ -60,9 +60,9 @@ class ControlPanel extends React.Component {
           }
           <button onClick={this.toggleDropdown}>{this.state.dropdown ? 'on' : 'off'}</button>
           <button onClick={() => this.props.setContent(this.props.index, 'System Monitor')}>Monitor</button>
-          <button onClick={() => this.props.setContent(this.props.index, 'System Viewer')}>Viewer</button>
           <button onClick={() => this.props.setContent(this.props.index, 'System Viz')}>Viz</button>
-          <button onClick={() => this.props.setContent(this.props.index, 'System Graph')}>Graph</button>
+          <button onClick={() => this.props.setContent(this.props.index, 'System Graph')}>System</button>
+          <button onClick={() => this.props.setContent(this.props.index, 'Battery Graph')}>Battery</button>
         </div>
         <div className="ContentPanel__Body">
           {setComponent(content[0])}

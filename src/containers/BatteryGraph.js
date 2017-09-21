@@ -25,7 +25,7 @@ const actions = mergeAll([
   activeSceneActions
 ]);
 
-SystemGraph.propTypes = {
+BatteryGraph.propTypes = {
   activeScene: PropTypes.object,
   ui: PropTypes.object,
   setViewerMode: PropTypes.func.isRequired,
@@ -47,24 +47,25 @@ SystemGraph.propTypes = {
   legend: PropTypes.object.isRequired,
 };
 
-function SystemGraph (props) {
+function BatteryGraph (props) {
+  let chart = <SystemChart
+    resizePane={props.ui.resizePane}
+    structureTiles={props.activeScene.structureTiles}
+    powerData={props.powerData[props.activeScene.id]}
+    time={props.time}
+    legend={props.legend}
+  />;
+
   return (
     isNil(props.activeScene) ?
-    <div className="selection-prompt">
-      Please select a system...
-    </div>
-    :
-    <SystemChart
-      resizePane={props.ui.resizePane}
-      structureTiles={props.activeScene.structureTiles}
-      powerData={props.powerData[props.activeScene.id]}
-      time={props.time}
-      legend={props.legend}
-    />
+      <div className="selection-prompt">
+        Please select a system...
+      </div>
+    : chart
   );
 }
 
 const mapStateToProps = pick(['activeScene', 'ui', 'editor', 'activeTile', 'time', 'powerData', 'legend']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(SystemGraph);
+export default connect(mapStateToProps, mapDispatchToProps)(BatteryGraph);

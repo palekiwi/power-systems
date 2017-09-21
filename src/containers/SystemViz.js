@@ -48,27 +48,26 @@ SystemViz.propTypes = {
 };
 
 function SystemViz (props) {
-  let scene = <Scene
-    {...props.activeScene}
-    openSVModal={props.openSVModal}
-    closeSVModal={props.closeSVModal}
-    setActiveStructure={props.setActiveStructure}
-    setActiveTile={props.setActiveTile}
-    resetActiveTile={props.resetActiveTile}
-    deleteTile={props.deleteTile}
-    activeTile={props.activeTile}
-    saveTile={props.saveTile}
-    resizePane={props.ui.resizePane}
-    editor={props.editor}
-    time={props.time}
-  />;
-
   return (
     isNil(props.activeScene) ?
       <div className="selection-prompt">
         Please select a system...
       </div>
-    : scene
+    :
+    <Scene
+      {...props.activeScene}
+      openSVModal={props.openSVModal}
+      closeSVModal={props.closeSVModal}
+      setActiveStructure={props.setActiveStructure}
+      setActiveTile={props.setActiveTile}
+      resetActiveTile={props.resetActiveTile}
+      deleteTile={props.deleteTile}
+      activeTile={props.activeTile}
+      saveTile={props.saveTile}
+      resizePane={props.ui.resizePane}
+      editor={props.editor}
+      time={props.time}
+    />
   );
 }
 
