@@ -14,35 +14,45 @@ html {
   padding: 10px 10px;
 }
 
+.SplitPane {
+  padding: 10px 10px 10px 0;
+}
+
+.Container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.Content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
 .ContentPanel {
   position: absolute;
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   box-sizing: border-box;
-}
-
-.top {
-  padding: 10px 10px 2px 0;
-}
-
-.bottom {
-  padding: 0px 10px 10px 0;
-}
-
-.Content {
-  width: 100%;
-  height: 100%;
   background-color: rgb(255,255,255);
   border-radius: 4px;
   border: 1px solid rgb(236,236,236);
+  min-width: 20%;
 }
 
-.Content__Header {
+.ContentPanel__Header {
   border-bottom: 1px solid rgb(247, 247, 247);
+  background-color: rgb(236,236,236);
   margin-bottom: 2%;
   padding: 4px 8px;
+}
+
+.ContentPanel__Body {
+  width: 100%;
+  height: 100%;
 }
 
 .Resizer {

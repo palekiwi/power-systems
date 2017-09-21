@@ -9,14 +9,26 @@ class ControlPanel extends React.Component {
     super(props);
     this.state = {
       components: ['System Monitor' , 'SystemViewer'],
-      split: 'vertical'
+      split: 'vertical',
+      dropdown: false
     };
+
+    this.setSplit = this.setSplit.bind(this);
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+  }
+
+  setSplit (s) {
+    this.setState({split: s});
+  }
+
+  toggleDropdown () {
+    this.setState({dropdown: !this.state.dropdown});
   }
 
   render () {
     let content = this.props.content;
 
-    const setContent = (content) => {
+    const setComponent = (content) => {
       switch (content) {
 
       case 'System Monitor':
@@ -32,21 +44,31 @@ class ControlPanel extends React.Component {
 
     return (
       content.length == 1 ?
-      <div style={{border: '2px solid red'}}>
-        <button onClick={() => this.props.addPane(this.props.index)}>+</button>
-        <button onClick={() => this.props.closePane(this.props.index)}>x</button>
-        {setContent(content[0])}
+      <div className="ContentPanel">
+        <div className="ContentPanel__Header">
+          <button onClick={() => this.props.addPane(this.props.index)}>+</button>
+          {
+            this.props.index > 0 && <button onClick={() => this.props.closePane(this.props.index)}>x</button>
+          }
+          <button onClick={this.toggleDropdown}>{this.state.dropdown ? 'on' : 'off'}</button>
+          <button onClick={() => this.props.setContent(this.props.index, 'System Monitor')}>Monitor</button>
+          <button onClick={() => this.props.setContent(this.props.index, 'System Viewer')}>Viewer</button>
+        </div>
+        <div className="ContentPanel__Body">
+          {setComponent(content[0])}
+        </div>
       </div>
       :
-      <div style={{border: '4px solid green', width: '100%', height: '100%'}}>
-        <SplitPane split={this.props.split}>
+      <div className="Content">
+        <SplitPane split={this.props.split || this.state.split} onDragFinished={this.props.resizePane}>
           {content.map((c, i) =>
             <ControlPanel
               key={c}
               addPane={this.props.addPane}
               closePane={this.props.closePane}
+              setContent={this.props.setContent}
+              resizePane={this.props.resizePane}
               content={c}
-              split={this.state.split}
               index={this.props.index * 2 + 1 + i}/>
           )}
         </SplitPane>
@@ -60,7 +82,9 @@ ControlPanel.propTypes = {
   split: PropTypes.string,
   index: PropTypes.number.isRequired,
   addPane: PropTypes.func.isRequired,
-  closePane: PropTypes.func.isRequired
+  closePane: PropTypes.func.isRequired,
+  setContent: PropTypes.func.isRequired,
+  resizePane: PropTypes.func.isRequired
 };
 
 export default ControlPanel;

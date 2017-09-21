@@ -21,6 +21,7 @@ import remove from 'ramda/src/remove';
 import append from 'ramda/src/append';
 import lensPath from 'ramda/src/lensPath';
 import over from 'ramda/src/over';
+import set from 'ramda/src/set';
 import last from 'ramda/src/last';
 import init from 'ramda/src/init';
 
@@ -52,9 +53,7 @@ class App extends Component {
       }
     };
 
-    this.toggleDropdown = this.toggleDropdown.bind(this);
-    this.setPaneContent = this.setPaneContent.bind(this);
-    this.setSplit = this.setSplit.bind(this);
+    this.setContent = this.setContent.bind(this);
     this.closePane = this.closePane.bind(this);
     this.addPane = this.addPane.bind(this);
   }
@@ -64,29 +63,16 @@ class App extends Component {
     setTimeout(() => setActiveScene(head(scenes)), 1000);
   }
 
-  toggleDropdown (pos, i) {
-    let p = [pos, 'panes', i, 'dropdown'];
-    let val = path(p, this.state);
-    this.setState(assocPath(p, !val, this.state));
-  }
-
-  setPaneContent (pos, i, c) {
-    this.setState(assocPath([pos, 'panes', i], {content: c, dropdown: false}, this.state));
-  }
-
-  setSplit(ns, s) {
-    this.setState(assocPath([...ns, 'split'], s, this.state));
+  setContent (idx, content) {
+    this.setState({content: set(lensPath(treePath(idx)), [content], this.state.content)});
   }
 
   closePane (idx) {
     let path = treePath(idx);
     let i = last(path);
     let p = init(path);
-    console.log(p, i);
     let res = over(lensPath(p), a => (i == 0) ? a[1] : a[0], this.state.content);
-    console.log(res);
     this.setState({content: res});
-    console.log(this.state.content);
   }
 
   addPane (idx) {
@@ -114,19 +100,24 @@ class App extends Component {
       <div className="App">
         <SystemViewerModal />
 
-        <SplitPane split="vertical" defaultSize={200} onDragFinished={resizePane}>
+          <SplitPane split="vertical" defaultSize={200} onDragFinished={resizePane}>
 
-          <div className="SidePanel">
-            <ControlPanel />
-          </div>
+            <div className="SidePanel">
+              <ControlPanel />
+            </div>
 
-          <ContentPanel
-            addPane={this.addPane}
-            closePane={this.closePane}
-            split="horizontal"
-            content={this.state.content}
-            index={0}/>
-        </SplitPane>
+            <div className="Container">
+              <ContentPanel
+                addPane={this.addPane}
+                closePane={this.closePane}
+                split="horizontal"
+                setContent={this.setContent}
+                resizePane={this.props.resizePane}
+                content={this.state.content}
+                index={0}
+              />
+            </div>
+          </SplitPane>
       </div>
     );
   }

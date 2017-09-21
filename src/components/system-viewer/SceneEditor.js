@@ -27,14 +27,14 @@ class SceneTwoD extends React.Component {
   componentDidMount () {
     window.addEventListener('resize', this.resize);
     this.resize();
-    this.animateEnter();
+    //this.animateEnter();
   }
   componentDidUpdate (prevProps) {
     if (prevProps.resizePane != this.props.resizePane) this.resize();
     if (prevProps.gridSize != this.props.gridSize) this.resize();
     if (prevProps.name != this.props.name) {
       this.resize();
-      this.animateEnter();
+      //this.animateEnter();
     }
   }
 
