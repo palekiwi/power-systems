@@ -38,19 +38,7 @@ class App extends Component {
           ['System Monitor'],
           ['System Viewer']
         ],
-      ],
-      top: {
-        split: null,
-        panes: [
-          { content: 'System Monitor', dropdown: false }
-        ]
-      },
-      bottom: {
-        split: null,
-        panes: [
-          { content: 'System Monitor', dropdown: false }
-        ]
-      }
+      ]
     };
 
     this.setContent = this.setContent.bind(this);
@@ -81,20 +69,6 @@ class App extends Component {
 
   render() {
     let {resizePane} = this.props;
-
-    const setContent = (content) => {
-      switch (content) {
-
-      case 'System Monitor':
-        return <SystemMonitor/>;
-
-      case 'System Viewer':
-        return <SystemViewer/>;
-
-      default:
-        <div>Nothing</div>;
-      }
-    };
 
     return (
       <div className="App">

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import SplitPane from '@kadira/react-split-pane';
 import SystemMonitor from '../../containers/SystemMonitor.js';
 import SystemViewer from '../../containers/SystemViewer.js';
+import SystemViz from '../../containers/SystemViz.js';
+import SystemGraph from '../../containers/SystemGraph.js';
 
 class ControlPanel extends React.Component {
   constructor (props) {
@@ -37,6 +39,12 @@ class ControlPanel extends React.Component {
       case 'System Viewer':
         return <SystemViewer/>;
 
+      case 'System Viz':
+        return <SystemViz/>;
+
+      case 'System Graph':
+        return <SystemGraph/>;
+
       default:
         <div>Nothing</div>;
       }
@@ -53,6 +61,8 @@ class ControlPanel extends React.Component {
           <button onClick={this.toggleDropdown}>{this.state.dropdown ? 'on' : 'off'}</button>
           <button onClick={() => this.props.setContent(this.props.index, 'System Monitor')}>Monitor</button>
           <button onClick={() => this.props.setContent(this.props.index, 'System Viewer')}>Viewer</button>
+          <button onClick={() => this.props.setContent(this.props.index, 'System Viz')}>Viz</button>
+          <button onClick={() => this.props.setContent(this.props.index, 'System Graph')}>Graph</button>
         </div>
         <div className="ContentPanel__Body">
           {setComponent(content[0])}
