@@ -1,87 +1,66 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import SplitPane from '@kadira/react-split-pane';
+import SystemMonitor from '../../containers/SystemMonitor.js';
+import SystemViewer from '../../containers/SystemViewer.js';
 
-ContentPanel.propTypes = {
-  item: PropTypes.object.isRequired,
-  pos: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired,
+class ControlPanel extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      components: ['System Monitor' , 'SystemViewer'],
+      split: 'vertical'
+    };
+  }
+
+  render () {
+    let content = this.props.content;
+
+    const setContent = (content) => {
+      switch (content) {
+
+      case 'System Monitor':
+        return <SystemMonitor/>;
+
+      case 'System Viewer':
+        return <SystemViewer/>;
+
+      default:
+        <div>Nothing</div>;
+      }
+    };
+
+    return (
+      content.length == 1 ?
+      <div style={{border: '2px solid red'}}>
+        <button onClick={() => this.props.addPane(this.props.index)}>+</button>
+        <button onClick={() => this.props.closePane(this.props.index)}>x</button>
+        {setContent(content[0])}
+      </div>
+      :
+      <div style={{border: '4px solid green', width: '100%', height: '100%'}}>
+        <SplitPane split={this.props.split}>
+          {content.map((c, i) =>
+            <ControlPanel
+              key={c}
+              addPane={this.props.addPane}
+              closePane={this.props.closePane}
+              content={c}
+              split={this.state.split}
+              index={this.props.index * 2 + 1 + i}/>
+          )}
+        </SplitPane>
+      </div>
+    );
+  }
+}
+
+ControlPanel.propTypes = {
+  content: PropTypes.array.isRequired,
   split: PropTypes.string,
-  children: PropTypes.object,
-  components: PropTypes.array.isRequired,
-  toggleDropdown: PropTypes.func.isRequired,
-  setPaneContent: PropTypes.func.isRequired,
-  setSplit: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
   addPane: PropTypes.func.isRequired,
   closePane: PropTypes.func.isRequired
 };
 
-function ContentPanel (props) {
-  let p = props.item;
-  let i = props.index;
-  return (
-    <div className="ContentPanel">
-      <div className="Content">
-
-        <div className="Content__Header">
-          <div className={"dropdown " + (p.dropdown ? "is-active" : "")}>
-            <div className="dropdown-trigger">
-              <button className="button is-small" onClick={() => props.toggleDropdown(props.pos, i)}>
-                <span>{p.content}</span>
-                <span className="icon is-small">
-                  <i className="fa fa-angle-down"></i>
-                </span>
-              </button>
-            </div>
-            <div className="dropdown-menu">
-              <div className="dropdown-content">
-                {props.components.map(c =>
-                  <a key={c} className="dropdown-item" onClick={() => props.setPaneContent('top', i, c)}>
-                    {c}
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="field has-addons is-pulled-right">
-            <div className="control">
-              <a className="button is-small" onClick={() => this.props('top', 'horizontal')}>
-                <span className="icon is-small">
-                  <i className="fa fa-pause" style={{transform: "rotate(90deg)"}}></i>
-                </span>
-              </a>
-            </div>
-            <div className="control">
-              <a className="button is-small" onClick={() => props.setSplit('top', 'vertical')}>
-                <span className="icon is-small">
-                  <i className="fa fa-pause"></i>
-                </span>
-              </a>
-            </div>
-            <div className="control">
-              <a className="button is-small" onClick={() => props.addPane(props.pos)}>
-                <span className="icon is-small">
-                  <i className="fa fa-plus"></i>
-                </span>
-              </a>
-            </div>
-            <div className="control">
-              <a className="button is-small" onClick={() => props.closePane(props.pos, i)}>
-                <span className="icon is-small">
-                  <i className="fa fa-times"></i>
-                </span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          {props.children}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
-export default ContentPanel;
+export default ControlPanel;

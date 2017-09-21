@@ -18,12 +18,26 @@ import head from 'ramda/src/head';
 import pick from 'ramda/src/pick';
 import merge from 'ramda/src/merge';
 import remove from 'ramda/src/remove';
+import append from 'ramda/src/append';
+import lensPath from 'ramda/src/lensPath';
+import over from 'ramda/src/over';
+import last from 'ramda/src/last';
+import init from 'ramda/src/init';
 
 class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      components: ['System Monitor', 'System Viewer'],
+      content: [
+        [
+          ['System Monitor'],
+          ['System Viewer']
+        ],
+        [
+          ['System Monitor'],
+          ['System Viewer']
+        ],
+      ],
       top: {
         split: null,
         panes: [
@@ -64,17 +78,23 @@ class App extends Component {
     this.setState(assocPath([...ns, 'split'], s, this.state));
   }
 
-  closePane (pos, i) {
-    this.setState(assocPath([pos], {split: null, panes: remove(i, 1, this.state[pos].panes)}, this.state));
+  closePane (idx) {
+    let path = treePath(idx);
+    let i = last(path);
+    let p = init(path);
+    console.log(p, i);
+    let res = over(lensPath(p), a => (i == 0) ? a[1] : a[0], this.state.content);
+    console.log(res);
+    this.setState({content: res});
+    console.log(this.state.content);
   }
 
-  addPane (pos) {
-    this.setState(assocPath([pos], {split: 'vertical', panes: [...this.state[pos].panes, {content: null, dropdown: false}]}, this.state));
+  addPane (idx) {
+    this.setState({content: over(lensPath(treePath(idx)), a => [a, ['']], this.state.content)});
   }
 
   render() {
     let {resizePane} = this.props;
-    let {components, top, bottom} = this.state;
 
     const setContent = (content) => {
       switch (content) {
@@ -100,66 +120,12 @@ class App extends Component {
             <ControlPanel />
           </div>
 
-          <SplitPane split="horizontal" defaultSize={200} onDragFinished={resizePane}>
-            {
-              top.split ?
-              <SplitPane split={top.split} onDragFinished={resizePane}>
-                {top.panes.map((p, i) =>
-                  <ContentPanel
-                    item={p}
-                    components={components}
-                    key={i}
-                    index={i}
-                    pos="top"
-                    split={top.split}
-                    toggleDropdown={this.toggleDropdown}
-                    setSplit={this.setSplit}
-                    setPaneContent={this.setPaneContent}
-                    addPane={this.addPane}
-                    closePane={this.closePane}
-                  >
-                    {setContent(p.content)}
-                  </ContentPanel>
-                )}
-              </SplitPane>
-              :
-              <ContentPanel
-                item={top.panes[0]}
-                components={components}
-                index={0}
-                pos="top"
-                split={top.split}
-                toggleDropdown={this.toggleDropdown}
-                setSplit={this.setSplit}
-                setPaneContent={this.setPaneContent}
-                addPane={this.addPane}
-                closePane={this.closePane}
-              >
-                {setContent(top.panes[0].content)}
-              </ContentPanel>
-            }
-            {
-              bottom.split ?
-              <SplitPane split={bottom.split} onDragFinished={resizePane}>
-                <div className="ContentPanel">
-                  <div className="Content">
-                    {setContent(bottom.a.content)}
-                  </div>
-                </div>
-                <div className="ContentPanel">
-                  <div className="Content">
-                    {setContent(bottom.b.content)}
-                  </div>
-                </div>
-              </SplitPane>
-              :
-              <div className="ContentPanel bottom">
-                <div className="Content">
-                  <SystemMonitor />
-                </div>
-              </div>
-            }
-          </SplitPane>
+          <ContentPanel
+            addPane={this.addPane}
+            closePane={this.closePane}
+            split="horizontal"
+            content={this.state.content}
+            index={0}/>
         </SplitPane>
       </div>
     );
@@ -178,3 +144,7 @@ const mapStateToProps = pick(['scenes', 'activeScene']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(merge(activeSceneActions, uiActions), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+function treePath (n) {
+  return n == 0 ? [] : append((n - 1) % 2, treePath(Math.floor((n -1) / 2)));
+}
