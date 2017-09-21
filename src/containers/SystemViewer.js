@@ -98,16 +98,6 @@ function SystemViewer (props) {
 
   return (
     <div className="SystemViewer">
-      <div>
-        <button onClick={() => props.setViewerMode('graphic')}>Graphic</button>
-        <button onClick={() => props.setViewerMode('chart')}>Chart</button>
-        <button onClick={() => props.setViewerMode('split')}>Split</button>
-      </div>
-
-      { !props.editor &&
-        <button onClick={props.editScene}>Edit</button>
-      }
-
       { props.editor &&
         <div>
           { props.activeScene.id  ?

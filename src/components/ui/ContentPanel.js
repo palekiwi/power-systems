@@ -59,7 +59,7 @@ class ControlPanel extends React.Component {
         </div>
       </div>
       :
-      <div className="Content">
+      <div>
         <SplitPane split={this.props.split || this.state.split} onDragFinished={this.props.resizePane}>
           {content.map((c, i) =>
             <ControlPanel
