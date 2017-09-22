@@ -4,17 +4,10 @@ import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import LineChart from './LineChart.js';
 import XYaxis from './XYaxis.js';
-import propEq from 'ramda/src/propEq';
 import prop from 'ramda/src/prop';
 import range from 'ramda/src/range';
-import max from 'ramda/src/max';
-import min from 'ramda/src/min';
-import map from 'ramda/src/map';
-import compose from 'ramda/src/compose';
-import filter from 'ramda/src/filter';
-import reduce from 'ramda/src/reduce';
-import pluck from 'ramda/src/pluck';
-import tap from 'ramda/src/tap';
+import keys from 'ramda/src/keys';
+import contains from 'ramda/src/contains';
 import { parseHM, timeFromInt, fromUnix } from '../../helpers/format.js';
 import './SystemChart.scss';
 
@@ -35,7 +28,7 @@ class SystemChart extends React.Component {
     this.resize ();
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate (prevProps) {
     if (this.props.resizePane != prevProps.resizePane) this.resize();
   }
 
@@ -50,9 +43,9 @@ class SystemChart extends React.Component {
 
   render () {
     const {structureTiles, powerData, legend} = this.props;
+    const ss = structureTiles.filter(s => contains(s.id, keys(powerData)));
+
     const state = this.state;
-
-
     const scales = {
       x: x(state.width, range(0,25).map(timeFromInt).map(parseHM)),
       y: y(state.height, powerData.minPower, powerData.maxPower)};
@@ -81,7 +74,7 @@ class SystemChart extends React.Component {
                 <LineChart data={powerData.totalFeed} tag="totalFeed" value="power" {...scales}/>
               </g>
 
-              {structureTiles
+              {ss
                 .filter(x => x.category == 'generator')
                 .map((el, i) =>
                   <g key={el.id} style={{'visibility': el.active ? 'visible' : 'hidden'}}>
@@ -94,7 +87,7 @@ class SystemChart extends React.Component {
                 )
               }
 
-              {structureTiles
+              {ss
                 .filter(prop('buffer'))
                 .map(el =>
                   <g key={el.id} style={{'visibility': legend.buffer ? 'visible' : 'hidden'}}>
@@ -107,7 +100,7 @@ class SystemChart extends React.Component {
                 )
               }
 
-              {structureTiles
+              {ss
                 .filter(prop('storage'))
                 .map(el =>
                   <g key={el.id} style={{'visibility': legend.storage ? 'visible' : 'hidden'}}>
