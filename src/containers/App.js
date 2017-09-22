@@ -31,11 +31,11 @@ class App extends Component {
     this.state = {
       content: [
         [
-          ['System Monitor'],
-          ['System Viz']
+          'System Graph'
         ],
         [
-          'System Graph'
+          ['System Monitor'],
+          ['System Viz']
         ],
       ]
     };

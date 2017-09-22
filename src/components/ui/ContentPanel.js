@@ -6,7 +6,7 @@ import SystemViz from '../../containers/SystemViz.js';
 import SystemGraph from '../../containers/SystemGraph.js';
 import BatteryGraph from '../../containers/BatteryGraph.js';
 
-class ControlPanel extends React.Component {
+class ContentPanel extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -19,8 +19,14 @@ class ControlPanel extends React.Component {
     this.toggleDropdown = this.toggleDropdown.bind(this);
   }
 
-  setSplit (s) {
+  componentDidMount () {
+    this.setState({split: this.props.split});
+  }
+
+  setSplit () {
+    let s = this.state.split == 'horizontal' ? 'vertical' : 'horizontal';
     this.setState({split: s});
+    this.props.resizePane();
   }
 
   toggleDropdown () {
@@ -63,6 +69,7 @@ class ControlPanel extends React.Component {
           <button onClick={() => this.props.setContent(this.props.index, 'System Viz')}>Viz</button>
           <button onClick={() => this.props.setContent(this.props.index, 'System Graph')}>System</button>
           <button onClick={() => this.props.setContent(this.props.index, 'Battery Graph')}>Battery</button>
+          <button onClick={this.props.setSplit}>{this.props.split == 'horizontal' ? 'V' : 'H'}</button>
         </div>
         <div className="ContentPanel__Body">
           {setComponent(content[0])}
@@ -70,14 +77,16 @@ class ControlPanel extends React.Component {
       </div>
       :
       <div>
-        <SplitPane split={this.props.split || this.state.split} onDragFinished={this.props.resizePane}>
+        <SplitPane split={this.state.split} onDragFinished={this.props.resizePane}>
           {content.map((c, i) =>
-            <ControlPanel
+            <ContentPanel
               key={c}
               addPane={this.props.addPane}
               closePane={this.props.closePane}
               setContent={this.props.setContent}
               resizePane={this.props.resizePane}
+              setSplit={this.setSplit}
+              split={this.state.split}
               content={c}
               index={this.props.index * 2 + 1 + i}/>
           )}
@@ -87,14 +96,15 @@ class ControlPanel extends React.Component {
   }
 }
 
-ControlPanel.propTypes = {
+ContentPanel.propTypes = {
   content: PropTypes.array.isRequired,
   split: PropTypes.string,
   index: PropTypes.number.isRequired,
   addPane: PropTypes.func.isRequired,
   closePane: PropTypes.func.isRequired,
   setContent: PropTypes.func.isRequired,
+  setSplit: PropTypes.func,
   resizePane: PropTypes.func.isRequired
 };
 
-export default ControlPanel;
+export default ContentPanel;
