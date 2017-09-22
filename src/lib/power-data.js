@@ -251,6 +251,7 @@ function getBuffer (i, date, acc, items, capacity, lastPower, currPower, currEne
             date,
             buffered,
             balance: balance + buffered,
+            soc: (balance + buffered) / (b.capacity * 1000) * 100,
             power,
             buffer,
             energy
@@ -300,7 +301,8 @@ function getStorage (i, date, acc, items, buffer, currPower, currEnergy) {
           date,
           storage,
           stored,
-          balance: balance + stored
+          balance: balance + stored,
+          soc: (balance + stored) / (s.capacity * 1000) * 100
         };
       }, ss);
     },

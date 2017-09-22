@@ -12,37 +12,13 @@ BatteryChart.propTypes = {
 function BatteryChart ({powerData, structureTiles, legend, scales}) {
   return (
     <g>
-      <g style={{'visibility': legend.totalGen ? 'visible' : 'hidden'}}>
-        <LineChart data={powerData.totalGen} tag="totalGen" value="power" {...scales}/>
-      </g>
-
-      <g style={{'visibility': legend.totalLoad ? 'visible' : 'hidden'}}>
-        <LineChart data={powerData.totalLoad} tag="totalLoad" value="power" {...scales}/>
-      </g>
-
-      <g style={{'visibility': legend.totalRamped ? 'visible' : 'hidden'}}>
-        <LineChart data={powerData.totalRamped} tag="totalRamped" value="power" {...scales}/>
-      </g>
-
-      <g style={{'visibility': legend.totalFeed ? 'visible' : 'hidden'}}>
-        <LineChart data={powerData.totalFeed} tag="totalFeed" value="power" {...scales}/>
-      </g>
-
-      <g style={{'visibility': legend.totalBuffer ? 'visible' : 'hidden'}}>
-        <LineChart data={powerData.totalBuffer} tag="buffer" value="buffer" {...scales}/>
-      </g>
-
-      <g style={{'visibility': legend.totalStorage ? 'visible' : 'hidden'}}>
-        <LineChart data={powerData.totalStorage} tag="storage" value="storage" {...scales}/>
-      </g>
-
       {structureTiles
         .filter(x => x.category == 'battery')
         .map(el =>
           <g key={el.id} style={{'visibility': legend[el.id] ? 'visible' : 'hidden'}}>
             <LineChart
-              tag={el.tag}
-              value="power"
+              tag={el.buffer ? 'buffer' : 'storage'}
+              value="soc"
               data={powerData[el.id]} {...scales}/>
           </g>
         )

@@ -25,7 +25,12 @@ class SystemChart extends React.Component {
       width: 400,
       height: 300,
       margin: { top: 30, bottom: 30, left: 60, right: 30},
-      legend: {totalLoad: true, totalGen: true}
+      legend: {
+        totalLoad: true,
+        totalGen: true,
+        totalBuffer: true,
+        totalStorage: true
+      }
     };
 
     this.resize = this.resize.bind(this);
@@ -35,13 +40,14 @@ class SystemChart extends React.Component {
   componentDidMount () {
     window.addEventListener('resize', this.resize);
     this.resize();
-    this.setState({legend: merge(map(always(false), this.props.powerData), this.state.legend)});
+    //this.setState({legend: merge(map(always(false), this.props.powerData), this.state.legend)});
+    this.setState({legend: merge(map(x => (x[0] && x[0].balance) ? true : false, this.props.powerData), this.state.legend)});
   }
 
   componentDidUpdate (prevProps) {
     if (this.props.resizePane != prevProps.resizePane) this.resize();
     if (this.props.powerData != prevProps.powerData) {
-      this.setState({legend: merge(map(always(false), this.props.powerData), this.state.legend)});
+      this.setState({legend: merge(map(x => x[0].balance ? true : false, this.props.powerData), this.state.legend)});
     }
   }
 

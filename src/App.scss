@@ -54,6 +54,15 @@ html {
   position: relative;
 }
 
+.ContentPanel__Controls {
+  opacity: 0.1;
+  transition: opacity 0.3s ease-in;
+}
+
+.ContentPanel__Header:hover .ContentPanel__Controls {
+  opacity: 1;
+}
+
 .Resizer {
   background: #000;
   opacity: .1;

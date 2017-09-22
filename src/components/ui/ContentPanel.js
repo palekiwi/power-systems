@@ -87,7 +87,7 @@ class ContentPanel extends React.Component {
             </div>
           </div>
 
-          <div className="field has-addons is-pulled-right">
+          <div className="ContentPanel__Controls field has-addons is-pulled-right">
             <p className="control">
               <a className="button is-small" onClick={() => this.props.addPane(this.props.index)}>
                 <span className="icon is-small">

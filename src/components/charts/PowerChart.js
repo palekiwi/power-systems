@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import LineChart from '../charts/LineChart.js';
+import prop from 'ramda/src/prop';
 
 PowerChart.propTypes = {
   structureTiles: PropTypes.array.isRequired,
@@ -28,13 +29,19 @@ function PowerChart ({powerData, structureTiles, legend, scales}) {
         <LineChart data={powerData.totalFeed} tag="totalFeed" value="power" {...scales}/>
       </g>
 
-      <g style={{'visibility': legend.totalBuffer ? 'visible' : 'hidden'}}>
-        <LineChart data={powerData.totalBuffer} tag="buffer" value="buffer" {...scales}/>
-      </g>
+      {
+        structureTiles.find(prop('buffer')) &&
+        <g style={{'visibility': legend.totalBuffer ? 'visible' : 'hidden'}}>
+          <LineChart data={powerData.totalBuffer} tag="buffer" value="buffer" {...scales}/>
+        </g>
+      }
 
-      <g style={{'visibility': legend.totalStorage ? 'visible' : 'hidden'}}>
-        <LineChart data={powerData.totalStorage} tag="storage" value="storage" {...scales}/>
-      </g>
+      {
+        structureTiles.find(prop('storage')) &&
+        <g style={{'visibility': legend.totalStorage ? 'visible' : 'hidden'}}>
+          <LineChart data={powerData.totalStorage} tag="storage" value="storage" {...scales}/>
+        </g>
+      }
 
       {structureTiles
         .filter(x => x.category == 'generator')
