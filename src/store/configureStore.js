@@ -1,8 +1,9 @@
+/* global process */
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from '../reducers';
 
-export default function configureStore (preloadedState) {
+function configureStoreDev (preloadedState) {
   return createStore(
     rootReducer,
     preloadedState,
@@ -12,3 +13,17 @@ export default function configureStore (preloadedState) {
     )
   );
 }
+
+function configureStoreProd (preloadedState) {
+  return createStore(
+    rootReducer,
+    preloadedState,
+    compose(
+      applyMiddleware(thunk)
+    )
+  );
+}
+
+const configureStore = process.env.NODE_ENV === 'production' ? configureStoreProd : configureStoreDev;
+
+export default configureStore;

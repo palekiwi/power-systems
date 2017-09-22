@@ -34,7 +34,7 @@ class App extends Component {
           'System Chart'
         ],
         [
-          ['System Monitor'],
+          ['System Data'],
           ['Graphic']
         ],
       ]
