@@ -20,7 +20,7 @@ class ContentPanel extends React.Component {
   }
 
   componentDidMount () {
-    this.setState({split: this.props.split});
+    this.props.defaultSplit && this.setState({split: this.props.defaultSplit});
   }
 
   setSplit () {
@@ -99,6 +99,7 @@ class ContentPanel extends React.Component {
 ContentPanel.propTypes = {
   content: PropTypes.array.isRequired,
   split: PropTypes.string,
+  defaultSplit: PropTypes.string,
   index: PropTypes.number.isRequired,
   addPane: PropTypes.func.isRequired,
   closePane: PropTypes.func.isRequired,

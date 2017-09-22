@@ -95,23 +95,27 @@ class SystemChart extends React.Component {
               }
 
               {structureTiles
-                .filter(x => x.category == 'battery')
+                .filter(prop('buffer'))
                 .map(el =>
-                  <g key={el.id} style={{'visibility': el.active ? 'visible' : 'hidden'}}>
-                    <g style={{'visibility': legend.buffer ? 'visible' : 'hidden'}}>
-                      <LineChart
-                        stroke={"green"}
-                        tag={"buffer"}
-                        value="buffer"
-                        data={powerData[el.id]} {...scales}/>
-                    </g>
-                    <g style={{'visibility': legend.storage ? 'visible' : 'hidden'}}>
-                      <LineChart
-                        stroke={"yellow"}
-                        tag={"storage"}
-                        value="storage"
-                        data={powerData[el.id]} {...scales}/>
-                    </g>
+                  <g key={el.id} style={{'visibility': legend.buffer ? 'visible' : 'hidden'}}>
+                    <LineChart
+                      stroke={"green"}
+                      tag={"buffer"}
+                      value="buffer"
+                      data={powerData[el.id]} {...scales}/>
+                  </g>
+                )
+              }
+
+              {structureTiles
+                .filter(prop('storage'))
+                .map(el =>
+                  <g key={el.id} style={{'visibility': legend.storage ? 'visible' : 'hidden'}}>
+                    <LineChart
+                      stroke={"yellow"}
+                      tag={"storage"}
+                      value="storage"
+                      data={powerData[el.id]} {...scales}/>
                   </g>
                 )
               }

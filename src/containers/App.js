@@ -83,7 +83,7 @@ class App extends Component {
               <ContentPanel
                 addPane={this.addPane}
                 closePane={this.closePane}
-                split="vertical"
+                defaultSplit="vertical"
                 setContent={this.setContent}
                 resizePane={this.props.resizePane}
                 content={this.state.content}
