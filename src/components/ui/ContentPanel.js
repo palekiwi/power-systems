@@ -42,13 +42,13 @@ class ContentPanel extends React.Component {
       case 'System Monitor':
         return <SystemMonitor/>;
 
-      case 'System Viz':
+      case 'Graphic':
         return <SystemViz/>;
 
-      case 'System Graph':
+      case 'System Chart':
         return <SystemGraph/>;
 
-      case 'Battery Graph':
+      case 'Battery Chart':
         return <BatteryGraph/>;
 
       default:
@@ -56,19 +56,38 @@ class ContentPanel extends React.Component {
       }
     };
 
+    let x = content[0];
+    let xs = ['System Monitor', 'Graphic', 'System Chart', 'Battery Chart'];
     return (
       content.length == 1 ?
       <div className="ContentPanel">
         <div className="ContentPanel__Header">
+          <div className={"dropdown" + (this.state.dropdown ? ' is-active': '')}>
+            <div className="dropdown-trigger">
+              <button className="button is-small"
+                onClick={this.toggleDropdown}
+              >
+                <span>{x}</span>
+                <span className="icon is-small">
+                  <i className="fa fa-angle-down"></i>
+                </span>
+              </button>
+            </div>
+            <div className="dropdown-menu">
+              <div className="dropdown-content">
+                {xs.map((x, i) =>
+                  <a className="dropdown-item"
+                    key={i}
+                    onClick={() => this.props.setContent(this.props.index, x)}
+                  >{x}</a>
+                  )}
+              </div>
+            </div>
+          </div>
           <button onClick={() => this.props.addPane(this.props.index)}>+</button>
           {
             this.props.index > 0 && <button onClick={() => this.props.closePane(this.props.index)}>x</button>
           }
-          <button onClick={this.toggleDropdown}>{this.state.dropdown ? 'on' : 'off'}</button>
-          <button onClick={() => this.props.setContent(this.props.index, 'System Monitor')}>Monitor</button>
-          <button onClick={() => this.props.setContent(this.props.index, 'System Viz')}>Viz</button>
-          <button onClick={() => this.props.setContent(this.props.index, 'System Graph')}>System</button>
-          <button onClick={() => this.props.setContent(this.props.index, 'Battery Graph')}>Battery</button>
           <button onClick={this.props.setSplit}>{this.props.split == 'horizontal' ? 'V' : 'H'}</button>
         </div>
         <div className="ContentPanel__Body">
