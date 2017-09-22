@@ -61,7 +61,9 @@ class ContentPanel extends React.Component {
     return (
       content.length == 1 ?
       <div className="ContentPanel">
+
         <div className="ContentPanel__Header">
+
           <div className={"dropdown" + (this.state.dropdown ? ' is-active': '')}>
             <div className="dropdown-trigger">
               <button className="button is-small"
@@ -84,12 +86,36 @@ class ContentPanel extends React.Component {
               </div>
             </div>
           </div>
-          <button onClick={() => this.props.addPane(this.props.index)}>+</button>
-          {
-            this.props.index > 0 && <button onClick={() => this.props.closePane(this.props.index)}>x</button>
-          }
-          <button onClick={this.props.setSplit}>{this.props.split == 'horizontal' ? 'V' : 'H'}</button>
+
+          <div className="field has-addons is-pulled-right">
+            <p className="control">
+              <a className="button is-small" onClick={() => this.props.addPane(this.props.index)}>
+                <span className="icon is-small">
+                  <i className="fa fa-plus"></i>
+                </span>
+              </a>
+            </p>
+            {this.props.index > 0 &&
+              <p className="control">
+                <a className="button is-small" onClick={() => this.props.closePane(this.props.index)}>
+                  <span className="icon is-small">
+                    <i className="fa fa-times"></i>
+                  </span>
+                </a>
+              </p>
+            }
+            {this.props.index > 0 &&
+              <p className="control">
+                <a className="button is-small" onClick={this.props.setSplit}>
+                  <span className="icon is-small">
+                    <i className="fa fa-pause" style={{transform: `rotate(${this.props.split == 'vertical' ? '90' : '0'}deg)`}}></i>
+                  </span>
+                </a>
+              </p>
+            }
+          </div>
         </div>
+
         <div className="ContentPanel__Body">
           {setComponent(content[0])}
         </div>
