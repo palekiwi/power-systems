@@ -10,7 +10,6 @@ import * as legendActions from '../actions/legendActions.js';
 import SystemSelector from '../components/control-panel/SystemSelector.js';
 import SystemControls from '../components/control-panel/SystemControls.js';
 import SystemSettings from '../components/control-panel/SystemSettings.js';
-import ChartLegend from '../components/control-panel/ChartLegend.js';
 
 const actions = R.mergeAll([activeSceneActions, editorActions, legendActions]);
 
@@ -76,14 +75,6 @@ function ControlPanel (props) {
             updateScene={props.updateScene}
             closeEditor={props.closeEditor}
             setSceneName={props.setSceneName}
-          />
-        }
-        { props.activeScene &&
-          <ChartLegend
-            activeScene={props.activeScene}
-            legend={props.legend}
-            toggleStructureActive={props.toggleStructureActive}
-            toggleLegendField={props.toggleLegendField}
           />
         }
       </div>

@@ -1,0 +1,94 @@
+@import '../../_variables.scss';
+
+.ChartLegend__Controls .button {
+}
+
+.button.totalLoad {
+  background: $totalLoad;
+  color: white;
+}
+
+.button.totalLoad.is-inverted {
+  color: $totalLoad;
+  background: white;
+}
+
+.button.totalGen {
+  background: $totalGen;
+  color: white;
+}
+
+.button.totalGen.is-inverted {
+  color: $totalGen;
+  background: white;
+}
+
+.button.totalFeed {
+  background: $totalFeed;
+  color: white;
+}
+
+.button.totalFeed.is-inverted {
+  color: $totalFeed;
+  background: white;
+}
+
+.button.totalRamped {
+  background: $totalRamped;
+  color: white;
+}
+
+.button.totalRamped.is-inverted {
+  color: $totalRamped;
+  background: white;
+}
+
+.button.solar {
+  background: $solar;
+  color: white;
+}
+
+.button.solar.is-inverted {
+  background: white;
+  color: $solar;
+}
+
+.button.diesel {
+  background: $diesel;
+  color: white;
+}
+
+.button.diesel.is-inverted {
+  color: $diesel;
+  background: white;
+}
+
+.button.gas {
+  background: $gas;
+  color: white;
+}
+
+.button.gas.is-inverted {
+  color: $gas;
+  background: white;
+}
+
+.button.buffer {
+  background: $buffer;
+  color: white;
+}
+
+.button.buffer.is-inverted {
+  color: $buffer;
+  background: white;
+}
+
+.button.storage {
+  background: $storage;
+  color: white;
+}
+
+.button.storage.is-inverted {
+  color: $storage;
+  background: white;
+}

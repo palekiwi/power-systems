@@ -13,12 +13,12 @@ PowerChart.propTypes = {
 function PowerChart ({powerData, structureTiles, legend, scales}) {
   return (
     <g>
-      <g style={{'visibility': legend.totalGeneration ? 'visible' : 'hidden'}}>
-        <LineChart stroke={'black'} data={powerData.totalGen} tag="totalGen" value="power" {...scales}/>
+      <g style={{'visibility': legend.totalGen ? 'visible' : 'hidden'}}>
+        <LineChart data={powerData.totalGen} tag="totalGen" value="power" {...scales}/>
       </g>
 
       <g style={{'visibility': legend.totalLoad ? 'visible' : 'hidden'}}>
-        <LineChart stroke={'red'} data={powerData.totalLoad} tag="totalLoad" value="power" {...scales}/>
+        <LineChart data={powerData.totalLoad} tag="totalLoad" value="power" {...scales}/>
       </g>
 
       <g style={{'visibility': legend.totalRamped ? 'visible' : 'hidden'}}>
@@ -29,37 +29,21 @@ function PowerChart ({powerData, structureTiles, legend, scales}) {
         <LineChart data={powerData.totalFeed} tag="totalFeed" value="power" {...scales}/>
       </g>
 
+      <g style={{'visibility': legend.totalBuffer ? 'visible' : 'hidden'}}>
+        <LineChart data={powerData.totalBuffer} tag="buffer" value="buffer" {...scales}/>
+      </g>
+
+      <g style={{'visibility': legend.totalStorage ? 'visible' : 'hidden'}}>
+        <LineChart data={powerData.totalStorage} tag="storage" value="storage" {...scales}/>
+      </g>
+
       {structureTiles
         .filter(x => x.category == 'generator')
         .map(el =>
-          <g key={el.id} style={{'visibility': el.active ? 'visible' : 'hidden'}}>
+          <g key={el.id} style={{'visibility': legend[el.id] ? 'visible' : 'hidden'}}>
             <LineChart
               tag={el.tag}
               value="power"
-              data={powerData[el.id]} {...scales}/>
-          </g>
-        )
-      }
-
-      {structureTiles
-        .filter(prop('buffer'))
-        .map(el =>
-          <g key={el.id} style={{'visibility': legend.buffer ? 'visible' : 'hidden'}}>
-            <LineChart
-              tag={"buffer"}
-              value="buffer"
-              data={powerData[el.id]} {...scales}/>
-          </g>
-        )
-      }
-
-      {structureTiles
-        .filter(prop('storage'))
-        .map(el =>
-          <g key={el.id} style={{'visibility': legend.storage ? 'visible' : 'hidden'}}>
-            <LineChart
-              tag={"storage"}
-              value="storage"
               data={powerData[el.id]} {...scales}/>
           </g>
         )

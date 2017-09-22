@@ -28,7 +28,7 @@ export function computeOutput (powerData, dates, data) {
   )(data);
 
   const EMPTY = R.merge(
-    {totalLoad: [], totalGen: [], totalFeed: [], totalRamped: [], consumption: [], production: [], energyBalance: [], powerBalance: [], min: [], max: []},
+    {totalLoad: [], totalGen: [], totalFeed: [], totalRamped: [], consumption: [], production: [], energyBalance: [], powerBalance: [], totalStorage: [], totalBuffer: [], min: [], max: []},
     R.zipObj(
       R.pluck('id', data),
       R.map(R.always([]), data)
@@ -116,6 +116,8 @@ function computeCycle (acc, date, i, hash, powerData, capacity) {
     totalGen: {date, power: totalGen},
     totalFeed: {date, power: totalFeed},
     totalRamped: {date, power: totalRamped},
+    totalBuffer: {date, buffer: totalBuffer},
+    totalStorage: {date, stoarge: totalStorage},
     powerBalance: {date, power: powerBalance},
     energyBalance: {date, energy: energyBalance},
     production: {date, energy: totalProduction},
