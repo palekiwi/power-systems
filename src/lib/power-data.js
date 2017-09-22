@@ -222,11 +222,12 @@ function getBuffer (i, date, acc, items, capacity, lastPower, currPower, currEne
 
       return R.map(
         b => {
-          let balance = (i > 0) ? R.last(acc[b.id]).balance : b.soc * b.capacity * 1000;           // mutliply by 1000 to convert from kWh to Wh
+          let balance = (i > 0) ? R.last(acc[b.id]).balance : b.initSoc * b.capacity * 1000;           // mutliply by 1000 to convert from kWh to Wh
           let c = b.capacity * 1000 * b.c / 60 * 5;
+          let minBalance = b.minSoc * b.capacity * 1000;
 
           let prebuffered = R.compose(
-            R.clamp(0 - balance, b.capacity * 1000 - balance), // clamp by capacity
+            R.clamp(minBalance - balance, b.capacity * 1000 - balance), // clamp by capacity
             R.clamp(-c, c)                                     // clamp by C-rating
           )(targetBuffered);
 
@@ -273,12 +274,13 @@ function getStorage (i, date, acc, items, buffer, currPower, currEnergy) {
           buffer[s.id].balance :
           (i > 0) ?
           R.last(acc[s.id]).balance :
-          s.capacity * 1000 * s.soc;
+          s.capacity * 1000 * s.initSoc;
 
         let c = s.capacity * 1000 * s.c / 12; // 5min charge and discharge limit
+        let minBalance = s.capacity * s.minSoc * 1000;
 
         let prestored = R.compose(
-          R.clamp(0 - balance, s.capacity * 1000 - balance), // clamp by capacity
+          R.clamp(minBalance - balance, s.capacity * 1000 - balance), // clamp by capacity
           R.clamp(-c, c)                                     // clamp by C-rating
         )(targetEnergy);
 

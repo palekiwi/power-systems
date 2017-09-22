@@ -21,10 +21,6 @@ function PowerChart ({powerData, structureTiles, legend, scales}) {
         <LineChart data={powerData.totalLoad} tag="totalLoad" value="power" {...scales}/>
       </g>
 
-      <g style={{'visibility': legend.totalRamped ? 'visible' : 'hidden'}}>
-        <LineChart data={powerData.totalRamped} tag="totalRamped" value="power" {...scales}/>
-      </g>
-
       <g style={{'visibility': legend.totalFeed ? 'visible' : 'hidden'}}>
         <LineChart data={powerData.totalFeed} tag="totalFeed" value="power" {...scales}/>
       </g>
@@ -54,6 +50,11 @@ function PowerChart ({powerData, structureTiles, legend, scales}) {
           </g>
         )
       }
+
+      <g style={{'visibility': legend.totalRamped ? 'visible' : 'hidden'}}>
+        <LineChart data={powerData.totalRamped} tag="totalRamped" value="power" {...scales}/>
+      </g>
+
     </g>
   );
 }
