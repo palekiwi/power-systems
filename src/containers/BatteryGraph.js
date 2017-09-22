@@ -54,6 +54,8 @@ function BatteryGraph (props) {
     powerData={props.powerData[props.activeScene.id]}
     time={props.time}
     legend={props.legend}
+    min={0}
+    max={100}
   />;
 
   return (

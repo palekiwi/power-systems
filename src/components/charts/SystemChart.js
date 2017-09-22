@@ -42,13 +42,13 @@ class SystemChart extends React.Component {
   }
 
   render () {
-    const {structureTiles, powerData, legend} = this.props;
+    const {min, max, structureTiles, powerData, legend} = this.props;
     const ss = structureTiles.filter(s => contains(s.id, keys(powerData)));
 
     const state = this.state;
     const scales = {
       x: x(state.width, range(0,25).map(timeFromInt).map(parseHM)),
-      y: y(state.height, powerData.minPower, powerData.maxPower)};
+      y: y(state.height, min, max)};
 
     const pos = scales.x(d3.timeParse('%H:%M')(fromUnix(this.props.time)));
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(range(0,10));
@@ -134,6 +134,8 @@ SystemChart.propTypes = {
   structureTiles: PropTypes.array.isRequired,
   time: PropTypes.number.isRequired,
   powerData: PropTypes.object.isRequired,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
   legend: PropTypes.object.isRequired
 };
 

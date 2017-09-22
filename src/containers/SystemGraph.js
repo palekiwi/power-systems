@@ -58,9 +58,12 @@ function SystemGraph (props) {
       resizePane={props.ui.resizePane}
       structureTiles={props.activeScene.structureTiles}
       powerData={props.powerData[props.activeScene.id]}
+      min={props.powerData[props.activeScene.id].minPower}
+      max={props.powerData[props.activeScene.id].maxPower}
       time={props.time}
       legend={props.legend}
-    />
+    >
+    </SystemChart>
   );
 }
 
