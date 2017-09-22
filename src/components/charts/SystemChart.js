@@ -3,7 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import PowerChart from './PowerChart.js';
-import ChartLegend from './ChartLegend.js';
+import BatteryChart from './BatteryChart.js';
+import PowerChartLegend from './PowerChartLegend.js';
+import BatteryChartLegend from './BatteryChartLegend.js';
 import XYaxis from './XYaxis.js';
 import range from 'ramda/src/range';
 import keys from 'ramda/src/keys';
@@ -12,6 +14,7 @@ import map from 'ramda/src/map';
 import contains from 'ramda/src/contains';
 import evolve from 'ramda/src/evolve';
 import not from 'ramda/src/not';
+import merge from 'ramda/src/merge';
 import { parseHM, timeFromInt, fromUnix } from '../../helpers/format.js';
 import './SystemChart.scss';
 
@@ -22,7 +25,7 @@ class SystemChart extends React.Component {
       width: 400,
       height: 300,
       margin: { top: 30, bottom: 30, left: 60, right: 30},
-      legend: {}
+      legend: {totalLoad: true, totalGen: true}
     };
 
     this.resize = this.resize.bind(this);
@@ -32,11 +35,14 @@ class SystemChart extends React.Component {
   componentDidMount () {
     window.addEventListener('resize', this.resize);
     this.resize();
-    this.setState({legend: map(always(false), this.props.powerData)});
+    this.setState({legend: merge(map(always(false), this.props.powerData), this.state.legend)});
   }
 
   componentDidUpdate (prevProps) {
     if (this.props.resizePane != prevProps.resizePane) this.resize();
+    if (this.props.powerData != prevProps.powerData) {
+      this.setState({legend: merge(map(always(false), this.props.powerData), this.state.legend)});
+    }
   }
 
   resize () {
@@ -65,17 +71,34 @@ class SystemChart extends React.Component {
 
     return (
       <div className="SystemChart">
-        <ChartLegend
-          legend={this.state.legend}
-          structureTiles={structureTiles}
-          toggleLegendField={this.toggleLegendField}
-        />
+        {
+          type == 'power' ?
+          <PowerChartLegend
+            legend={this.state.legend}
+            structureTiles={structureTiles}
+            toggleLegendField={this.toggleLegendField}
+          />
+          :
+          <BatteryChartLegend
+            legend={this.state.legend}
+            structureTiles={structureTiles}
+            toggleLegendField={this.toggleLegendField}
+          />
+
+        }
         <div className="SystemChart__Chart" ref={(chart) => this.chart = chart} style={{height: '100%'}}>
           <svg {...svgSize(state)}>
             <g transform={transform(state)}>
 
-              {type == 'power' &&
+              {type == 'power' ?
                 <PowerChart
+                  powerData={powerData}
+                  legend={this.state.legend}
+                  structureTiles={ss}
+                  scales={scales}
+                />
+                :
+                <BatteryChart
                   powerData={powerData}
                   legend={this.state.legend}
                   structureTiles={ss}

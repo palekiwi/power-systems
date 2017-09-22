@@ -117,7 +117,7 @@ function computeCycle (acc, date, i, hash, powerData, capacity) {
     totalFeed: {date, power: totalFeed},
     totalRamped: {date, power: totalRamped},
     totalBuffer: {date, buffer: totalBuffer},
-    totalStorage: {date, stoarge: totalStorage},
+    totalStorage: {date, storage: totalStorage},
     powerBalance: {date, power: powerBalance},
     energyBalance: {date, energy: energyBalance},
     production: {date, energy: totalProduction},

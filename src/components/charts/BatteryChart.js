@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LineChart from '../charts/LineChart.js';
 
-PowerChart.propTypes = {
+BatteryChart.propTypes = {
   structureTiles: PropTypes.array.isRequired,
   powerData: PropTypes.object.isRequired,
   scales: PropTypes.object.isRequired,
   legend: PropTypes.object.isRequired
 };
 
-function PowerChart ({powerData, structureTiles, legend, scales}) {
+function BatteryChart ({powerData, structureTiles, legend, scales}) {
   return (
     <g>
       <g style={{'visibility': legend.totalGen ? 'visible' : 'hidden'}}>
@@ -37,7 +37,7 @@ function PowerChart ({powerData, structureTiles, legend, scales}) {
       </g>
 
       {structureTiles
-        .filter(x => x.category == 'generator')
+        .filter(x => x.category == 'battery')
         .map(el =>
           <g key={el.id} style={{'visibility': legend[el.id] ? 'visible' : 'hidden'}}>
             <LineChart
@@ -52,4 +52,4 @@ function PowerChart ({powerData, structureTiles, legend, scales}) {
 }
 
 
-export default PowerChart;
+export default BatteryChart;
