@@ -1,9 +1,8 @@
 /* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
-import Scene from '../components/system-viewer/SceneEditor.js';
 import SystemChart from '../components/charts/SystemChart.js';
-import scene2d from '../lib/scene-2d.js';
+import LineChart from '../components/charts/LineChart.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as uiActions from '../actions/uiActions.js';
@@ -48,23 +47,27 @@ SystemGraph.propTypes = {
 };
 
 function SystemGraph (props) {
-  return (
-    isNil(props.activeScene) ?
+  if (isNil(props.activeScene)) {
+    return (
     <div className="selection-prompt">
-      Please select a system...
-    </div>
-    :
-    <SystemChart
-      resizePane={props.ui.resizePane}
-      structureTiles={props.activeScene.structureTiles}
-      powerData={props.powerData[props.activeScene.id]}
-      min={props.powerData[props.activeScene.id].minPower}
-      max={props.powerData[props.activeScene.id].maxPower}
-      time={props.time}
-      legend={props.legend}
-    >
-    </SystemChart>
-  );
+      No system selected.
+    </div>);
+  } else {
+    let powerData = props.powerData[props.activeScene.id];
+    return (
+      <SystemChart
+        resizePane={props.ui.resizePane}
+        structureTiles={props.activeScene.structureTiles}
+        powerData={props.powerData[props.activeScene.id]}
+        min={powerData.minPower}
+        max={powerData.maxPower}
+        time={props.time}
+        legend={props.legend}
+        type="power"
+      >
+      </SystemChart>
+    );
+  }
 }
 
 const mapStateToProps = pick(['activeScene', 'ui', 'editor', 'activeTile', 'time', 'powerData', 'legend']);

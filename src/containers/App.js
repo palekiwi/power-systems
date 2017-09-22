@@ -47,7 +47,7 @@ class App extends Component {
 
   componentDidMount () {
     const {scenes, setActiveScene} = this.props;
-    setTimeout(() => setActiveScene(head(scenes)), 1000);
+    setTimeout(() => setActiveScene(head(scenes)), 100);
   }
 
   setContent (idx, content) {

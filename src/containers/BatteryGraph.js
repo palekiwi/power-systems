@@ -56,6 +56,7 @@ function BatteryGraph (props) {
     legend={props.legend}
     min={0}
     max={100}
+    type="battery"
   />;
 
   return (
