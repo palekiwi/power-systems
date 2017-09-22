@@ -18,9 +18,7 @@ function configureStoreProd (preloadedState) {
   return createStore(
     rootReducer,
     preloadedState,
-    compose(
-      applyMiddleware(thunk)
-    )
+    applyMiddleware(thunk)
   );
 }
 

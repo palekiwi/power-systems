@@ -1,6 +1,8 @@
 import {parseCSV} from '../../helpers/format.js';
+const defaultLoad = require('./defaultLoad.csv');
+const solar = require('./solar.csv');
 
 export default {
-  defaultLoad: require('./defaultLoad.csv').map(parseCSV),
-  solar: require('./solar.csv').map(parseCSV)
+  defaultLoad: defaultLoad.map(parseCSV),
+  solar: solar.map(parseCSV)
 };
