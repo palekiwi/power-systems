@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SplitPane from '@kadira/react-split-pane';
 import SystemMonitor from '../../containers/SystemMonitor.js';
+import SystemSettings from '../../containers/SystemSettings.js';
 import SystemData from '../../containers/SystemData.js';
 import SystemViz from '../../containers/SystemViz.js';
 import SystemGraph from '../../containers/SystemGraph.js';
@@ -11,7 +12,6 @@ class ContentPanel extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      components: ['System Monitor' , 'SystemViewer'],
       split: 'horizontal',
       dropdown: false
     };
@@ -43,6 +43,9 @@ class ContentPanel extends React.Component {
       case 'System Monitor':
         return <SystemMonitor/>;
 
+      case 'System Settings':
+        return <SystemSettings/>;
+
       case 'System Data':
         return <SystemData/>;
 
@@ -61,7 +64,7 @@ class ContentPanel extends React.Component {
     };
 
     let x = content[0];
-    let xs = ['System Monitor', 'Graphic', 'System Chart', 'Battery Chart', 'System Data'];
+    let xs = ['System Monitor', 'Graphic', 'System Chart', 'Battery Chart', 'System Data', 'System Settings'];
     return (
       content.length == 1 ?
       <div className="ContentPanel">

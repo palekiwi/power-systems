@@ -31,7 +31,7 @@ class App extends Component {
     this.state = {
       content: [
         [
-          'System Chart'
+          'System Settings'
         ],
         [
           ['System Data'],
@@ -73,7 +73,7 @@ class App extends Component {
       <div className="App">
         <SystemViewerModal />
 
-          <SplitPane split="vertical" defaultSize={200} onDragFinished={resizePane}>
+          <SplitPane split="vertical" defaultSize={210} minSize={180} maxSize={220} onDragFinished={resizePane}>
 
             <div className="SidePanel">
               <ControlPanel />

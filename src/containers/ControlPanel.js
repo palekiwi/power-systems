@@ -42,7 +42,7 @@ ControlPanel.propTypes = {
 
 function ControlPanel (props) {
   return (
-    <div className='ControlPanel' >
+    <div className='ControlPanel' style={{width: '100%'}}>
 
       <p className="box">
         <img src={require('../assets/ctn.bmp')}/>
@@ -50,37 +50,15 @@ function ControlPanel (props) {
 
       <SystemSelector
         createNewScene={props.createNewScene}
+        saveNewScene={props.saveNewScene}
+        updateScene={props.updateScene}
+        closeEditor={props.closeEditor}
+        editScene={props.editScene}
         activeScene={props.activeScene}
         setActiveScene={props.setActiveScene}
         scenes={props.scenes}
+        editor={props.editor}
       />
-
-      {!(R.isNil(props.activeScene) || props.editor) &&
-        <SystemControls
-          activeScene={props.activeScene}
-          sceneTogglePower={props.sceneTogglePower}
-          toggleStructureActive={props.toggleStructureActive}
-          editScene={props.editScene}
-        />
-      }
-
-      { props.editor &&
-        <SystemSettings
-          activeScene={props.activeScene}
-          setStructureCapacity={props.setStructureCapacity}
-          setStructureRamp={props.setStructureRamp}
-          setStructureBase={props.setStructureBase}
-          setStructureType={props.setStructureType}
-          setBatteryC={props.setBatteryC}
-          setBatteryBuffer={props.setBatteryBuffer}
-          setBatteryStorage={props.setBatteryStorage}
-          setGridSize={props.setGridSize}
-          saveNewScene={props.saveNewScene}
-          updateScene={props.updateScene}
-          closeEditor={props.closeEditor}
-          setSceneName={props.setSceneName}
-        />
-      }
     </div>
   );
 }

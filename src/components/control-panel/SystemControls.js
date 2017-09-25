@@ -40,10 +40,6 @@ function SystemControls (props) {
         }
       </div>
       <div>
-        <button onClick={() => props.sceneTogglePower(true)}>All ON</button>
-        <button onClick={() => props.sceneTogglePower(false)}>All OFF</button>
-      </div>
-      <div>
         <button onClick={props.editScene}>Edit</button>
       </div>
     </div>
