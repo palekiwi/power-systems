@@ -10,6 +10,7 @@ import * as legendActions from '../actions/legendActions.js';
 import SystemSelector from '../components/control-panel/SystemSelector.js';
 import SystemControls from '../components/control-panel/SystemControls.js';
 import SystemSettings from '../components/control-panel/SystemSettings.js';
+import './ControlPanel.scss';
 
 const actions = R.mergeAll([activeSceneActions, editorActions, legendActions]);
 
@@ -42,42 +43,44 @@ ControlPanel.propTypes = {
 function ControlPanel (props) {
   return (
     <div className='ControlPanel' >
-      <div className='content'>
 
-        <SystemSelector
-          createNewScene={props.createNewScene}
+      <p className="box">
+        <img src={require('../assets/ctn.bmp')}/>
+      </p>
+
+      <SystemSelector
+        createNewScene={props.createNewScene}
+        activeScene={props.activeScene}
+        setActiveScene={props.setActiveScene}
+        scenes={props.scenes}
+      />
+
+      {!(R.isNil(props.activeScene) || props.editor) &&
+        <SystemControls
           activeScene={props.activeScene}
-          setActiveScene={props.setActiveScene}
-          scenes={props.scenes}
+          sceneTogglePower={props.sceneTogglePower}
+          toggleStructureActive={props.toggleStructureActive}
+          editScene={props.editScene}
         />
+      }
 
-        {!(R.isNil(props.activeScene) || props.editor) &&
-          <SystemControls
-            activeScene={props.activeScene}
-            sceneTogglePower={props.sceneTogglePower}
-            toggleStructureActive={props.toggleStructureActive}
-            editScene={props.editScene}
-          />
-        }
-
-        { props.editor &&
-          <SystemSettings
-            activeScene={props.activeScene}
-            setStructureCapacity={props.setStructureCapacity}
-            setStructureRamp={props.setStructureRamp}
-            setStructureBase={props.setStructureBase}
-            setStructureType={props.setStructureType}
-            setBatteryC={props.setBatteryC}
-            setBatteryBuffer={props.setBatteryBuffer}
-            setBatteryStorage={props.setBatteryStorage}
-            setGridSize={props.setGridSize}
-            saveNewScene={props.saveNewScene}
-            updateScene={props.updateScene}
-            closeEditor={props.closeEditor}
-            setSceneName={props.setSceneName}
-          />
-        }
-      </div>
+      { props.editor &&
+        <SystemSettings
+          activeScene={props.activeScene}
+          setStructureCapacity={props.setStructureCapacity}
+          setStructureRamp={props.setStructureRamp}
+          setStructureBase={props.setStructureBase}
+          setStructureType={props.setStructureType}
+          setBatteryC={props.setBatteryC}
+          setBatteryBuffer={props.setBatteryBuffer}
+          setBatteryStorage={props.setBatteryStorage}
+          setGridSize={props.setGridSize}
+          saveNewScene={props.saveNewScene}
+          updateScene={props.updateScene}
+          closeEditor={props.closeEditor}
+          setSceneName={props.setSceneName}
+        />
+      }
     </div>
   );
 }
