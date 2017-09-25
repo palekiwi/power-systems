@@ -52,6 +52,10 @@ function SystemGraph (props) {
     <div className="selection-prompt">
       No system selected.
     </div>);
+  } else if (isNil(props.activeScene.id)) {
+    return (
+      <div>Update the system to see the chart</div>
+    );
   } else {
     let powerData = props.powerData[props.activeScene.id];
     return (

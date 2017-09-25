@@ -197,7 +197,7 @@ function SystemSettings (props) {
                     <th>Name</th>
                     <th>Type</th>
                     <th>Capacity</th>
-                    <th>C</th>
+                    <th>C-Rating</th>
                     <th>Ramp</th>
                   </tr>
                 </thead>
@@ -216,8 +216,6 @@ function SystemSettings (props) {
                             />
                             Buffer
                           </label>
-                        </p>
-                        <p className="control">
                           <label className="checkbox">
                             <input
                               className="checkbox"

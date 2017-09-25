@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import scene2d from '../../lib/scene-2d.js';
 
 SystemSelector.propTypes = {
   scenes: PropTypes.array.isRequired,
@@ -25,7 +26,7 @@ function SystemSelector (props) {
           <div className="field has-addons">
             <p className="control">
               <a className="button is-primary is-outlined"
-                onClick={props.createNewScene}
+                onClick={() => props.activeScene.id ? props.updateScene(props.activeScene) : props.saveNewScene(scene2d(props.activeScene))}
               >
                 <span className="icon is-small">
                   <i className="fa fa-floppy-o"></i>
@@ -48,7 +49,7 @@ function SystemSelector (props) {
           <div className="field has-addons">
             <p className="control">
               <a className="button is-primary is-outlined"
-                onClick={() => props.activeScene.id ? props.updateScene(props.activeScene) : props.saveNewScene(props.activeScene)}
+                onClick={props.createNewScene}
               >
                 <span className="icon is-small">
                   <i className="fa fa-plus"></i>

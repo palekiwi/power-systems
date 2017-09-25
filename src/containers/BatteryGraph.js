@@ -64,7 +64,10 @@ function BatteryGraph (props) {
       <div className="selection-prompt">
         Please select a system...
       </div>
-    : chart
+    : isNil(props.activeScene.id) ?
+    <div>Update the system to see the chart</div>
+    :
+    chart
   );
 }
 

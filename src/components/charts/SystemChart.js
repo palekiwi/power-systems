@@ -9,7 +9,7 @@ import BatteryChartLegend from './BatteryChartLegend.js';
 import XYaxis from './XYaxis.js';
 import range from 'ramda/src/range';
 import keys from 'ramda/src/keys';
-import always from 'ramda/src/always';
+import isNil from 'ramda/src/isNil';
 import map from 'ramda/src/map';
 import contains from 'ramda/src/contains';
 import evolve from 'ramda/src/evolve';
@@ -94,7 +94,7 @@ class SystemChart extends React.Component {
           />
 
         }
-        <div className="SystemChart__Chart" ref={(chart) => this.chart = chart} style={{height: '100%'}}>
+        <div className="SystemChart__Chart" ref={(chart) => this.chart = chart}>
           <svg {...svgSize(state)}>
             <g transform={transform(state)}>
 
