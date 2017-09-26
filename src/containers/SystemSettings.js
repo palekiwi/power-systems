@@ -24,10 +24,12 @@ SystemSettings.propTypes = {
   setBatteryC: PropTypes.func.isRequired,
   setBatteryBuffer: PropTypes.func.isRequired,
   setBatteryStorage: PropTypes.func.isRequired,
-  activeScene: PropTypes.object
+  activeScene: PropTypes.object,
+  editor: PropTypes.bool.isRequired
 };
 
 function SystemSettings (props) {
+  let disabled = !props.editor;
   return (
     <div className="SystemSettings">
       {
@@ -43,7 +45,7 @@ function SystemSettings (props) {
             </div>
 
             <div className="card-content">
-              <input className="input" type="text"
+              <input className="input" type="text" disabled={disabled}
                 onChange={(e) => props.setSceneName(e.target.value)}
                 value={props.activeScene.name}
               />
@@ -59,22 +61,25 @@ function SystemSettings (props) {
             <div className="card-content">
               <div className="field has-addons">
                 <p className="control">
-                  <a className="button is-primary is-outlined"
+                  <a className={gridButton(props, [3,3])}
                     onClick={() => props.setGridSize([3,3])}
+                    disabled={disabled}
                   >
                     <span>S</span>
                   </a>
                 </p>
                 <p className="control">
-                  <a className="button is-primary is-outlined"
+                  <a className={gridButton(props, [4,4])}
                     onClick={() => props.setGridSize([4,4])}
+                    disabled={disabled}
                   >
                     <span>M</span>
                   </a>
                 </p>
                 <p className="control">
-                  <a className="button is-primary is-outlined"
+                  <a className={gridButton(props, [5,5])}
                     onClick={() => props.setGridSize([5,5])}
+                    disabled={disabled}
                   >
                     <span>L</span>
                   </a>
@@ -105,9 +110,10 @@ function SystemSettings (props) {
                   <tr key={t.name + i} style={{display: (t.category == 'generator') ? 'auto' : 'none'}}>
                     <td>{t.name}</td>
                     <td>
-                      <div className="field">
+                      <div className="field" style={{display: (t.type == 'variable') ? 'none' : 'auto'}}>
                         <div className="select">
                           <select
+                            disabled={disabled}
                             value={t.type}
                             onChange={(e) => props.setStructureType(i, e.target.value)}
                           >
@@ -122,6 +128,7 @@ function SystemSettings (props) {
                         <p className="control">
                           <input
                             className="input"
+                            disabled={disabled}
                             type="number"
                             value={t.capacity}
                             min="0"
@@ -138,11 +145,12 @@ function SystemSettings (props) {
                       </div>
                     </td>
                     <td>
-                      <div className="field has-addons">
+                      <div className="field has-addons" style={{display: (t.type == 'variable') ? 'none' : 'auto'}}>
                         <p className="control">
                           <input
                             type="number"
                             className="input"
+                            disabled={disabled}
                             min="0"
                             max="100"
                             step="1"
@@ -158,11 +166,12 @@ function SystemSettings (props) {
                       </div>
                     </td>
                     <td>
-                      <div className="field has-addons">
+                      <div className="field has-addons" style={{display: (t.type == 'variable') ? 'none' : 'auto'}}>
                         <p className="control">
                           <input
                             className="input"
                             type="number"
+                            disabled={disabled}
                             min="0"
                             max="100"
                             step="5"
@@ -210,6 +219,7 @@ function SystemSettings (props) {
                         <p className="control">
                           <label className="checkbox">
                             <input
+                              disabled={disabled}
                               type="checkbox"
                               checked={t.buffer}
                               onChange={() => props.setBatteryBuffer(i)}
@@ -218,6 +228,7 @@ function SystemSettings (props) {
                           </label>
                           <label className="checkbox">
                             <input
+                              disabled={disabled}
                               className="checkbox"
                               type="checkbox"
                               checked={t.storage}
@@ -233,6 +244,7 @@ function SystemSettings (props) {
                         <p className="control">
                           <input
                             className="input"
+                            disabled={disabled}
                             type="number"
                             value={t.capacity}
                             min="0"
@@ -253,6 +265,7 @@ function SystemSettings (props) {
                         <p className="control">
                           <input
                             className="input"
+                            disabled={disabled}
                             type="number"
                             min="0"
                             max="5"
@@ -273,6 +286,7 @@ function SystemSettings (props) {
                         <p className="control">
                           <input
                             className="input"
+                            disabled={disabled}
                             type="number"
                             min="0"
                             max="100"
@@ -318,6 +332,7 @@ function SystemSettings (props) {
                         <p className="control">
                           <input
                             className="input"
+                            disabled={disabled}
                             type="number"
                             value={t.capacity}
                             min="0"
@@ -345,7 +360,11 @@ function SystemSettings (props) {
   );
 }
 
-const mapStateToProps = pick(['activeScene', 'powerData']);
+const mapStateToProps = pick(['activeScene', 'powerData', 'editor']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SystemSettings);
+
+function gridButton (props, arr) {
+  return "button is-primary" + (props.activeScene.gridSize.toString() == arr.toString() ? "" : " is-outlined");
+}
