@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import SystemDataLevel from '../components/control-panel/SystemDataLevel.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as timeActions from '../actions/timeActions.js';
@@ -40,43 +41,81 @@ const currentLoad = currentAt('consumer');
 SystemData.propTypes = {
   activeScene: PropTypes.object,
   time: PropTypes.number.isRequired,
-  setTime: PropTypes.func.isRequired
+  setTime: PropTypes.func.isRequired,
+  powerData: PropTypes.object
 };
 
-function SystemData ({activeScene, time, setTime}) {
-  return (
-    <div className="SystemData has-text-centered">
-      <h3>{defaultTo('System Data', path(['name'], activeScene))}</h3>
-      {
-        activeScene &&
-        <div>
-          <div className="columns">
-            <div className="column is-2 has-text-centered">
-              <span>Total Capacity:</span>
-              <div>
-                {totalGenCap(activeScene)}
+function SystemData ({powerData, activeScene, time, setTime}) {
+  if (!activeScene || !powerData[activeScene.id]) {
+    return (<div>No data available.</div>);
+  } else {
+    let data = powerData[activeScene.id];
+    return (
+      <div className="SystemData">
+        <div className="hero">
+          <div className="hero-body">
+            <h3 className="title has-text-centered">
+              {activeScene.name}
+            </h3>
+          </div>
+        </div>
+        {activeScene && powerData[activeScene.id] &&
+          <div>
+            <div className="box">
+              <div className="columns is-desktop">
+
+                <SystemDataLevel
+                  heading="Current Load"
+                  title={'mietek'}
+                />
+
+                <SystemDataLevel
+                  heading="Current Generation"
+                  title={'mietek'}
+                />
+
+                <SystemDataLevel
+                  heading="Balance"
+                  title={'mietek'}
+                />
+
               </div>
             </div>
-            <div className="column is-2 has-text-centered">
-              <span>Max Load:</span>
-              <div>
-                {maxLoad(activeScene)}
-              </div>
-            </div>
-            <div className="column is-2 has-text-centered">
-              <span>Current Generation:</span>
-              <div>
-                0
+
+            <div className="box">
+              <div className="columns is-desktop">
+
+                <SystemDataLevel
+                  heading="Total Production"
+                  title={formatEnergy(data.totalProduction) + 'kWh'}
+                  classed="has-text-success"
+                />
+
+                <SystemDataLevel
+                  heading="Total Consumption"
+                  title={formatEnergy(data.totalConsumption) + 'kWh'}
+                  classed="has-text-danger"
+                />
+
+                <SystemDataLevel
+                  heading="Net Energy"
+                  title={formatEnergy(data.netEnergy) + 'kWh'}
+                />
+
               </div>
             </div>
           </div>
-        </div>
-      }
-    </div>
-  );
+        }
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = pick(['activeScene', 'time', 'powerData']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(timeActions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SystemData);
+
+function formatEnergy (x) {
+  return Math.round(x / 1000);
+}

@@ -15,12 +15,12 @@ $light: hsl(0, 0%, 96%);
 $dark: hsl(0, 0%, 21%);
 
 $totalLoad: $danger;
-$totalGen: #4ECDC4;
+$totalGen: $success;
 $totalFeed: $secondary;
 $totalRamped: $primary;
 $solar: $tertiary;
 $diesel: $dark;
-$gas: $success;
+$gas: #00AFB5;
 $wind: $info;
 $buffer: $warning;
 $storage: #CC3363;
