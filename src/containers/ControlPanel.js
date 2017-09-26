@@ -48,17 +48,19 @@ function ControlPanel (props) {
         <img src={require('../assets/ctn.bmp')}/>
       </p>
 
-      <SystemSelector
-        createNewScene={props.createNewScene}
-        saveNewScene={props.saveNewScene}
-        updateScene={props.updateScene}
-        closeEditor={props.closeEditor}
-        editScene={props.editScene}
-        activeScene={props.activeScene}
-        setActiveScene={props.setActiveScene}
-        scenes={props.scenes}
-        editor={props.editor}
-      />
+      <div className="ControlPanel__Body">
+        <SystemSelector
+          createNewScene={props.createNewScene}
+          saveNewScene={props.saveNewScene}
+          updateScene={props.updateScene}
+          closeEditor={props.closeEditor}
+          editScene={props.editScene}
+          activeScene={props.activeScene}
+          setActiveScene={props.setActiveScene}
+          scenes={props.scenes}
+          editor={props.editor}
+        />
+      </div>
     </div>
   );
 }

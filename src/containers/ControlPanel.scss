@@ -1,5 +1,10 @@
-.ControlPanel__Logo {
-  background-color: white;
-  padding: 6px;
-  border-radius: 6px;
+.ControlPanel {
+  height: 100%;
+  width: 100%;
+}
+
+.ControlPanel__Body {
+  height: 100%;
+  overflow-X: hidden;
+  overflow-Y: auto;
 }

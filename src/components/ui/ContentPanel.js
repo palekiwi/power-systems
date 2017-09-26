@@ -64,7 +64,15 @@ class ContentPanel extends React.Component {
     };
 
     let x = content[0];
-    let xs = ['System Monitor', 'Graphic', 'System Chart', 'Battery Chart', 'System Data', 'System Settings'];
+    let xs = ['Graphic', 'System Chart', 'Battery Chart', 'System Data', 'System Settings'];
+    let icons = {
+      'Graphic': 'picture-o',
+      'System Chart': 'area-chart',
+      'Battery Chart': 'battery-three-quarters',
+      'System Data': 'tachometer',
+      'System Settings': 'sliders'
+    };
+
     return (
       content.length == 1 ?
       <div className="ContentPanel">
@@ -76,6 +84,9 @@ class ContentPanel extends React.Component {
               <button className="button is-small"
                 onClick={this.toggleDropdown}
               >
+                <span className="panel-icon is-small">
+                  <i className={"fa fa-" + icons[x]}></i>
+                </span>
                 <span>{x}</span>
                 <span className="icon is-small">
                   <i className="fa fa-angle-down"></i>
@@ -88,7 +99,12 @@ class ContentPanel extends React.Component {
                   <a className="dropdown-item"
                     key={i}
                     onClick={() => this.props.setContent(this.props.index, x)}
-                  >{x}</a>
+                  >
+                    <span className="panel-icon is-small">
+                      <i className={"fa fa-" + icons[x]}></i>
+                    </span>
+                    <span>{x}</span>
+                  </a>
                   )}
               </div>
             </div>

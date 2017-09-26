@@ -31,7 +31,7 @@ class App extends Component {
     this.state = {
       content: [
         [
-          'System Settings'
+          'System Chart'
         ],
         [
           ['System Data'],
