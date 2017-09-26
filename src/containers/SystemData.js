@@ -55,7 +55,7 @@ function SystemData ({powerData, activeScene, time, setTime}) {
         <div className="hero">
           <div className="hero-body">
             <h3 className="title has-text-centered">
-              {activeScene.name}
+              {formatName(totalGenCap, activeScene)}
             </h3>
           </div>
         </div>
@@ -65,18 +65,18 @@ function SystemData ({powerData, activeScene, time, setTime}) {
               <div className="columns is-desktop">
 
                 <SystemDataLevel
-                  heading="Current Load"
-                  title={'mietek'}
+                  heading="Current Generation"
+                  title={formatPower(data.totalGen, time)}
                 />
 
                 <SystemDataLevel
-                  heading="Current Generation"
-                  title={'mietek'}
+                  heading="Current Load"
+                  title={formatPower(data.totalLoad, time)}
                 />
 
                 <SystemDataLevel
                   heading="Balance"
-                  title={'mietek'}
+                  title={formatPower(data.powerBalance, time)}
                 />
 
               </div>
@@ -86,13 +86,13 @@ function SystemData ({powerData, activeScene, time, setTime}) {
               <div className="columns is-desktop">
 
                 <SystemDataLevel
-                  heading="Total Production"
+                  heading="24hr Production"
                   title={formatEnergy(data.totalProduction) + 'kWh'}
                   classed="has-text-success"
                 />
 
                 <SystemDataLevel
-                  heading="Total Consumption"
+                  heading="24hr Consumption"
                   title={formatEnergy(data.totalConsumption) + 'kWh'}
                   classed="has-text-danger"
                 />
@@ -118,4 +118,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(SystemData);
 
 function formatEnergy (x) {
   return Math.round(x / 1000);
+}
+
+function formatName (f, x) {
+  return f(x) + 'kW ' + x.name;
+}
+
+function formatPower (xs, time) {
+  return Math.round(xs[time/86400 * 288].power * 100) / 100 + 'kW';
 }
