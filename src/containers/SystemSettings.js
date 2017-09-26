@@ -286,7 +286,7 @@ function SystemSettings (props) {
                         <p className="control">
                           <input
                             className="input"
-                            disabled={disabled}
+                            disabled={!t.buffer || disabled}
                             type="number"
                             min="0"
                             max="100"
