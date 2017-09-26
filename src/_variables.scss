@@ -1,12 +1,29 @@
-@import '../node_modules/bulma/sass/utilities/variables.sass';
+@import '../node_modules/bulma/sass/utilities/initial-variables.sass';
+
+$primary: #33658A;
+$secondary: #2F4858;
+$tertiary: #F6AE2D;
+
+$info: #86BBD8;
+$success: #2A9D8F;
+$warning: #FF7700;
+$danger: #E3655B;
+
+$white: hsl(0, 0%, 100%);
+$black: hsl(0, 0%, 4%);
+$light: hsl(0, 0%, 96%);
+$dark: hsl(0, 0%, 21%);
 
 $totalLoad: $danger;
-$totalGen: $primary;
-$totalFeed: aqua;
-$totalRamped: olive;
-$solar: $info;
+$totalGen: #4ECDC4;
+$totalFeed: $secondary;
+$totalRamped: $primary;
+$solar: $tertiary;
 $diesel: $dark;
 $gas: $success;
 $wind: $info;
-$buffer: $orange;
-$storage: $purple;
+$buffer: $warning;
+$storage: #CC3363;
+
+$family-serif: 'Nexa Bold';
+$family-pimary: $family-serif;

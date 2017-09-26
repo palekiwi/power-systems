@@ -77,7 +77,7 @@ function SystemSelector (props) {
           <span className="panel-icon">
             <i className={"fa" + (props.activeScene && s.id == props.activeScene.id ? ' fa-dot-circle-o' : ' fa-circle-o')}></i>
           </span>
-          {s.name}
+          <span>{s.name}</span>
         </a>
         )
       )}

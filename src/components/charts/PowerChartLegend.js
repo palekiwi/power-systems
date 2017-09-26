@@ -1,4 +1,5 @@
 import React from 'react';
+import ChartLegendButton from './ChartLegendButton.js';
 import PropTypes from 'prop-types';
 import propEq from 'ramda/src/propEq';
 import prop from 'ramda/src/prop';
@@ -12,60 +13,82 @@ PowerChartLegend.propTypes = {
 
 function PowerChartLegend (props) {
   return (
-    <div>
-      <div className="ChartLegend__Controls">
-        <button
-          onClick={() => props.toggleLegendField('totalLoad')}
-          className={"button totalLoad is-small" + (props.legend.totalLoad ? '' : ' is-inverted')}>
-          Load
-        </button>
+    <div className="ChartLegend__Controls">
+      <div className="columns is-desktop">
 
-          <button
-            onClick={() => props.toggleLegendField('totalGen')}
-            className={"button totalGen is-small" + (props.legend.totalGen ? '' : ' is-inverted')}>
-            Generation
-          </button>
+        <div className="column">
+          <div className="field has-addons">
+            <ChartLegendButton
+              handleClick={() => props.toggleLegendField('totalLoad')}
+              active={props.legend.totalLoad}
+              selector="totalLoad"
+              text="Load"
+            />
 
-          <button
-            onClick={() => props.toggleLegendField('totalFeed')}
-            className={"button totalFeed is-small" + (props.legend.totalFeed ? '' : ' is-inverted')}>
-            Feed
-          </button>
+            <ChartLegendButton
+              handleClick={() => props.toggleLegendField('totalGen')}
+              active={props.legend.totalGen}
+              selector="totalGen"
+              text="Generation"
+            />
 
-        {
-          props.structureTiles.filter(prop('buffer')).length > 0 &&
-          <button
-            onClick={() => props.toggleLegendField('totalBuffer')}
-            className={"button buffer is-small" + (props.legend.totalBuffer ? '' : ' is-inverted')}>
-            Battery Buffer
-          </button>
-        }
-          <button
-            onClick={() => props.toggleLegendField('totalRamped')}
-            className={"button totalRamped is-small" + (props.legend.totalRamped ? '' : ' is-inverted')}>
-            Ramped Variable
-          </button>
+            <ChartLegendButton
+              handleClick={() => props.toggleLegendField('totalFeed')}
+              active={props.legend.totalFeed}
+              selector="totalFeed"
+              text="Feed"
+            />
+          </div>
+        </div>
 
-        {
-          props.structureTiles.filter(prop('storage')).length > 0 &&
-            <button
-              onClick={() => props.toggleLegendField('totalStorage')}
-              className={"button storage is-small" + (props.legend.totalStorage ? '' : ' is-inverted')}>
-              Battery Storage
-            </button>
-        }
+        <div className="column">
+          <div className="field has-addons">
+          {props.structureTiles
+            .filter(propEq('category', 'generator'))
+            .map(s => (
+              <ChartLegendButton
+                key={s.id}
+                handleClick={() =>props.toggleLegendField(s.id)}
+                active={props.legend[s.id]}
+                selector={s.tag}
+                text={s.name}
+              />
+            ))
+          }
 
-        {props.structureTiles
-          .filter(propEq('category', 'generator'))
-          .map(s => (
-            <button
-              key={s.id}
-              onClick={() => props.toggleLegendField(s.id)}
-              className={"button is-small " + s.tag + (props.legend[s.id] ? '' : ' is-inverted')}>
-              {s.name}
-            </button>
-          ))
-        }
+            <ChartLegendButton
+              handleClick={() => props.toggleLegendField('totalRamped')}
+              active={props.legend.totalRamped}
+              selector="totalRamped"
+              text="Ramp"
+            />
+          </div>
+        </div>
+
+        <div className="column">
+          <div className="field has-addons">
+            {
+              props.structureTiles.find(prop('buffer')) &&
+              <ChartLegendButton
+                handleClick={() =>props.toggleLegendField('totalBuffer')}
+                active={props.legend.totalBuffer}
+                selector="buffer"
+                text="Buffer"
+              />
+            }
+
+            {
+              props.structureTiles.find(prop('storage')) &&
+              <ChartLegendButton
+                handleClick={() =>props.toggleLegendField('totalStorage')}
+                active={props.legend.totalStorage}
+                selector="storage"
+                text="Storage"
+              />
+            }
+          </div>
+        </div>
+
       </div>
     </div>
   );
