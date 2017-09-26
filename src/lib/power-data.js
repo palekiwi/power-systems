@@ -290,7 +290,7 @@ function getStorage (i, date, acc, items, buffer, currPower, currEnergy) {
           storage = currPower / units;
         } else if (i == 0 || (prestored == 0 && (balance == 0 || balance == s.capacity * 1000))) {
           storage = 0;
-        } else if (Math.abs(prestored * 2 * 12 / 1000) - R.last(acc[s.id]).buffer < 0) { // not enough energy to output over a 5m interval
+        } else if (Math.abs(prestored * 2 * 12 / 1000) - Math.abs(R.last(acc[s.id]).storage) < 0) { // not enough energy to output over a 5m interval
           storage = 0;
           stop = true;
         } else {
