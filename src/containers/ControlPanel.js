@@ -7,12 +7,10 @@ import { bindActionCreators } from 'redux';
 import * as activeSceneActions from '../actions/activeSceneActions.js';
 import * as editorActions from '../actions/editorActions.js';
 import * as legendActions from '../actions/legendActions.js';
-import * as timeActions from '../actions/timeActions.js';
 import SystemSelector from '../components/control-panel/SystemSelector.js';
-import Clock from '../components/control-panel/Clock.js';
 import './ControlPanel.scss';
 
-const actions = R.mergeAll([activeSceneActions, editorActions, legendActions, timeActions]);
+const actions = R.mergeAll([activeSceneActions, editorActions, legendActions]);
 
 ControlPanel.propTypes = {
   ui: PropTypes.object,
@@ -38,8 +36,6 @@ ControlPanel.propTypes = {
   editor: PropTypes.bool.isRequired,
   legend: PropTypes.object,
   toggleLegendField: PropTypes.func.isRequired,
-  time: PropTypes.number.isRequired,
-  setTime: PropTypes.func.isRequired,
 };
 
 function ControlPanel (props) {
@@ -51,10 +47,6 @@ function ControlPanel (props) {
       </p>
 
       <div className="ControlPanel__Body">
-        <Clock
-          time={props.time}
-          setTime={props.setTime}
-        />
 
         <SystemSelector
           createNewScene={props.createNewScene}
@@ -72,7 +64,7 @@ function ControlPanel (props) {
   );
 }
 
-const mapStateToProps = R.pick(['scenes', 'activeScene', 'editor', 'ui', 'legend', 'time']);
+const mapStateToProps = R.pick(['scenes', 'activeScene', 'editor', 'ui', 'legend']);
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlPanel);

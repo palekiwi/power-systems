@@ -2,8 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Scene from '../components/system-viewer/SceneEditor.js';
-import SystemChart from '../components/charts/SystemChart.js';
-import scene2d from '../lib/scene-2d.js';
+import Clock from '../components/control-panel/Clock.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as uiActions from '../actions/uiActions.js';
@@ -15,6 +14,7 @@ import * as activeSceneActions from '../actions/activeSceneActions.js';
 import mergeAll from 'ramda/src/mergeAll';
 import pick from 'ramda/src/pick';
 import isNil from 'ramda/src/isNil';
+import './SystemViz.scss';
 
 const actions = mergeAll([
   uiActions,
@@ -54,20 +54,23 @@ function SystemViz (props) {
         Please select a system...
       </div>
     :
-    <Scene
-      {...props.activeScene}
-      openSVModal={props.openSVModal}
-      closeSVModal={props.closeSVModal}
-      setActiveStructure={props.setActiveStructure}
-      setActiveTile={props.setActiveTile}
-      resetActiveTile={props.resetActiveTile}
-      deleteTile={props.deleteTile}
-      activeTile={props.activeTile}
-      saveTile={props.saveTile}
-      resizePane={props.ui.resizePane}
-      editor={props.editor}
-      time={props.time}
-    />
+    <div className="SystemViz">
+      <Clock time={props.time}/>
+      <Scene
+        {...props.activeScene}
+        openSVModal={props.openSVModal}
+        closeSVModal={props.closeSVModal}
+        setActiveStructure={props.setActiveStructure}
+        setActiveTile={props.setActiveTile}
+        resetActiveTile={props.resetActiveTile}
+        deleteTile={props.deleteTile}
+        activeTile={props.activeTile}
+        saveTile={props.saveTile}
+        resizePane={props.ui.resizePane}
+        editor={props.editor}
+        time={props.time}
+      />
+    </div>
   );
 }
 

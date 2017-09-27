@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SystemDataLevel from '../components/control-panel/SystemDataLevel.js';
+import Clock from '../components/control-panel/Clock.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as timeActions from '../actions/timeActions.js';
@@ -45,13 +46,16 @@ SystemData.propTypes = {
   powerData: PropTypes.object
 };
 
-function SystemData ({powerData, activeScene, time, setTime}) {
+function SystemData ({powerData, activeScene, time}) {
   if (!activeScene || !powerData[activeScene.id]) {
     return (<div>No data available.</div>);
   } else {
     let data = powerData[activeScene.id];
     return (
       <div className="SystemData">
+
+        <Clock time={time}/>
+
         <div className="hero">
           <div className="hero-body">
             <h3 className="title has-text-centered">

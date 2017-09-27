@@ -1,17 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {parseHM, fromUnix} from '../../helpers/format.js';
+import {fromUnix} from '../../helpers/format.js';
+import './Clock.scss';
 
 Clock.propTypes = {
-  setTime: PropTypes.func.isRequired,
   time: PropTypes.number.isRequired
 };
 
-function Clock ({time, setTime}) {
-  /* eslint-disable no-console */
+function Clock ({time}) {
   return (
     <div className="Clock">
-      <span>{fromUnix(time)}</span>
+      <div className="field has-addons">
+        <div className="control">
+          <p className="button">
+            <span className="icon is-small">
+              <i className="fa fa-clock-o"></i>
+            </span>
+            <span>{fromUnix(time)}</span>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
