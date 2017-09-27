@@ -29,6 +29,10 @@
   stroke: $solar;
 }
 
+.powerline.battery {
+  stroke: $buffer;
+}
+
 .powerline.gas {
   stroke: $gas;
 }
@@ -44,11 +48,18 @@
   stroke: rgba(255,153,153,0.5);
 }
 
-.active .powerflow {
+.active .powerflow, .active.discharge .powerflow {
   stroke: white;
   stroke-width: 0.3%;
   stroke-dasharray: 1 10;
   animation: powerflow 15s infinite linear forwards;
+}
+
+.active.charge .powerflow {
+  stroke: white;
+  stroke-width: 0.3%;
+  stroke-dasharray: 1 10;
+  animation: powerflow-reverse 15s infinite linear backwards;
 }
 
 @keyframes powerflow {
@@ -58,5 +69,15 @@
 
   100% {
     stroke-dashoffset: -250;
+  }
+}
+
+@keyframes powerflow-reverse {
+  0% {
+    stroke-dashoffset: -250;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
   }
 }

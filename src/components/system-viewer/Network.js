@@ -13,13 +13,25 @@ Network.propTypes = {
 function Network ({grid, structureTiles, time, powerData}) {
   let distLines = [];
   let genLines = [];
+  let batLines = [];
 
   let distributor = structureTiles.find(el => el.category == 'distributor');
   let generators = structureTiles.filter(el => el.category == 'generator');
   let consumers = structureTiles.filter(el => el.category == 'consumer');
+  let batteries = structureTiles.filter(el => el.category == 'battery');
 
   if (distributor) {
     genLines = generators.map(g => {
+      let source = isometricTile(grid, g);
+      let target = isometricTile(grid, distributor);
+      return [
+        {x: source.midX(), y: source.midY()},
+        {x: target.midX(), y: target.midY()},
+        g
+      ];
+    });
+
+    batLines = batteries.map(g => {
       let source = isometricTile(grid, g);
       let target = isometricTile(grid, distributor);
       return [
@@ -39,13 +51,18 @@ function Network ({grid, structureTiles, time, powerData}) {
     });
   }
 
-  let activeGens = generators.some(el => el.active);
-
   return (
     <div className="Network">
       <svg>
         {genLines.map((line, i) =>
-          <g key={i} className={isActive(powerData, line[2].id, time) ? 'active' : ''}>
+          <g key={i} className={isActive(powerData, 'power', line[2].id, time) > 0 ? 'active' : ''}>
+            <path d={link(line)} className={"powerline " + line[2].tag}/>
+            <path d={link(line)} className="powerflow"/>
+          </g>
+        )}
+
+        {batLines.map((line, i) =>
+          <g key={i} className={isActive(powerData, 'buffer', line[2].id, time) > 0 ? 'active charge' : '' + (isActive(powerData, 'buffer', line[2].id, time) < 0 ? 'active discharge' : '')}>
             <path d={link(line)} className={"powerline " + line[2].tag}/>
             <path d={link(line)} className="powerflow"/>
           </g>
@@ -75,6 +92,6 @@ function link ([s, t]) {
   ].join(' ');
 }
 
-function isActive (powerData, x, time) {
-  return Math.round(powerData[x][time/86400 * 288].power * 100) > 0;
+function isActive (powerData,field, x, time) {
+  return powerData[x][time/86400 * 288][field];
 }
