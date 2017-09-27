@@ -109,7 +109,7 @@ function computeCycle (acc, date, i, hash, powerData, capacity) {
   const totalProduction = totalVarEnergy + totalBaseEnergy + totalBackupEnergy;
   const totalConsumption = totalLoadEnergy;
   const powerBalance = totalFeed - totalLoad;
-  const energyBalance = totalRampedEnergy + totalBaseEnergy + totalGridEnergy + totalBackupEnergy - totalLoadEnergy - totalStored;
+  const energyBalance = (R.keys(buffer).length > 0 ? totalRampedEnergy : totalVarEnergy) + totalBaseEnergy + totalGridEnergy + totalBackupEnergy - totalLoadEnergy - totalStored;
 
   const stat = {
     totalLoad: {date, power: totalLoad},
