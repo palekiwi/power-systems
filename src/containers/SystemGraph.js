@@ -2,10 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SystemChart from '../components/charts/SystemChart.js';
-import LineChart from '../components/charts/LineChart.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as uiActions from '../actions/uiActions.js';
+import * as timeActions from '../actions/timeActions.js';
 import * as editorActions from '../actions/editorActions.js';
 import * as activeStructureActions from '../actions/activeStructureActions.js';
 import * as svModalActions from '../actions/svModalActions.js';
@@ -17,6 +17,7 @@ import isNil from 'ramda/src/isNil';
 
 const actions = mergeAll([
   uiActions,
+  timeActions,
   editorActions,
   svModalActions,
   activeStructureActions,
@@ -42,6 +43,7 @@ SystemGraph.propTypes = {
   openSVModal: PropTypes.func.isRequired,
   closeSVModal: PropTypes.func.isRequired,
   time: PropTypes.number.isRequired,
+  setTime: PropTypes.func.isRequired,
   powerData: PropTypes.object.isRequired,
   legend: PropTypes.object.isRequired,
 };
@@ -66,6 +68,7 @@ function SystemGraph (props) {
         min={powerData.minPower}
         max={powerData.maxPower}
         time={props.time}
+        setTime={props.setTime}
         legend={props.legend}
         type="power"
       >

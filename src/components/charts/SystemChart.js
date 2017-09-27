@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
@@ -35,6 +36,7 @@ class SystemChart extends React.Component {
 
     this.resize = this.resize.bind(this);
     this.toggleLegendField = this.toggleLegendField.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount () {
@@ -63,6 +65,13 @@ class SystemChart extends React.Component {
 
   toggleLegendField (s) {
     this.setState({legend: evolve({[s]: not}, this.state.legend)});
+  }
+
+  handleClick (e, x) {
+    let {left} = e.target.getBoundingClientRect();
+    let pos = e.pageX - left - this.state.margin.left;
+    let date = x.invert(pos);
+    this.props.setTime(date.getHours() * 60 * 60 + (Math.ceil(date.getMinutes()/5) * 5) * 60);
   }
 
   render () {
@@ -94,7 +103,7 @@ class SystemChart extends React.Component {
 
         }
         <div className="SystemChart__Chart" ref={(chart) => this.chart = chart}>
-          <svg {...svgSize(state)}>
+          <svg {...svgSize(state)} onClick={(e) => this.handleClick(e, scales.x)}>
             <g transform={transform(state)}>
 
               {type == 'power' ?
@@ -132,6 +141,7 @@ class SystemChart extends React.Component {
 SystemChart.propTypes = {
   resizePane: PropTypes.object.isRequired,
   structureTiles: PropTypes.array.isRequired,
+  setTime: PropTypes.func.isRequired,
   time: PropTypes.number.isRequired,
   powerData: PropTypes.object.isRequired,
   min: PropTypes.number.isRequired,

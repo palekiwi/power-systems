@@ -1,12 +1,11 @@
 /* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
-import Scene from '../components/system-viewer/SceneEditor.js';
 import SystemChart from '../components/charts/SystemChart.js';
-import scene2d from '../lib/scene-2d.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as uiActions from '../actions/uiActions.js';
+import * as timeActions from '../actions/timeActions.js';
 import * as editorActions from '../actions/editorActions.js';
 import * as activeStructureActions from '../actions/activeStructureActions.js';
 import * as svModalActions from '../actions/svModalActions.js';
@@ -18,6 +17,7 @@ import isNil from 'ramda/src/isNil';
 
 const actions = mergeAll([
   uiActions,
+  timeActions,
   editorActions,
   svModalActions,
   activeStructureActions,
@@ -43,6 +43,7 @@ BatteryGraph.propTypes = {
   openSVModal: PropTypes.func.isRequired,
   closeSVModal: PropTypes.func.isRequired,
   time: PropTypes.number.isRequired,
+  setTime: PropTypes.func.isRequired,
   powerData: PropTypes.object.isRequired,
   legend: PropTypes.object.isRequired,
 };
@@ -53,6 +54,7 @@ function BatteryGraph (props) {
     structureTiles={props.activeScene.structureTiles}
     powerData={props.powerData[props.activeScene.id]}
     time={props.time}
+    setTime={props.setTime}
     legend={props.legend}
     min={0}
     max={100}

@@ -10,10 +10,8 @@ Clock.propTypes = {
 function Clock ({time, setTime}) {
   /* eslint-disable no-console */
   return (
-    <div className="box">
-      <div className="has-text-centered">
-        <span>{fromUnix(time)}</span>
-      </div>
+    <div className="Clock">
+      <span>{fromUnix(time)}</span>
     </div>
   );
 }
