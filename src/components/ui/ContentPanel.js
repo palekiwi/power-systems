@@ -18,6 +18,7 @@ class ContentPanel extends React.Component {
 
     this.setSplit = this.setSplit.bind(this);
     this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.handleItemClick = this.handleItemClick.bind(this);
   }
 
   componentDidMount () {
@@ -32,6 +33,11 @@ class ContentPanel extends React.Component {
 
   toggleDropdown () {
     this.setState({dropdown: !this.state.dropdown});
+  }
+
+  handleItemClick (idx, x) {
+    this.setState({dropdown: false});
+    this.props.setContent(idx, x);
   }
 
   render () {
@@ -98,7 +104,7 @@ class ContentPanel extends React.Component {
                 {xs.map((x, i) =>
                   <a className="dropdown-item"
                     key={i}
-                    onClick={() => this.props.setContent(this.props.index, x)}
+                    onClick={() => this.handleItemClick(this.props.index, x)}
                   >
                     <span className="panel-icon is-small">
                       <i className={"fa fa-" + icons[x]}></i>
