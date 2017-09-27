@@ -45,52 +45,82 @@ class TileEditor extends React.Component {
   render () {
     return (
       <div className="TileEditor">
-        <div className="TileEditor__Background"
-          onClick={this.props.resetActiveTile}
-        >
-        </div>
-        <div className="TileEditor__Content container">
-          <div>
-            <button onClick={() => this.setActiveType('terrainTiles')}>Terrain</button>
-            <button onClick={() => this.setActiveType('structureTiles')}>Structures</button>
+        <div className="TileEditor__Content">
+
+          <div className="TileEditor__Header">
+            <div className="tabs is-centered">
+              <ul>
+                <li>
+                  <a onClick={() => this.setActiveType('terrainTiles')}>Terrain</a>
+                </li>
+                <li>
+                  <a onClick={() => this.setActiveType('structureTiles')}>Structures</a>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          { this.state.type == 'terrainTiles' &&
-            <div>
-              <div>
-                {ts.map((t,i) =>
-                  <span key={i}
-                    onClick={() => this.saveTile(t)}
-                  >
-                    <span>{t.name}</span>
-                    <img src={require('../../assets/' + t.texture.filename)}/>
-                  </span>
-                )}
-              </div>
-            </div>
-          }
+          <div className="TileEditor__Body">
 
-          { this.state.type == 'structureTiles' &&
-            <div>
-              <div className="columns is-multiline TileEditor__Textures">
-                {ss.map((t,i) =>
-                  <div className="column is-3" key={i}
-                    onClick={() => this.saveTile(t)}
+            <div className="columns is-multiline TileEditor__Textures">
+            { this.state.type == 'terrainTiles' &&
+                ts.map((t,i) =>
+                  <div className="column"
+                    key={i}
                   >
-                    <img src={require('../../assets/' + t.texture.filename)}/>
+                    <a className="box"
+                      onClick={() => this.saveTile(t)}
+                    >
+                      <p className="TileEditor__Image">
+                        <img className="TerrainImage" src={require('../../assets/' + t.texture.filename)}/>
+                      </p>
+                      <p className="title is-5 has-text-centered">
+                        {t.name}
+                      </p>
+                    </a>
+
                   </div>
-                )}
+                )
+              }
+             </div>
+
+            <div className="columns is-multiline TileEditor__Textures">
+            { this.state.type == 'structureTiles' &&
+                ss.map((t,i) =>
+                  <div className="column is-3 is-half-tablet"
+                    key={i}
+                  >
+                    <a className="box"
+                      onClick={() => this.saveTile(t)}
+                    >
+                      <p className="TileEditor__Image">
+                        <img className="StructureImage" src={require('../../assets/' + t.texture.filename)}/>
+                      </p>
+                      <p className="title is-5 has-text-centered">
+                        {t.name}
+                      </p>
+                    </a>
+
+                  </div>
+                )
+              }
+             </div>
+
+            </div>
+
+            <div className="TileEditor__Footer">
+              <div className="field is-grouped">
+                <div className="control">
+                  <button className="button" onClick={this.closeModal}>Cancel</button>
+                </div>
+
+                <div className="control">
+                  <button className="button is-danger" onClick={this.deleteTile}>Clear</button>
+                </div>
               </div>
             </div>
-          }
-
-          <div>
-            <button onClick={this.deleteTile}>Clear</button>
-            <button onClick={this.closeModal}>Cancel</button>
           </div>
-
         </div>
-      </div>
     );
   }
 }

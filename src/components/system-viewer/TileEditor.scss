@@ -2,6 +2,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .TileEditor__Background {
@@ -13,18 +14,48 @@
 }
 
 .TileEditor__Content {
-  border-radius: 4px;
-  padding: 10px;
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 80%;
-  height: 80%;
+  width: 100%;
+  height: 100%;
   background: white;
-  transform: translate(-50%, -50%);
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-.TileEditor__Textures {
+.TileEditor__Header {
+  align-self: flex-start;
+  z-index: 2;
+  width: 100%;
+}
+
+.TileEditor__Body {
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1;
+  flex: 1;
+  padding: 10px;
+}
+
+.TileEditor__Footer {
+  width: 100%;
+  align-self: flex-end;
+  text-align: center;
+  padding: 2% 0;
+  border-top: 2px solid rgb(247, 247, 247);
+}
+
+.TileEditor__TerrainImage {
+  overflow: hidden;
+  position: relative;
+}
+
+.TileEditor__Image {
+  text-align: center;
+  overflow: hidden;
+}
+
+.StructureImage {
+  width: 200%;
+  height: 200%;
 }
