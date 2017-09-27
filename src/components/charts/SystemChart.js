@@ -9,12 +9,12 @@ import BatteryChartLegend from './BatteryChartLegend.js';
 import XYaxis from './XYaxis.js';
 import range from 'ramda/src/range';
 import keys from 'ramda/src/keys';
-import isNil from 'ramda/src/isNil';
 import map from 'ramda/src/map';
 import contains from 'ramda/src/contains';
 import evolve from 'ramda/src/evolve';
 import not from 'ramda/src/not';
 import merge from 'ramda/src/merge';
+import clamp from 'ramda/src/clamp';
 import { parseHM, timeFromInt, fromUnix } from '../../helpers/format.js';
 import './SystemChart.scss';
 
@@ -69,9 +69,8 @@ class SystemChart extends React.Component {
 
   handleClick (e, x) {
     let {left} = e.target.getBoundingClientRect();
-    let pos = e.pageX - left - this.state.margin.left;
-    let date = x.invert(pos);
-    this.props.setTime(date.getHours() * 60 * 60 + (Math.ceil(date.getMinutes()/5) * 5) * 60);
+    let date = x.invert(e.pageX - left);
+    this.props.setTime(clamp(0, 86400 - 300, date.getHours() * 60 * 60 + (Math.ceil(date.getMinutes()/5) * 5) * 60));
   }
 
   render () {
@@ -103,7 +102,7 @@ class SystemChart extends React.Component {
 
         }
         <div className="SystemChart__Chart" ref={(chart) => this.chart = chart}>
-          <svg {...svgSize(state)} onClick={(e) => this.handleClick(e, scales.x)}>
+          <svg {...svgSize(state)}>
             <g transform={transform(state)}>
 
               {type == 'power' ?
@@ -130,6 +129,11 @@ class SystemChart extends React.Component {
                 width={state.width}
                 height={state.height}
                 {...scales}/>
+
+              <rect x="0" y="0" width={state.width} height={state.height} fill="transparent"
+                onClick={(e) => this.handleClick(e, scales.x)}
+              />
+
             </g>
           </svg>
         </div>
