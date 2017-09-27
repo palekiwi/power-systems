@@ -69,6 +69,7 @@ function SystemViz (props) {
         resizePane={props.ui.resizePane}
         editor={props.editor}
         time={props.time}
+        powerData={props.powerData[props.activeScene.id]}
       />
     </div>
   );

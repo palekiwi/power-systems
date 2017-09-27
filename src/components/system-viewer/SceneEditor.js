@@ -81,6 +81,7 @@ class SceneTwoD extends React.Component {
             grid={this.state.grid}
             structureTiles={this.props.structureTiles}
             time={this.props.time}
+            powerData={this.props.powerData}
           />
         }
         { viewer &&
@@ -132,7 +133,8 @@ SceneTwoD.propTypes = {
   activeTile: PropTypes.object,
   resizePane: PropTypes.object,
   editor: PropTypes.bool.isRequired,
-  time: PropTypes.number.isRequired
+  time: PropTypes.number.isRequired,
+  powerData: PropTypes.object.isRequired
 };
 
 export default SceneTwoD;
