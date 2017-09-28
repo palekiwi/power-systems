@@ -1,7 +1,7 @@
 import scene2d from '../../lib/scene-2d.js';
 import vector from '../../lib/vector.js';
 import { flatmapToTilesArray } from '../../lib/tile.js';
-import { battery, diesel, solar, powerPole, houseThatched, farm } from '../../helpers/tile-creators.js';
+import { battery, diesel, solar, powerPole, communityCenter, schoolField } from '../../helpers/tile-creators.js';
 import { grass, dirt } from '../terrain-textures.js';
 
 const village = scene2d({
@@ -35,10 +35,13 @@ const village = scene2d({
     powerPole({
       position: vector(1, 1),
     }),
-    farm({
+    communityCenter({
       position: vector(0, 2),
+      data: {
+        capacity: 100
+      }
     }),
-    houseThatched({
+    schoolField({
       position: vector(1, 2),
       data: {
         capacity: 100

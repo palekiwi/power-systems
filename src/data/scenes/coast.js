@@ -1,83 +1,57 @@
 import scene2d from '../../lib/scene-2d.js';
 import vector from '../../lib/vector.js';
-import tile, { flatmapToTilesArray } from '../../lib/tile.js';
+import { flatmapToTilesArray } from '../../lib/tile.js';
+import { battery, gas, solar, powerPole, warehouse, biomass, boat, farm } from '../../helpers/tile-creators.js';
 import { grass, water } from '../terrain-textures.js';
-import * as ST from '../structure-textures.js';
 
-export default scene2d({
+const island = scene2d({
   name: 'Coast Microgrid',
   gridSize: [4, 4],
   terrainTiles: flatmapToTilesArray([
-    [grass, grass, grass, grass],
-    [grass, grass, grass, grass],
-    [grass, grass, grass, grass],
-    [water, water, water, water]
+    [grass, grass, grass, water],
+    [grass, grass, grass, water],
+    [grass, grass, grass, water],
+    [water, water, water, water],
   ]),
   structureTiles: [
-    tile({
-      position: vector(0, 0),
-      texture: ST.dieselGenerator,
-      data: {
-        name: 'Diesel Generator',
-        category: 'generator',
-        capacity: 100,
-        max: 200,
-        active: false
-      }
-    }),
-    tile({
+    gas({
       position: vector(2, 0),
-      texture: ST.windGenAnim,
-      data:{
-        name: 'Wind Generator',
-        category: 'generator',
+      data: {
         capacity: 100,
-        max: 200,
-        active: false
+        type: 'base'
       }
     }),
-    tile({
-      position: vector(3, 0),
-      texture: ST.windGenAnim,
+    battery({
+      position: vector(0, 1),
       data:{
-        name: 'Wind Generator',
-        category: 'generator',
         capacity: 100,
-        max: 200,
-        active: false
       }
     }),
-    tile({
+    solar({
+      position: vector(2, 1),
+      data:{
+        capacity: 100,
+      }
+    }),
+    powerPole({
       position: vector(1, 1),
-      texture: ST.powerPole,
-      data: {
-        name: 'Power Grid',
-        category: 'distributor',
-        capacity: 100,
-        max: 200,
-        active: false
-      }
     }),
-    tile({
-      position: vector(0, 2),
-      texture: ST.farm,
-      data: {
-        name: 'Farm',
-        category: null,
-        capacity: 100,
-        max: 200,
-        active: false
-      }
+    farm({
+      position: vector(0, 0),
     }),
-    tile({
-      data: {
-        name: 'House',
-        category: 'consumer',
-        capacity: 100,
-        max: 200
-      },
+    warehouse({
       position: vector(1, 2),
-      texture: ST.houseThatched
+      data: {
+        capacity: 100
+      }
+    }),
+    biomass({
+      position: vector(1, 0)
+    }),
+    boat({
+      position: vector(2, 3)
     })
   ]
 });
+
+export default island;

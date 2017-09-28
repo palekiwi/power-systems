@@ -124,6 +124,35 @@ export const hospital = ({position, data}) => {
   return consumer({texture, position, data: d});
 };
 
+export const warehouse = ({position, data}) => {
+  const texture = st.warehouse;
+  const d = merge({
+    name: 'Warehouse',
+    capacity: 0,
+    max: 200
+  }, data);
+  return consumer({texture, position, data: d});
+};
+
+export const schoolField = ({position, data}) => {
+  const texture = st.schoolField;
+  const d = merge({
+    name: 'Warehouse',
+    capacity: 0,
+    max: 200
+  }, data);
+  return consumer({texture, position, data: d});
+};
+
+export const houseElevated = ({position, data}) => {
+  const texture = st.houseElevated;
+  const d = merge({
+    name: 'House',
+    capacity: 0,
+    max: 200
+  }, data);
+  return consumer({texture, position, data: d});
+};
 
 export const distributor = ({texture, position, data}) => {
   const d = merge({
@@ -150,6 +179,22 @@ export const other = ({texture, position, data}) => {
 
 export const farm = ({position, data}) => {
   const texture = st.farm;
+  const d = merge({
+    name: 'Farm',
+  }, data);
+  return other({texture, position, data: d});
+};
+
+export const biomass = ({position, data}) => {
+  const texture = st.biomass;
+  const d = merge({
+    name: 'Biomass',
+  }, data);
+  return other({texture, position, data: d});
+};
+
+export const boat = ({position, data}) => {
+  const texture = st.boat;
   const d = merge({
     name: 'Farm',
   }, data);
